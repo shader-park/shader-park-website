@@ -1,6 +1,6 @@
 ## Sculpure Park  
 
 Basic vision:  
-Environment for creating, viewing and interacting with raymarched creations.
+Environment for creating, sharing and interacting with ray traced surfaces.
 
 
