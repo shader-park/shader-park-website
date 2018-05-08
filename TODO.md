@@ -19,7 +19,7 @@
 	- depth magic
 	- handle bad shaders
 		- priortize faster to load shaders
-		- load balencing
+		- load balancing
 	- editor
 		- HTML editor for now
 	- culling
