@@ -1,4 +1,6 @@
-
+import * as glmatrix from './gl-matrix.js';
+import * as glu from './gl-util.js';
+import {Camera} from './camera.js';
 
 const vs_source = `#version 300 es
 	in lowp vec4 position;
@@ -27,45 +29,6 @@ const depth_mod_fs_source = `#version 300 es
 
 
 var gl;
-
-function create_shader(vs_source, fs_source, attributes, uniforms) {
-	function load_shader(type, source) {
-		const shader = gl.createShader(type);
-		gl.shaderSource(shader, source);
-		gl.compileShader(shader);
-		if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-			console.log('shader error: ' + gl.getShaderInfoLog(shader));
-			gl.deleteShader(shader);
-			return null;
-		}
-		return shader;
-	}
-
-	const vs = load_shader(gl.VERTEX_SHADER, vs_source);
-	const fs = load_shader(gl.FRAGMENT_SHADER, fs_source);
-
-	const prog = gl.createProgram();
-	gl.attachShader(prog, vs);
-	gl.attachShader(prog, fs);
-	gl.linkProgram(prog);
-
-	if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-		console.log('shader link error: ' + gl.getProgramInfoLog(prog));
-		return null;
-	}
-
-	var sh = { program: prog, attribs: {}, uniforms: {} };
-
-	for(var i = 0; i < attributes.length; ++i) {
-		sh.attribs[attributes[i]] = gl.getAttribLocation(prog, attributes[i]);
-	}
-	
-	for(var i = 0; i < uniforms.length; ++i) {
-		sh.uniforms[uniforms[i]] = gl.getUniformLocation(prog, uniforms[i]);
-	}
-
-	return sh;
-}
 
 const cube_positions = [
 	// Front face
@@ -113,46 +76,29 @@ const cube_indices = [
 	20, 21, 22,     20, 22, 23,   // left
 ];
 
-
-function create_mesh(positions, indices) {
-	const posbuf = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, posbuf);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-	const idxbuf = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxbuf);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-	// buffer objects stored in closures
-	return {
-		bind: function(shader) {
-			gl.bindBuffer(gl.ARRAY_BUFFER, posbuf);
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxbuf);
-			gl.vertexAttribPointer(shader.attribs.position, 3, gl.FLOAT, false, 0, 0);
-			gl.enableVertexAttribArray(shader.attribs.position);
-		},
-		draw: function() {
-			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
-		}
-	};
-}
-
 var scene;
 
 function on_keypress(e, down) {
 	switch(e.keyCode) {
-		case 37:
+		case 65:
 			scene.cam.v[0] = down ? -8.1 : 0.0;
 			break;
-		case 39:
+		case 68:
 			scene.cam.v[0] = down ? 8.1 : 0.0;
 			break;
-		case 38:
+		case 87:
 			scene.cam.v[1] = down ? 8.1 : 0.0;
 			break;
-		case 40:
+		case 83:
 			scene.cam.v[1] = down ? -8.1 : 0.0;
 			break;
+		case 81:
+			scene.cam.v[2] = down ? 8.1 : 0.0;
+			break;
+		case 69:
+			scene.cam.v[2] = down ? -8.1 : 0.0;
+			break;
+
 	}
 }
 
@@ -163,7 +109,7 @@ function render(t) {
 	last_t = t;
 
 	scene.rot += dt*0.2;
-	vec3.scaleAndAdd(scene.cam.p, scene.cam.p, scene.cam.v, dt);
+	scene.cam.update(dt);
 
 	gl.clearColor(0.0, 0.0, 0.3, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -172,11 +118,8 @@ function render(t) {
 
 	const T = mat4.create(), P = mat4.create(), V = mat4.create();
 
-	mat4.perspective(P,
-                   Math.PI / 4,
-                   gl.canvas.clientWidth/gl.canvas.clientHeight,
-                   0.1, 100.0);
-	mat4.lookAt(V, scene.cam.p, [0,0.2,0], [0,0,1]);
+	scene.cam.projection_matrix(P, gl);
+	scene.cam.view_matrix(V);
 
 	mat4.mul(P, P, V);
 	mat4.identity(T);
@@ -206,7 +149,7 @@ function render(t) {
 	requestAnimationFrame(render);
 }
 
-function init() {
+window.init = function() {
 	const canvas = document.querySelector("#cv");
 	gl = canvas.getContext("webgl2");
 	if (!gl) {
@@ -214,20 +157,18 @@ function init() {
 	}
 
 	scene = {
-		shader: create_shader(vs_source, fs_source, ["position"], ["W", "VP"]),
-		qshader: create_shader(vs_source, depth_mod_fs_source, ["position"], ["W", "VP", "time"]),
-		cube: create_mesh(cube_positions, cube_indices),
-		quad: create_mesh([
+		shader: glu.shader(gl, vs_source, fs_source, ["position"], ["W", "VP"]),
+		qshader: glu.shader(gl, vs_source, depth_mod_fs_source, ["position"], ["W", "VP", "time"]),
+		cube: glu.mesh(gl, cube_positions, cube_indices),
+		quad: glu.mesh(gl, [
 			1.0, 1.0, 0.0,
 			1.0, -1.0, 0.0,
 			-1.0, -1.0, 0.0,
 			-1.0, 1.0, 0.0], [0, 1, 2, 2, 3, 0]),
 		rot: 0,
-		cam: { v: [0.0, 0.0, 0.0], p: [0.0, -20.0, 0.0]  }
+		cam: new Camera([0, -20.0, 0], [0.0, 0.2, 0.0], 9.0)
 	};
 
-	document.addEventListener('keydown', (e) => on_keypress(e, true));
-	document.addEventListener('keyup', (e) => on_keypress(e, false));
 
 	render(0);
 }
