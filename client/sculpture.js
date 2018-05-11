@@ -27,6 +27,7 @@ export class Sculpture {
 			vec3.subtract(ext, this.aabb.max, this.aabb.min);
 			mat4.scale(T,T,ext);
 			gl.uniformMatrix4fv(this.shader.uniforms.W, false, T);
+			gl.uniform3fv(this.shader.uniforms.box_pos, this.position);
 			this.mesh.draw();
 		}
 	}

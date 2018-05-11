@@ -25,10 +25,12 @@ const depth_mod_fs_source = `#version 300 es
 	uniform float iTime;
 	uniform mat4 VP;
 	uniform vec3 cam_pos;
+	uniform vec3 box_pos;
 	out vec4 color;
 
 float map(vec3 pos) {
 	return length(pos) - 0.5;
+	//return length(mod(pos,4.)-2.) - 0.5;
 }
 
 vec3 norm(vec3 pos) {
@@ -43,7 +45,7 @@ float intersect(vec3 ro, vec3 rd) {
     float t = 0.;
 
     for(int i = 0; i < 128; ++i) {
-        float h = map(ro+rd*t);
+        float h = map((ro+rd*t) - box_pos);
         if(h < 0.001 || t>100.) break;
         t += h;
     }
@@ -54,19 +56,16 @@ vec3 shade(float t, vec3 p, vec3 rd) {
 	return abs(p);
 }
 void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-	vec2 iResolution = vec2(1000.0, 1000.0);
-	vec2 uv = (fragCoord - iResolution.xy*.5)/iResolution.y;
-
-	vec3 ro = cam_pos;
+	vec3 ro = pos.xyz;
 	vec3 rd = normalize(pos.xyz-cam_pos);
         
 	float t = intersect(ro, rd);
 
     if(t < 100.) {
         vec3 p = ro + rd*t;
-		fragColor = vec4(abs(p), 1.0);
+		fragColor = vec4(abs(sin(p)), 1.0);
     } else {
-		discard;
+		fragColor = vec4(0.1);
 	}
 }
 
@@ -136,7 +135,7 @@ window.init = function() {
 
 	scene = {
 		shader: glu.shader(gl, vs_source, fs_source, ["position"], ["W", "VP"]),
-		qshader: glu.shader(gl, vs_source, depth_mod_fs_source, ["position"], ["W", "VP", "iTime", "cam_pos"]),
+		qshader: glu.shader(gl, vs_source, depth_mod_fs_source, ["position"], ["W", "VP", "iTime", "cam_pos", "box_pos"]),
 		cube: glu.mesh(gl, glu.cube_positions, glu.cube_indices),
 		quad: glu.mesh(gl, [
 			1.0, 1.0, 0.0,
@@ -144,7 +143,7 @@ window.init = function() {
 			-1.0, -1.0, 0.0,
 			-1.0, 1.0, 0.0], [0, 1, 2, 2, 3, 0]),
 		rot: 0,
-		cam: new Camera([0, -20.0, 0], [0.0, 0.2, 0.0], 9.0)
+		cam: new Camera([0, 20.0, 0.0], [0.0, 0.0, 0.0], 9.0)
 	};
 
 	scene.qshader.check();
