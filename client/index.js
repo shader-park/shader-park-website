@@ -27,7 +27,6 @@ const depth_mod_fs_source = `#version 300 es
 `;
 
 
-
 var gl;
 
 const cube_positions = [
@@ -77,30 +76,6 @@ const cube_indices = [
 ];
 
 var scene;
-
-function on_keypress(e, down) {
-	switch(e.keyCode) {
-		case 65:
-			scene.cam.v[0] = down ? -8.1 : 0.0;
-			break;
-		case 68:
-			scene.cam.v[0] = down ? 8.1 : 0.0;
-			break;
-		case 87:
-			scene.cam.v[1] = down ? 8.1 : 0.0;
-			break;
-		case 83:
-			scene.cam.v[1] = down ? -8.1 : 0.0;
-			break;
-		case 81:
-			scene.cam.v[2] = down ? 8.1 : 0.0;
-			break;
-		case 69:
-			scene.cam.v[2] = down ? -8.1 : 0.0;
-			break;
-
-	}
-}
 
 var last_t = 0;
 function render(t) {
