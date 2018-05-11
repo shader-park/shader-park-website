@@ -14,7 +14,7 @@ const vs_source = `#version 300 es
 const fs_source = `#version 300 es
 	in lowp vec4 pos;
 	out lowp vec4 color;
-	void main() { color = floor(abs(sin(pos*vec4(8.0, 3.0, 20.0, 1.0)))+0.5); }
+	void main() { color = abs(sin(floor(pos+0.5)*10.)); }
 `;
 
 ///////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ const depth_mod_fs_source = `#version 300 es
 	out vec4 color;
 
 float map(vec3 pos) {
-	return length(pos) - 0.5;
+	return length(pos) - 0.5 + (sin(pos.x*10.0) + sin(pos.y*10.0) + sin(pos.z*10.0))*0.1;
 	//return length(mod(pos,4.)-2.) - 0.5;
 }
 
@@ -55,23 +55,21 @@ float intersect(vec3 ro, vec3 rd) {
 vec3 shade(float t, vec3 p, vec3 rd) {
 	return abs(p);
 }
-void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+void main() {
 	vec3 ro = pos.xyz;
 	vec3 rd = normalize(pos.xyz-cam_pos);
         
 	float t = intersect(ro, rd);
 
     if(t < 100.) {
-        vec3 p = ro + rd*t;
-		fragColor = vec4(abs(sin(p)), 1.0);
+        vec3 p = (ro + rd*t);
+		vec4 sp = VP*vec4(p,1.0);
+		color = vec4(abs(sin(p.xyz*8.0)), 1.0);
+		gl_FragDepth = (sp.z/sp.w)*0.5 + 0.5;
     } else {
-		fragColor = vec4(0.1);
+		discard;
 	}
 }
-
-	void main() {
-		mainImage(color, gl_FragCoord.xy);
-	}
 `;
 
 
@@ -93,6 +91,7 @@ function render(t) {
 	gl.clearColor(0.0, 0.0, 0.3, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
+	gl.enable(gl.CULL_FACE);
 	gl.depthFunc(gl.LEQUAL);
 
 	const T = mat4.create(), P = mat4.create(), V = mat4.create();
@@ -107,10 +106,12 @@ function render(t) {
 	scene.cube.bind(scene.shader);
 	gl.uniformMatrix4fv(scene.shader.uniforms.VP, false, P);
 	for(var x = -2; x < 2; ++x) {
+		for(var y = -2; y < 2; ++y) {
 		for(var z = -2; z < 2; ++z) {
-			mat4.fromTranslation(T, [x*2, z*2, -2.0]);
+			mat4.fromTranslation(T, [x*2+Math.cos(t)*0.5, z*2+Math.sin(t)*0.5, y*2]);
 			gl.uniformMatrix4fv(scene.shader.uniforms.W, false, T);
 			scene.cube.draw();
+		}
 		}
 	}
 
