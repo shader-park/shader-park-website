@@ -1,30 +1,40 @@
-export function shader(gl, vs_source, fs_source, attributes, uniforms) {
-	function load_shader(type, source) {
-		const shader = gl.createShader(type);
-		gl.shaderSource(shader, source);
-		gl.compileShader(shader);
-		if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-			console.log('shader error: ' + gl.getShaderInfoLog(shader));
-			gl.deleteShader(shader);
-			return null;
-		}
-		return shader;
-	}
+function load_shader(gl, type, source) {
+	const shader = gl.createShader(type);
+	gl.shaderSource(shader, source);
+	gl.compileShader(shader);
+	return shader;
+}
 
-	const vs = load_shader(gl.VERTEX_SHADER, vs_source);
-	const fs = load_shader(gl.FRAGMENT_SHADER, fs_source);
+export function shader(gl, vs_source, fs_source, attributes, uniforms) {
+	const vs = load_shader(gl, gl.VERTEX_SHADER, vs_source);
+	const fs = load_shader(gl, gl.FRAGMENT_SHADER, fs_source);
 
 	const prog = gl.createProgram();
 	gl.attachShader(prog, vs);
 	gl.attachShader(prog, fs);
 	gl.linkProgram(prog);
 
-	if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-		console.log('shader link error: ' + gl.getProgramInfoLog(prog));
-		return null;
-	}
-
-	var sh = { program: prog, attribs: {}, uniforms: {} };
+	var sh = {
+		program: prog, attribs: {}, uniforms: {},
+		check: function() {
+			var errors = {};
+			if(!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+				errors.vs = gl.getShaderInfoLog(vs);
+				console.log('vertex shader error: ' + errors.vs);
+				gl.deleteShader(vs);
+			}
+			if(!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+				errors.fs = gl.getShaderInfoLog(fs);
+				console.log('fragment shader error: ' + errors.fs);
+				gl.deleteShader(fs);
+			}
+			if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+				errors.prog = gl.getProgramInfoLog(prog);
+				console.log('shader link error: ' + errors.prog);
+			}
+			return errors;
+		}
+	};
 
 	for(var i = 0; i < attributes.length; ++i) {
 		sh.attribs[attributes[i]] = gl.getAttribLocation(prog, attributes[i]);
@@ -61,4 +71,50 @@ export function mesh(gl, positions, indices) {
 	};
 }
 
+
+export const cube_positions = [
+	// Front face
+	-0.5, -0.5,  0.5,
+	0.5, -0.5,  0.5,
+	0.5,  0.5,  0.5,
+	-0.5,  0.5,  0.5,
+
+	// Back face
+	-0.5, -0.5, -0.5,
+	-0.5,  0.5, -0.5,
+	0.5,  0.5, -0.5,
+	0.5, -0.5, -0.5,
+
+	// Top face
+	-0.5,  0.5, -0.5,
+	-0.5,  0.5,  0.5,
+	0.5,  0.5,  0.5,
+	0.5,  0.5, -0.5,
+
+	// Bottom face
+	-0.5, -0.5, -0.5,
+	0.5, -0.5, -0.5,
+	0.5, -0.5,  0.5,
+	-0.5, -0.5,  0.5,
+
+	// Right face
+	0.5, -0.5, -0.5,
+	0.5,  0.5, -0.5,
+	0.5,  0.5,  0.5,
+	0.5, -0.5,  0.5,
+
+	// Left face
+	-0.5, -0.5, -0.5,
+	-0.5, -0.5,  0.5,
+	-0.5,  0.5,  0.5,
+	-0.5,  0.5, -0.5,
+];
+export const cube_indices = [
+	0,  1,  2,      0,  2,  3,    // front
+	4,  5,  6,      4,  6,  7,    // back
+	8,  9,  10,     8,  10, 11,   // top
+	12, 13, 14,     12, 14, 15,   // bottom
+	16, 17, 18,     16, 18, 19,   // right
+	20, 21, 22,     20, 22, 23,   // left
+];
 
