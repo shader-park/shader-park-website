@@ -89,6 +89,8 @@ function render(t) {
 	scene.rot += dt*0.2;
 	scene.cam.update(dt);
 
+	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
 	gl.clearColor(0.0, 0.0, 0.3, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
@@ -125,6 +127,9 @@ function render(t) {
 window.init = function() {
 	const canvas = document.querySelector("#cv");
 	gl = canvas.getContext("webgl2");
+	gl.canvas.width = gl.canvas.clientWidth;
+	gl.canvas.height = gl.canvas.clientHeight;
+
 	if (!gl) {
 		alert('WebGL is borked');
 	}

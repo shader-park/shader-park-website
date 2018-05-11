@@ -3,9 +3,20 @@
 	<head>
 		<title>Sculpture Park</title>
 		<script type="module" src="index.js"></script>
+		<style>
+		body {
+     			margin: 0;
+			overflow: hidden;
+   		}
+   		canvas {
+    	 		overflow: hidden;
+     			width: 100vw;
+     			height: 100vh;
+   		}
+		</style>
 	</head>
 	<body onload="init()" style="background-color: black;">
-		<canvas id="cv" width="1000" height="600"></canvas>
+		<canvas id="cv"></canvas>
 	</body>
 </html>
 
