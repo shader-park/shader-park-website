@@ -2,7 +2,7 @@ import * as THREE from './three.module.js';
 import { OrbitControls } from './OrbitControls.js';
 import { Sculpture } from './sculpture.js';
 
-var scene, camera, controls, renderer;
+var scene, sculp, camera, controls, renderer;
 
 function init() {
 	
@@ -23,7 +23,7 @@ function init() {
 
 	scene.add( create_room() );
 
-	let sculp = new Sculpture("test_obj", 0, 0, 1.0);
+	sculp = new Sculpture("test_obj", 0, 0, 1.0);
 	scene.add( sculp.mesh );
 
 	let pointLight = new THREE.PointLight(0xdddddd, 0.5);
@@ -44,6 +44,9 @@ function render() {
 		group.children[i].rotation.x += 0.01;
 	}
 	//*/
+	
+	//sculp.update_uniforms( { camera_pos: camera.position } );
+
 	renderer.render(scene, camera);
 };
 
