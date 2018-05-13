@@ -18,7 +18,7 @@
 - the Sculptures
 	- multiple shaders
 	- bounding boxes/spheres
-	- depth magic
+	+ depth magic
 	- handle bad shaders
 		- priortize faster to load shaders
 		- load balencing

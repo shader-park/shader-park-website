@@ -3,30 +3,29 @@ import * as glu from './gl-util.js';
 import {Camera} from './camera.js';
 import {Sculpture} from './sculpture.js';
 
-const vs_source = `#version 300 es
-	in lowp vec4 position;
+const vs_source = `
+	attribute lowp vec4 position;
 	uniform mat4 W;
 	uniform mat4 VP;
-	out lowp vec4 pos;
+	varying lowp vec4 pos;
 	void main() { pos = W*position; gl_Position = VP*W*position; }
 `;
 
-const fs_source = `#version 300 es
-	in lowp vec4 pos;
-	out lowp vec4 color;
-	void main() { color = abs(sin(floor(pos+0.5)*10.)); }
+const fs_source = `
+	varying lowp vec4 pos;
+	void main() { gl_FragColor = abs(sin(floor(pos+0.5)*10.)); }
 `;
 
 ///////////////////////////////////////////////////////////////
 
-const depth_mod_fs_source = `#version 300 es
+const depth_mod_fs_source = `
+    #extension GL_EXT_frag_depth : enable
 	precision highp float;
-	in lowp vec4 pos;
+varying lowp vec4 pos;
 	uniform float iTime;
 	uniform mat4 VP;
 	uniform vec3 cam_pos;
 	uniform vec3 box_pos;
-	out vec4 color;
 
 float map(vec3 pos) {
 	return length(pos) - 0.5 + (sin(pos.x*10.0) + sin(pos.y*10.0) + sin(pos.z*10.0))*0.1;
@@ -64,8 +63,8 @@ void main() {
     if(t < 100.) {
         vec3 p = (ro + rd*t);
 		vec4 sp = VP*vec4(p,1.0);
-		color = vec4(abs(sin(p.xyz*8.0)), 1.0);
-		gl_FragDepth = (sp.z/sp.w)*0.5 + 0.5;
+		gl_FragColor = vec4(abs(sin(p.xyz*8.0)), 1.0);
+		gl_FragDepthEXT = (sp.z/sp.w)*0.5 + 0.5;
     } else {
 		discard;
 	}
@@ -126,7 +125,7 @@ function render(t) {
 
 window.init = function() {
 	const canvas = document.querySelector("#cv");
-	gl = canvas.getContext("webgl2");
+	gl = canvas.getContext("webgl");
 	gl.canvas.width = gl.canvas.clientWidth;
 	gl.canvas.height = gl.canvas.clientHeight;
 
@@ -134,6 +133,7 @@ window.init = function() {
 		alert('WebGL is borked');
 	}
 
+	gl.getExtension('EXT_frag_depth');
 	scene = {
 		shader: glu.shader(gl, vs_source, fs_source, ["position"], ["W", "VP"]),
 		qshader: glu.shader(gl, vs_source, depth_mod_fs_source, ["position"], ["W", "VP", "iTime", "cam_pos", "box_pos"]),
@@ -144,7 +144,7 @@ window.init = function() {
 			-1.0, -1.0, 0.0,
 			-1.0, 1.0, 0.0], [0, 1, 2, 2, 3, 0]),
 		rot: 0,
-		cam: new Camera([0, 20.0, 0.0], [0.0, 0.0, 0.0], 9.0)
+		cam: new Camera([10, 10.0, 0.0], [0.0, 0.0, 0.0], 9.0)
 	};
 
 	scene.qshader.check();

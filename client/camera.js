@@ -39,7 +39,8 @@ export class Camera {
 	}
 
 	on_mousemove(e) {
-		
+		this.ina[0] = e.clientX * 0.1;
+		this.ina[1] = e.clientY * 0.1;
 	}
 
 	projection_matrix(P, gl) {
@@ -50,6 +51,14 @@ export class Camera {
 		var targ = vec3.create();
 		vec3.add(targ, this.position, this.look);
 		mat4.lookAt(V, this.position, targ, this.up);
+		//mat4.rotateX(V, V, this.ina[1]);
+		//mat4.rotateY(V, V, this.ina[0]);
+	}
+
+	transform(T) {
+		vec3.transformMat3(this.look, this.look, T);
+		vec3.transformMat3(this.up, this.up, T);
+		vec3.transformMat3(this.right, this.right, T);
 	}
 
 	update(dt) {
@@ -58,5 +67,9 @@ export class Camera {
 		vec3.scaleAndAdd(v, v, this.look, this.inp[1]);
 		vec3.scaleAndAdd(v, v, this.up, this.inp[2]);
 		vec3.scaleAndAdd(this.position, this.position, v, dt*this.speed);
+		/*var T = mat3.create(),Q = quat.create();
+		quat.fromEuler(Q, this.ina[1], 0.0, this.ina[0]);
+		mat3.fromQuat(T,Q);
+		this.transform(T);*/
 	}
 }

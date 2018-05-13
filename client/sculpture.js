@@ -12,7 +12,7 @@ export class Sculpture {
 	}
 
 	render(gl, t, dt, applyUniforms) {
-		if(this.shader == null) {
+		if(this.position == null) {
 			// unloaded
 		} else if(this.shader.error) {
 			// in an error state
