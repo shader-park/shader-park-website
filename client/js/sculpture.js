@@ -19,13 +19,13 @@ export class Sculpture {
 	static get vertex_source() {
 		return `
 			varying vec2 vUv;
-			varying vec4 pos;
+			varying vec4 worldPos;
 			void main()
 			{
 				vUv = uv;
 				//pos = position;
 				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-				pos = mvPosition;
+				worldPos = modelMatrix*vec4(position,1.0);//mvPosition;
 				gl_Position = projectionMatrix * mvPosition;
 			}
 			`;
@@ -33,13 +33,15 @@ export class Sculpture {
 
 	static get default_frag_source() {
 		return `
+			//uniform mat4 modelViewMatrix;
+			//uniform mat4 viewMatrix;
 			uniform mat4 projectionMatrix;
 			uniform float time;
 			uniform vec3 camera_pos;
 			uniform vec3 sculpture_center;
 			uniform float box_size;
 			varying vec2 vUv;
-			varying vec4 pos;
+			varying vec4 worldPos;
 
 			float sdSphere(vec3 p, float r) {
 				return length(p)-r;
@@ -48,7 +50,7 @@ export class Sculpture {
 			float map(vec3 p) {
 				//p -= sculpture_center;
 				float d;
-				d = sdSphere(p, 1.0);
+				d = sdSphere(p, 0.2);
 				return d;
 			}
 
@@ -56,7 +58,7 @@ export class Sculpture {
 				float d;
 				for (int i=0; i<96; i++) {
 					d = map(p);
-					if (d < 0.001 || d > 3.0*box_size) break;
+					if (d < 0.001 || d > 5.0*box_size) break;
 					p += dir*d*0.97;
 				}
 				return d;
@@ -72,17 +74,17 @@ export class Sculpture {
 
 			void main() {
 
-				vec3 ray_pos = pos.xyz-sculpture_center;
-				vec3 ray_dir = normalize(pos.xyz - camera_pos);
+				vec3 ray_pos = worldPos.xyz;//-sculpture_center;
+				vec3 ray_dir = normalize(worldPos.xyz - camera_pos);
 				float dist = intersect(ray_pos, ray_dir);
+				//dist = distance( ray_pos, sculpture_center );
 				if (dist < box_size*2.0) {
 					vec3 intersect_pos = ray_pos + dist*ray_dir;
-					//vec2 position = - 1.0 + 2.0 * vUv;
-					float red = abs( sin( intersect_pos.x * intersect_pos.y + time / 5.0 ) );
-					float green = abs( sin( intersect_pos.y * intersect_pos.z + time / 4.0 ) );
-					float blue = abs( sin( intersect_pos.z * intersect_pos.x + time / 3.0 ) );
-					gl_FragColor = vec4( red, green, blue, 1.0 );
-					vec4 sp = projectionMatrix*vec4(intersect_pos,1.0);
+					vec3 norm = calc_norm(intersect_pos);
+					float light = clamp(dot(norm, ray_dir), 0.0, 1.0);
+					vec3 col = norm;//0.5*sin(intersect_pos.xyz*10.0)+0.5;
+					gl_FragColor = vec4( col, 1.0 );
+					vec4 sp = (projectionMatrix * viewMatrix) * vec4(intersect_pos/*+worldPos.xyz*/,1.0);
 					gl_FragDepthEXT = (sp.z/sp.w)*0.5+0.5;//0.1;//length(intersect_pos+pos-camera_pos);
 				} else {
 					discard;
@@ -115,6 +117,7 @@ export class Sculpture {
 		for (let u in uniforms) {
 			this.mesh.material.uniforms[u] = uniforms[u];
 		}
+		// update sculpture_center	
 	}
 
 	set_shader_source(source) {

@@ -7,8 +7,8 @@ var scene, sculp, camera, controls, renderer;
 function init() {
 	
 	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-	camera.position.z = 8;
+	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
+	camera.position.z = 4;
 	renderer = new THREE.WebGLRenderer({antialias:true});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setPixelRatio( window.devicePixelRatio );
@@ -36,16 +36,19 @@ function init() {
 function render() {
 	
 	requestAnimationFrame( render );
+	let t = Date.now();
 	controls.update();
 	let group = scene.children[0];
-	//group.rotation.x += 0.003;
+	group.position.x += 0.0003*Math.sin(0.001*t);
+	group.position.y += 0.00037*Math.cos(0.0014*t);
 	//*
 	for (var i = 0; i < group.children.length; i++ ) {
 		group.children[i].rotation.x += 0.01;
 	}
 	//*/
 	
-	//sculp.update_uniforms( { camera_pos: camera.position } );
+	sculp.update_uniforms( { camera_pos: {value:camera.position} } );
+	console.log(sculp.mesh.material.uniforms);
 
 	renderer.render(scene, camera);
 };
@@ -59,7 +62,7 @@ function create_room() {
 	// create grid of cubes
 	let gridDimension = 5;
 	let halfgrid = Math.floor(gridDimension / 2);
-	let geometry = new THREE.BoxGeometry( 0.5, 0.5, 0.5);
+	let geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2);
 	let boxes = new THREE.Group();
 	// Create Objects in a loop
 	for (var i = 0; i < gridDimension; i++ ) {
@@ -68,9 +71,9 @@ function create_room() {
 				var material = new THREE.MeshStandardMaterial( { 
 					color: new THREE.Color( Math.random(), Math.random(), Math.random()) } );
 				var box = new THREE.Mesh( geometry, material );
-				box.position.x = (i-halfgrid);
-				box.position.y = (j-halfgrid);
-				box.position.z = (k-halfgrid);
+				box.position.x = 0.4*(i-halfgrid);
+				box.position.y = 0.4*(j-halfgrid);
+				box.position.z = 0.4*(k-halfgrid);
 				boxes.add( box );
 			}
 		}
