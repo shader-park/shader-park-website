@@ -11,7 +11,7 @@ export class Sculpture {
 		this.user_shader_source = user_shader;
 		//user_shader === undefined ? 
 		//Sculpture.default_frag_source : user_shader;
-		this.geometry = new THREE.BoxBufferGeometry(1,1,1);
+		this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
 		this.mesh = new THREE.Mesh(this.geometry, this.generate_material());
 	}
 
@@ -33,64 +33,48 @@ export class Sculpture {
 
 	static get default_frag_source() {
 		return `
-			//uniform mat4 modelViewMatrix;
-			//uniform mat4 viewMatrix;
-			uniform mat4 projectionMatrix;
-			uniform float time;
-			uniform vec3 camera_pos;
-			uniform vec3 sculpture_center;
-			uniform float box_size;
-			varying vec2 vUv;
-			varying vec4 worldPos;
 
-			float sdSphere(vec3 p, float r) {
-				return length(p)-r;
+		uniform mat4 projectionMatrix;
+		uniform float time;
+		uniform vec3 sculpture_center;
+		uniform float box_size;
+		varying vec2 vUv;
+		varying vec4 worldPos;
+
+
+		float map(vec3 pos) {
+			//return length(pos)-0.2+
+			//	(sin(pos.x*10.0)+sin(pos.y*10.0)+sin(pos.z*10.0))*0.1;
+			return max(min(length(pos.xz)-0.2, min(length(pos.xy)-0.2, length(pos.zy)-0.2)), length(pos)-0.3);
+		}
+
+
+		float intersect(vec3 ro, vec3 rd) {
+			float t = 0.;
+			for(int i = 0; i < 128; ++i) {
+				float h = map((ro+rd*t) - sculpture_center);
+				if(h < 0.001 || t>1.) break;
+				t += h*0.2;
 			}
+			return t;
+		}
 
-			float map(vec3 p) {
-				//p -= sculpture_center;
-				float d;
-				d = sdSphere(p, 0.2);
-				return d;
+		void main() {
+			vec3 ro = worldPos.xyz;
+			vec3 rd = normalize(worldPos.xyz-cameraPosition);
+
+			float t = intersect(ro, rd);
+			if(t < 1.) {
+				vec3 p = (ro + rd*t);
+				vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
+				gl_FragColor = vec4(sin(p.xyz*8.0)*0.5 + 0.5, 1.0);
+				gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
+			} else {
+				discard;
 			}
+		}
 
-			float intersect(vec3 p, vec3 dir) {
-				float d;
-				for (int i=0; i<96; i++) {
-					d = map(p);
-					if (d < 0.001 || d > 5.0*box_size) break;
-					p += dir*d*0.97;
-				}
-				return d;
-			}
-
-			vec3 calc_norm(vec3 pos) {
-				vec2 e = vec2(0.01, 0.0);
-			    return normalize(vec3(
-				map(pos+e.xyy)-map(pos-e.xyy),
-				map(pos+e.yxy)-map(pos-e.yxy),
-				map(pos+e.yyx)-map(pos-e.yyx)));
-			}
-
-			void main() {
-
-				vec3 ray_pos = worldPos.xyz;//-sculpture_center;
-				vec3 ray_dir = normalize(worldPos.xyz - camera_pos);
-				float dist = intersect(ray_pos, ray_dir);
-				//dist = distance( ray_pos, sculpture_center );
-				if (dist < box_size*2.0) {
-					vec3 intersect_pos = ray_pos + dist*ray_dir;
-					vec3 norm = calc_norm(intersect_pos);
-					float light = clamp(dot(norm, ray_dir), 0.0, 1.0);
-					vec3 col = norm;//0.5*sin(intersect_pos.xyz*10.0)+0.5;
-					gl_FragColor = vec4( col, 1.0 );
-					vec4 sp = (projectionMatrix * viewMatrix) * vec4(intersect_pos/*+worldPos.xyz*/,1.0);
-					gl_FragDepthEXT = (sp.z/sp.w)*0.5+0.5;//0.1;//length(intersect_pos+pos-camera_pos);
-				} else {
-					discard;
-				}
-			}
-			`;			
+		`;			
 	}
 
 	generate_material() {
@@ -117,6 +101,7 @@ export class Sculpture {
 		for (let u in uniforms) {
 			this.mesh.material.uniforms[u] = uniforms[u];
 		}
+	//	this.mesh.material.uniforms.sculpture_center.value = this.mesh.position;
 		// update sculpture_center	
 	}
 

@@ -47,8 +47,12 @@ function render() {
 	}
 	//*/
 	
-	sculp.update_uniforms( { camera_pos: {value:camera.position} } );
-	console.log(sculp.mesh.material.uniforms);
+	sculp.mesh.position.x = Math.sin(t*0.0005)+Math.cos(t*0.0005+3.0);
+	sculp.mesh.position.y = Math.sin(t*0.0005);
+	sculp.mesh.position.z = Math.cos(t*0.0005);
+	sculp.update_uniforms( {
+		sculpture_center: {value:sculp.mesh.position}
+	} );
 
 	renderer.render(scene, camera);
 };
