@@ -31,6 +31,9 @@
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
 	- culling
+	
+- Social media features  
+	- "like" objects
 
 - Permissions for users
 	- lock shaders while actively editing
