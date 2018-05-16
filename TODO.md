@@ -32,7 +32,7 @@
 		- compile/save(push to database) buttons
 	- culling
 	
-- Social media features  
+- Social media features  :)
 	- "like" objects
 
 - Permissions for users
@@ -51,6 +51,7 @@ grid of Sculptures, (x,y) coordinates
 - active editing flag
 + create/modify
 * updating a scuplture pushs a message to each client invalidating that shader
+- Use clients to measure shader compile/render time. Push these to server to figure out which ones to display when
 
 ### Player
 - location 
