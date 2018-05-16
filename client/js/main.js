@@ -7,13 +7,12 @@ var scene, sculp, player, grid, boxes, room, camera, controls, renderer;
 
 function init() {
 	
-	grid = { x: 4, z: 4 };
+	grid = { x: 3, z: 3 };
 	let grid_size = 2.0;
 	let box_size = 1.0;
 	let ceiling_height = 2.0;
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
-	camera.position.z = 4;
 	renderer = new THREE.WebGLRenderer({antialias:true});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setPixelRatio( window.devicePixelRatio );
@@ -28,7 +27,6 @@ function init() {
 	player = new Player();
 	document.addEventListener('keydown', player.key_event.bind(player, true));
 	document.addEventListener('keyup', player.key_event.bind(player, false));
-	console.log(player.transform);
 	player.transform.add( camera );
 	scene.add(player.transform);
 
@@ -83,7 +81,6 @@ render();
 /* create background scene */
 function create_boxes(grid, grid_size, box_size) {
 	// create grid of cubes
-	//let gridDimension = 5;
 	let half_grid_x = Math.floor(grid.x / 2);
 	let half_grid_z = Math.floor(grid.z / 2);
 	let geometry = new THREE.BoxBufferGeometry( box_size, box_size, box_size);

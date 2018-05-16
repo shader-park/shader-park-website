@@ -9,8 +9,8 @@ export class Player {
 		//this.position = new THREE.Vector3();
 		//this.rotation_y = 0;
 		//this.rotation_x = 0;
-		this.move_speed = 0.01;
-		this.look_speed = 0.01;
+		this.move_speed = 0.06;
+		this.look_speed = 0.04;
 		this.movement = {
 			forward: false,
 			backward: false,
@@ -24,9 +24,13 @@ export class Player {
 	update() {
 		let m = this.movement;
 		let t = this.transform;
-		console.log(t.position.z);
-		if (m.forward) t.position.z += this.move_speed;
-		if (m.backward) t.position.z -= this.move_speed;
+		let dir = new THREE.Vector3();
+		t.getWorldDirection(dir);
+		dir.multiplyScalar(this.move_speed);
+		if (m.forward) t.position.sub( dir );
+		if (m.backward) t.position.add( dir );
+		if (m.left) t.rotation.y += this.look_speed;
+		if (m.right) t.rotation.y -= this.look_speed;
 	}
 
 	key_event(mode, e) {
