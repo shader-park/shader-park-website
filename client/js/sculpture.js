@@ -41,13 +41,15 @@ export class Sculpture {
 		varying vec2 vUv;
 		varying vec4 worldPos;
 
-
-		float map(vec3 pos) {
-			//return length(pos)-0.2+
-			//	(sin(pos.x*10.0)+sin(pos.y*10.0)+sin(pos.z*10.0))*0.1;
-			return max(min(length(pos.xz)-0.2, min(length(pos.xy)-0.2, length(pos.zy)-0.2)), length(pos)-0.3);
+		float sdSphere(vec3 p, float r) {
+			return length(p+0.1*sin(10.0*p))-r;
 		}
 
+		float map(vec3 pos) {
+			float d;
+			d = sdSphere(pos,0.5);
+			return d;	
+		}
 
 		float intersect(vec3 ro, vec3 rd) {
 			float t = 0.;
