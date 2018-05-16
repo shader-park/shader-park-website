@@ -28,6 +28,9 @@ function init() {
 	player = new Player();
 	document.addEventListener('keydown', player.key_event.bind(player, true));
 	document.addEventListener('keyup', player.key_event.bind(player, false));
+	console.log(player.transform);
+	player.transform.add( camera );
+	scene.add(player.transform);
 
 	let roomGeo = new THREE.BoxBufferGeometry( grid.x*grid_size, ceiling_height, grid.z*grid_size );
 	let roomMat = new THREE.MeshStandardMaterial( { 
@@ -53,14 +56,15 @@ function render() {
 	requestAnimationFrame( render );
 	let t = Date.now();
 	//controls.update();
-	let group = scene.children[0];
-	group.position.x += 0.0003*Math.sin(0.001*t);
-	group.position.y += 0.00037*Math.cos(0.0014*t);
-	//*
+	player.update();
+	//let group = scene.children[0];
+	//group.position.x += 0.0003*Math.sin(0.001*t);
+	//group.position.y += 0.00037*Math.cos(0.0014*t);
+	/*
 	for (var i = 0; i < group.children.length; i++ ) {
 		group.children[i].rotation.x += 0.01;
 	}
-	//*/
+	/*/
 	
 	sculp.mesh.position.x = Math.sin(t*0.0005)+Math.cos(t*0.0005+3.0);
 	sculp.mesh.position.y = Math.sin(t*0.0005);

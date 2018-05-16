@@ -5,7 +5,7 @@ export class Player {
         constructor() {
 
 		// initialize this to most recent position
-		this.tranform = new THREE.Object3D();
+		this.transform = new THREE.Object3D();
 		//this.position = new THREE.Vector3();
 		//this.rotation_y = 0;
 		//this.rotation_x = 0;
@@ -23,12 +23,14 @@ export class Player {
 
 	update() {
 		let m = this.movement;
-		
+		let t = this.transform;
+		console.log(t.position.z);
+		if (m.forward) t.position.z += this.move_speed;
+		if (m.backward) t.position.z -= this.move_speed;
 	}
 
 	key_event(mode, e) {
 		let m = this.movement;
-		console.log(e);
 		switch (e.key) {
 			case 'w':
 				m.forward = mode;
