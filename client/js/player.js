@@ -6,11 +6,12 @@ export class Player {
 
 		// initialize this to most recent position
 		this.transform = new THREE.Object3D();
-		//this.position = new THREE.Vector3();
-		//this.rotation_y = 0;
-		//this.rotation_x = 0;
-		this.move_speed = 0.06;
-		this.look_speed = 0.04;
+		this.velocity = new THREE.Vector3();
+		this.rot_vel = 0.0;
+		this.move_speed = 0.012;
+		this.vel_damp = 0.85;
+		this.look_speed = 0.012;
+		this.rot_damp = 0.8;
 		this.movement = {
 			forward: false,
 			backward: false,
@@ -27,10 +28,18 @@ export class Player {
 		let dir = new THREE.Vector3();
 		t.getWorldDirection(dir);
 		dir.multiplyScalar(this.move_speed);
-		if (m.forward) t.position.sub( dir );
-		if (m.backward) t.position.add( dir );
-		if (m.left) t.rotation.y += this.look_speed;
-		if (m.right) t.rotation.y -= this.look_speed;
+		if (m.forward) this.velocity.sub( dir );
+		if (m.backward) this.velocity.add( dir );
+		if (m.left) this.rot_vel += this.look_speed;
+		if (m.right) this.rot_vel -= this.look_speed;
+		this.rot_vel *= this.rot_damp;
+		t.rotation.y += this.rot_vel;
+		this.velocity.multiplyScalar(this.vel_damp);
+		t.position.add(this.velocity);
+	}
+
+	nudge(dir) {
+		this.velocity.add(dir);
 	}
 
 	key_event(mode, e) {
