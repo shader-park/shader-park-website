@@ -36,18 +36,19 @@ export class Sculpture {
 
 		uniform mat4 projectionMatrix;
 		uniform float time;
+		uniform float scale;
 		uniform vec3 sculpture_center;
 		uniform float box_size;
 		varying vec2 vUv;
 		varying vec4 worldPos;
 
 		float sdSphere(vec3 p, float r) {
-			return length(p+0.1*sin(10.0*p))-r;
+			return length(p+0.2*sin(10.0*p+time))-r;
 		}
 
 		float map(vec3 pos) {
 			float d;
-			d = sdSphere(pos,0.5);
+			d = sdSphere(pos,0.3);
 			return d;	
 		}
 
@@ -82,7 +83,8 @@ export class Sculpture {
 	generate_material() {
 		let m = new THREE.ShaderMaterial( {
 			uniforms: { 
-				time: { value: 1.0 },
+				time: { value: 0.0 },
+				scale: { value: 1.0 },
 				camera_pos: { value: new THREE.Vector3() },
 				sculpture_center: { value: new THREE.Vector3() },
 				box_size : { value: 1.0 }

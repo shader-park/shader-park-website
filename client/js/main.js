@@ -3,12 +3,12 @@ import { Sculpture } from './sculpture.js';
 import { collides_grid, get_normal } from './collider.js';
 import { Player } from './player.js';
 
-var scene, sculp, player, grid, boxes, point_lights, room, camera, controls, renderer;
+var scene, sculps, player, grid, point_lights, room, camera, controls, renderer, start_time;
 
 function init() {
 	
-	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0 };
-	let ceiling_height = 2.0;
+	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0, ceiling: 2.0 };
+
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
 	renderer = new THREE.WebGLRenderer({antialias:true});
@@ -25,7 +25,7 @@ function init() {
 	
 	let roomGeo = new THREE.BoxBufferGeometry( 
 		grid.x*grid.spacing, 
-		ceiling_height, 
+		grid.ceiling, 
 		grid.z*grid.spacing );
 
 	let roomMat = new THREE.MeshStandardMaterial( { 
@@ -37,12 +37,9 @@ function init() {
 	room = new THREE.Mesh( roomGeo, roomMat );
 	scene.add( room );
 
-	boxes = create_boxes(grid, grid.spacing, grid.size);
-	boxes.position.y -= ceiling_height/2;
-	scene.add( boxes );
-
-	sculp = new Sculpture("test_obj", 0, 0, 1.0);
-	scene.add( sculp.mesh );
+	sculps = create_sculps(grid, grid.spacing, grid.size);
+	//sculps.position.y -= ceiling_height/2;
+	scene.add( sculps );
 
 	point_lights = new THREE.Group();
 	let l_count = 4;
@@ -57,35 +54,31 @@ function init() {
 	point_lights.position.y = 1;
 	let hemisphereLight = new THREE.HemisphereLight(0x8899cc, 0x334455);
 	scene.add(hemisphereLight);
+	start_time = Date.now();
+
 }
 
 function render() {
 	
 	requestAnimationFrame( render );
-	let t = Date.now();
-	//controls.update();
+	let t = Date.now()-start_time;
+
 	player.update();
 	/*
 	if (collides_grid( player.transform.position, grid)) {
 		player.nudge( get_normal(player.transform.position, grid).multiplyScalar(0.02) );
 	}
 	*/
-	//let group = scene.children[0];
-	//group.position.x += 0.0003*Math.sin(0.001*t);
-	//group.position.y += 0.00037*Math.cos(0.0014*t);
-	/*
-	for (var i = 0; i < group.children.length; i++ ) {
-		group.children[i].rotation.x += 0.01;
+
+	// update all sculpture uniforms
+	let meshes = sculps.children[0].children;
+	for (let s in meshes) {
+		let sc = meshes[s];
+		sc.sculpRef.update_uniforms( {
+			sculpture_center: { value: sc.position },
+			time: { value: t*0.004 }
+		} );
 	}
-	/*/
-	/*
-	sculp.mesh.position.x = Math.sin(t*0.0005)+Math.cos(t*0.0005+3.0);
-	sculp.mesh.position.y = Math.sin(t*0.0005);
-	sculp.mesh.position.z = Math.cos(t*0.0005);
-	*/
-	sculp.update_uniforms( {
-		sculpture_center: {value:sculp.mesh.position}
-	} );
 
 	renderer.render(scene, camera);
 };
@@ -95,29 +88,38 @@ render();
 
 
 /* create background scene */
-function create_boxes(grid) {
+function create_sculps(grid) {
 	// create grid of cubes
 	let half_grid_x = Math.floor(grid.x / 2);
 	let half_grid_z = Math.floor(grid.z / 2);
 	let geometry = 
 		new THREE.BoxBufferGeometry( grid.size, grid.size, grid.size);
+	let all = new THREE.Group();
+	let sculptures = new THREE.Group();
 	let boxes = new THREE.Group();
 	// Create Objects in a loop
 	for (let i = 0; i < grid.x; i++ ) {
 		for (let j = 0; j < grid.z; j++) {
-				let material = new THREE.MeshStandardMaterial( { 
-					color: new THREE.Color( 
-						Math.random(), 
-						Math.random(), 
-						Math.random()),
-			       		roughness: 0.82,
-					metalness: 0.01	} );
-				let box = new THREE.Mesh( geometry, material );
-				box.position.x = grid.spacing*(i-half_grid_x);
-				box.position.y = 0.0;
-				box.position.z = grid.spacing*(j-half_grid_z);
-				boxes.add( box );
+			let material = new THREE.MeshStandardMaterial( { 
+				color: new THREE.Color( 
+					Math.random(), 
+					Math.random(), 
+					Math.random()),
+				roughness: 0.82,
+				metalness: 0.01	} );
+			let box = new THREE.Mesh( geometry, material );
+			let sculp = new Sculpture("test_obj", 0, 0, 1.0);
+			sculp.mesh.sculpRef = sculp;
+			box.position.x =  grid.spacing*(i-half_grid_x);
+			box.position.y = -grid.ceiling/2;
+			box.position.z =  grid.spacing*(j-half_grid_z);
+			sculp.mesh.position.x = box.position.x;
+			sculp.mesh.position.z = box.position.z;
+			sculptures.add( sculp.mesh );
+			boxes.add( box );
 		}
 	}
-	return boxes;
+	all.add(sculptures);
+	all.add(boxes);
+	return all;
 }
