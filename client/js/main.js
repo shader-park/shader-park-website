@@ -1,5 +1,6 @@
 import * as THREE from './three.module.js';
 import { Sculpture } from './sculpture.js';
+import { collides_grid, get_normal } from './collider.js';
 import { Player } from './player.js';
 
 var scene, sculp, player, grid, boxes, point_lights, room, camera, controls, renderer;
@@ -18,9 +19,10 @@ function init() {
 	player = new Player();
 	document.addEventListener('keydown', player.key_event.bind(player, true));
 	document.addEventListener('keyup', player.key_event.bind(player, false));
+	player.transform.position.z -= grid.spacing/2;
 	player.transform.add( camera );
 	scene.add(player.transform);
-
+	
 	let roomGeo = new THREE.BoxBufferGeometry( 
 		grid.x*grid.spacing, 
 		ceiling_height, 
@@ -63,6 +65,11 @@ function render() {
 	let t = Date.now();
 	//controls.update();
 	player.update();
+	/*
+	if (collides_grid( player.transform.position, grid)) {
+		player.nudge( get_normal(player.transform.position, grid).multiplyScalar(0.02) );
+	}
+	*/
 	//let group = scene.children[0];
 	//group.position.x += 0.0003*Math.sin(0.001*t);
 	//group.position.y += 0.00037*Math.cos(0.0014*t);

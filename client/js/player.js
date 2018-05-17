@@ -39,6 +39,7 @@ export class Player {
 	}
 
 	nudge(dir) {
+		console.log(dir);
 		this.velocity.add(dir);
 	}
 
