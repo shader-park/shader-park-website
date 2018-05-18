@@ -2,8 +2,11 @@ import * as THREE from './three.module.js';
 import { Sculpture } from './sculpture.js';
 import { collides_grid, get_normal } from './collider.js';
 import { Player } from './player.js';
+import { Editor } from './editor.js';
 
-var scene, sculps, player, grid, point_lights, room, camera, controls, renderer, start_time;
+var scene, sculps, player, grid, point_lights,
+	room, camera, controls, renderer, start_time,
+	editor;
 
 function init() {
 	
@@ -11,7 +14,7 @@ function init() {
 
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
-	renderer = new THREE.WebGLRenderer({antialias:true});
+	renderer = new THREE.WebGLRenderer({antialias:false});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	document.body.appendChild( renderer.domElement );
@@ -56,17 +59,11 @@ function init() {
 	scene.add(hemisphereLight);
 	start_time = Date.now();
 
-	var edit_div = document.getElementById('editor');
-	var cm = CodeMirror(edit_div, {
-		value: "int main() { }",
-		mode: "text/x-csrc",
-		lineNumbers: true
-	});
-	edit_div.style.visibility = "hidden";
+	editor = new Editor();
+	
 	document.addEventListener('keydown', (e) => {
-		console.log(e);
 		if(e.key == 'e') {
-			edit_div.style.visibility = (edit_div.style.visibility == 'hidden') ? 'visible' : 'hidden';
+			editor.show(sculps.children[0].children[0].sculpRef);
 		}
 	});
 }
