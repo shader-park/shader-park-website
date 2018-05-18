@@ -56,6 +56,13 @@ function init() {
 	scene.add(hemisphereLight);
 	start_time = Date.now();
 
+	var edit_div = document.getElementById('editor');
+	var cm = CodeMirror(edit_div, {
+		value: "int main() { }",
+		mode: "text/x-csrc",
+		lineNumbers: true
+	});
+
 }
 
 function render() {
