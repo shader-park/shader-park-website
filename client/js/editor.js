@@ -30,5 +30,10 @@ export class Editor {
 
 	close() {
 		this.edit_div.style.visibility = "hidden";
+		this.sculpture = null;
+	}
+
+	get visible() {
+		return this.edit_div.style.visibility == 'visible';
 	}
 }

@@ -20,8 +20,6 @@ function init() {
 	document.body.appendChild( renderer.domElement );
 
 	player = new Player();
-	document.addEventListener('keydown', player.key_event.bind(player, true));
-	document.addEventListener('keyup', player.key_event.bind(player, false));
 	player.transform.position.z -= grid.spacing/2;
 	player.transform.add( camera );
 	scene.add(player.transform);
@@ -60,12 +58,9 @@ function init() {
 	start_time = Date.now();
 
 	editor = new Editor();
-	
-	document.addEventListener('keydown', (e) => {
-		if(e.key == 'e') {
-			editor.show(sculps.children[0].children[0].sculpRef);
-		}
-	});
+
+	document.addEventListener('keydown', keypress.bind(null,true));
+	document.addEventListener('keyup', keypress.bind(null,false));
 }
 
 function render() {
@@ -95,6 +90,22 @@ function render() {
 
 init();
 render();
+
+function keypress(down, e) {
+	if(e.target.nodeName == "BODY") {
+		if(e.key == 'e' && !editor.visible) {
+			let meshes = sculps.children[0].children;
+			for (let s in meshes) {
+				let sc = meshes[s];
+				if (sc.position.distanceToSquared(player.transform.position) < 4.0) {
+					editor.show(sc.sculpRef);
+					break;
+				}
+			}
+		}
+		player.key_event(down, e);
+	}
+}
 
 
 /* create background scene */
