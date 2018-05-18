@@ -62,7 +62,13 @@ function init() {
 		mode: "text/x-csrc",
 		lineNumbers: true
 	});
-
+	edit_div.style.visibility = "hidden";
+	document.addEventListener('keydown', (e) => {
+		console.log(e);
+		if(e.key == 'e') {
+			edit_div.style.visibility = (edit_div.style.visibility == 'hidden') ? 'visible' : 'hidden';
+		}
+	});
 }
 
 function render() {
