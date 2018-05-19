@@ -1,5 +1,5 @@
 export class Editor {
-	constructor() {
+	constructor(renderer) {
 		this.edit_div = document.getElementById('editor');
 		this.cm = CodeMirror(this.edit_div, {
 			value: "/* shader source goes here */",
@@ -8,6 +8,8 @@ export class Editor {
 		});
 		this.edit_div.style.visibility = "hidden";
 		this.sculpture = null;
+		this.renderer = renderer;
+		this.error_widgets = [];
 		document.getElementById('editor-save-button').onclick = this.save.bind(this);
 		document.getElementById('editor-compile-button').onclick = this.compile.bind(this);
 		document.getElementById('editor-close-button').onclick = this.close.bind(this);
@@ -26,6 +28,21 @@ export class Editor {
 
 	compile() {
 		this.sculpture.set_shader_source(this.cm.getValue());
+		let errors = this.sculpture.get_shader_errors(this.renderer);
+		this.cm.operation(() => {
+		while(this.error_widgets.length > 0){
+			this.error_widgets[this.error_widgets.length-1].clear();
+			this.error_widgets.pop();
+		}
+		for(var e in errors) {
+			let error = errors[e];
+			var error_node = document.createElement('span');
+			error_node.className = 'error-span';
+			error_node.innerHTML = 'error: ';
+			if(error.item.length > 0) { error_node.innerHTML += "'" + error.item + "': "; }
+			error_node.innerHTML += error.message;
+			this.error_widgets.push(this.cm.addLineWidget(error.line, error_node, {above:true}));
+		}});
 	}
 
 	close() {

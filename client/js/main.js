@@ -57,7 +57,7 @@ function init() {
 	scene.add(hemisphereLight);
 	start_time = Date.now();
 
-	editor = new Editor();
+	editor = new Editor(renderer);
 
 	document.addEventListener('keydown', keypress.bind(null,true));
 	document.addEventListener('keyup', keypress.bind(null,false));

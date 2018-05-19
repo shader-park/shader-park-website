@@ -58,7 +58,7 @@ export class Sculpture {
 			for(int i = 0; i < 128; ++i) {
 				float h = map((ro+rd*t) - sculpture_center);
 				if(h < 0.001 || t>1.) break;
-				t += h*0.2;
+				t += h*0.9;
 			}
 			return t;
 		}
@@ -116,8 +116,28 @@ export class Sculpture {
 		// save source to db
 	}
 
-	get_shader_error() {
-		return "test error message";
+	get_shader_errors(renderer) {
+		let gl = renderer.context;
+		let s = gl.createShader(gl.FRAGMENT_SHADER);
+		const prefix = `
+		#extension GL_EXT_frag_depth : enable
+		precision highp float;
+		precision highp int;
+		uniform mat4 viewMatrix;
+		uniform vec3 cameraPosition;
+		`;
+		gl.shaderSource(s, prefix+this.user_shader_source);
+		gl.compileShader(s);
+		let log = gl.getShaderInfoLog(s);
+		gl.deleteShader(s);
+		if(log.length == 0) { return []; }
+		let re = /ERROR:\s(\d+):(\d+):\s'(.*)'\s:\s(.*)/g;
+		let errors = [];
+		var res;
+		while(res = re.exec(log)) {
+			errors.push({ line: parseInt(res[2])-7/*number of lines in prefix*/, item: res[3], message: res[4] });
+		}
+		return errors;
 	}
 
 }
