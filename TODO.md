@@ -31,6 +31,9 @@
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
 	- [x] culling (handled automatically)
+	- more provided uniforms to shader (mouse coords, closest player coords, light position)
+- Usability
+	- Well documented and structured default shader
 	
 - Social media features  :)
 	- "like" objects
