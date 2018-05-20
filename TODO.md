@@ -7,9 +7,10 @@
 	- lock shaders while actively editing
 
 ## Frontend
-- basic Camera/player controls
+- [x] basic Camera/player controls
 - the Room/Park
-	- nice, subtle shading: AO?
+	- Sky?
+	- Texture on floor, walls. General embellishments. Faked AO.
 	- grid layout?
 		 - helps collisions
 		 - could be infinite
@@ -17,20 +18,19 @@
 	- show other players
 	- smooth interpolation between updates
 - the Sculptures
-	- multiple shaders
-	- bounding boxes/spheres
-	- depth magic
+	- [x] multiple shaders  
+	- [x] bounding boxes/spheres
+	- [x] depth magic
 	- handle bad shaders
 		- priortize faster to load shaders
 		- load balencing
-	- player interaction (editing, creating)
-	- editor
-		- still need to be able to move camera
-			- modal editing
-		- HTML editor for now
+	- [x] player interaction (editing, creating)
+	- [x] editor
+		- [x] still need to be able to move camera
+		- [x] HTML editor for now
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
-	- culling
+	- [x] culling (handled automatically)
 	
 - Social media features  :)
 	- "like" objects
