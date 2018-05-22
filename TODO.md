@@ -3,7 +3,7 @@
 - Make it
 - Database schema + sort (Redis?)
 - Permissions for users
-	- __could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else
+	- ~~__could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else~~
 	- lock shaders while actively editing
 
 ## Frontend
@@ -14,6 +14,8 @@
 	- grid layout?
 		 - helps collisions
 		 - could be infinite
+- Break up main.js into gamestate, generate scene, interface, and network files/classes
+
 - Network
 	- show other players
 	- smooth interpolation between updates
@@ -31,6 +33,9 @@
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
 	- [x] culling (handled automatically)
+	- more provided uniforms to shader (mouse coords, closest player coords, light position)
+- Usability
+	- Well documented and structured default shader
 	
 - Social media features  :)
 	- "like" objects
