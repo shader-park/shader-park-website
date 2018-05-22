@@ -1,3 +1,5 @@
+'use strict';
+
 import * as THREE from './three.module.js';
 import { Sculpture } from './sculpture.js';
 import { collides_grid, get_normal } from './collider.js';
@@ -6,11 +8,13 @@ import { Editor } from './editor.js';
 
 var scene, sculps, player, grid, point_lights, room, highlight_box,
     camera, renderer, start_time, editor, mouse, raycaster,
-    current_sel;
+    current_sel, socket, players_remote, player_transforms;
 
 
 function init() {
-	
+
+	socket = io();
+
 	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
 	scene = new THREE.Scene();
@@ -23,23 +27,19 @@ function init() {
 	raycaster = new THREE.Raycaster();
 	current_sel = null;
 	editor = new Editor(renderer);
-	window.addEventListener('resize', onWindowResize, false);
-	window.addEventListener('click', onMouseClick, false);
-	document.addEventListener('mousemove', onMouseMove, false);
-	document.addEventListener('keydown', keypress.bind(null,true));
-	document.addEventListener('keyup', keypress.bind(null,false));
 
 	player = new Player();
+	console.log(player.ID);
 	player.transform.position.z -= grid.spacing/2;
 	player.transform.add( camera );
 	scene.add(player.transform);
 	
-	let room_geo = new THREE.BoxBufferGeometry( 
+	const room_geo = new THREE.BoxBufferGeometry( 
 		grid.x*grid.spacing, 
 		grid.ceiling, 
 		grid.z*grid.spacing );
 
-	let room_mat = new THREE.MeshStandardMaterial( { 
+	const room_mat = new THREE.MeshStandardMaterial( { 
 		color: new THREE.Color( 0.6, 0.6, 0.6),
 		roughness: 0.82,
 		metalness: 0.01,
@@ -56,18 +56,24 @@ function init() {
 
 	// setup lights
 	point_lights = new THREE.Group();
-	let l_count = 4;
+	const l_count = 4;
 	for (let i=0; i<4; i++) {
-		let pl = new THREE.PointLight(0xdddddd, 0.4);
-		let ang = i*2.0*Math.PI/l_count;
+		const pl = new THREE.PointLight(0xdddddd, 0.4);
+		const ang = i*2.0*Math.PI/l_count;
 		pl.position.x = Math.sin(ang)*grid.spacing/2;
 		pl.position.z = Math.cos(ang)*grid.spacing/2;
 		point_lights.add(pl);
 	}
 	scene.add(point_lights);
 	point_lights.position.y = 1;
-	let hemisphereLight = new THREE.HemisphereLight(0x8899cc, 0x334455);
+	const hemisphereLight = new THREE.HemisphereLight(0x8899cc, 0x334455);
 	scene.add(hemisphereLight);
+
+	window.addEventListener('resize', onWindowResize, false);
+	window.addEventListener('click', onMouseClick, false);
+	document.addEventListener('mousemove', onMouseMove, false);
+	document.addEventListener('keydown', keypress.bind(null,true));
+	document.addEventListener('keyup', keypress.bind(null,false));
 
 	start_time = Date.now();
 }
@@ -75,7 +81,7 @@ function init() {
 function render() {
 	
 	requestAnimationFrame( render );
-	let t = Date.now()-start_time;
+	const t = Date.now()-start_time;
 
 	player.update();
 	/*
@@ -85,7 +91,7 @@ function render() {
 	*/
 
 	// update all sculpture uniforms
-	let meshes = sculps.children;
+	const meshes = sculps.children;
 	for (let s in meshes) {
 		let sc = meshes[s];
 		sc.sculpRef.update_uniforms( {
@@ -96,9 +102,9 @@ function render() {
 
 	if (!editor.visible) {
 		raycaster.setFromCamera(mouse, camera);
-		let intersects = raycaster.intersectObjects( sculps.children );
+		const intersects = raycaster.intersectObjects( sculps.children );
 		if (intersects.length > 0) {
-			let i = intersects[0];
+			const i = intersects[0];
 			highlight_box.position.x = i.object.position.x;
 			highlight_box.position.z = i.object.position.z;
 			highlight_box.visible = true;
@@ -116,13 +122,20 @@ init();
 render();
 
 function keypress(down, e) {
-	if(e.target.nodeName === "BODY") {
+	if (e.key === "Escape" && editor.visible) {
+		editor.close();
+	}
+	if (e.key === "Enter" && e.altKey && editor.visible) {
+		editor.compile();
+	}
+	if (e.target.nodeName === "BODY") {
 		if(e.key === 'e' && !editor.visible) {
-			let meshes = sculps.children;
+			const meshes = sculps.children;
 			for (let s in meshes) {
-				let sc = meshes[s];
-				if (sc.position.distanceToSquared(player.transform.position) < 4.0) {
+				const sc = meshes[s];
+				if (sc.position.distanceToSquared(player.transform.position) < grid.spacing) {
 					editor.show(sc.sculpRef);
+					current_sel = null;
 					break;
 				}
 			}
@@ -145,21 +158,20 @@ function onMouseClick(event) {
 }
 
 function onWindowResize() {
-	console.log("changing window");
     	camera.aspect = window.innerWidth / window.innerHeight;
     	camera.updateProjectionMatrix();
     	renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
 function create_hl_box(grid) {
-	let edges = new THREE.Group();
-	let hl_geo = new THREE.BoxBufferGeometry( grid.size/32, grid.size, grid.size/32 );
-	let hl_mat = new THREE.MeshStandardMaterial( { color: 0xffffff } );
-	let a = new THREE.Mesh( hl_geo, hl_mat );
-	let b = new THREE.Mesh( hl_geo, hl_mat );
-	let c = new THREE.Mesh( hl_geo, hl_mat );
-	let d = new THREE.Mesh( hl_geo, hl_mat );
-	let offset = 0.5*grid.size;
+	const edges = new THREE.Group();
+	const hl_geo = new THREE.BoxBufferGeometry( grid.size/32, grid.size, grid.size/32 );
+	const hl_mat = new THREE.MeshStandardMaterial( { color: 0xffffff } );
+	const a = new THREE.Mesh( hl_geo, hl_mat );
+	const b = new THREE.Mesh( hl_geo, hl_mat );
+	const c = new THREE.Mesh( hl_geo, hl_mat );
+	const d = new THREE.Mesh( hl_geo, hl_mat );
+	const offset = 0.5*grid.size;
 	a.position.x -= offset;
 	a.position.z -= offset;
 	b.position.x -= offset;
@@ -179,23 +191,23 @@ function create_hl_box(grid) {
 /* create background scene */
 function create_sculps(grid) {
 	// create grid of cubes
-	let half_grid_x = Math.floor(grid.x / 2);
-	let half_grid_z = Math.floor(grid.z / 2);
-	let geometry = 
+	const half_grid_x = Math.floor(grid.x / 2);
+	const half_grid_z = Math.floor(grid.z / 2);
+	const geometry = 
 		new THREE.BoxBufferGeometry( grid.size, grid.size, grid.size);
-	let sculptures = new THREE.Group();
+	const sculptures = new THREE.Group();
 	// Create Objects in a loop
 	for (let i = 0; i < grid.x; i++ ) {
 		for (let j = 0; j < grid.z; j++) {
-			let material = new THREE.MeshStandardMaterial( { 
+			const material = new THREE.MeshStandardMaterial( { 
 				color: new THREE.Color( 
 					Math.random(), 
 					Math.random(), 
 					Math.random()),
 				roughness: 0.82,
 				metalness: 0.01	} );
-			let box = new THREE.Mesh( geometry, material );
-			let sculp = new Sculpture("test_obj", 0, 0, 1.0);
+			const box = new THREE.Mesh( geometry, material );
+			const sculp = new Sculpture("test_obj", 0, 0, 1.0);
 			sculp.mesh.sculpRef = sculp;
 			sculp.mesh.position.x =  grid.spacing*(i-half_grid_x);
 			sculp.mesh.position.z =  grid.spacing*(j-half_grid_z);
