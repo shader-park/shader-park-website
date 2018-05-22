@@ -3,7 +3,7 @@
 - Make it
 - Database schema + sort (Redis?)
 - Permissions for users
-	- __could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else
+	- ~~__could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else~~
 	- lock shaders while actively editing
 
 ## Frontend
