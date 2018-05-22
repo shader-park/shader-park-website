@@ -8,14 +8,25 @@ import { Editor } from './editor.js';
 
 var scene, sculps, player, grid, point_lights, room, highlight_box,
     camera, renderer, start_time, editor, mouse, raycaster,
-    current_sel, socket, players_remote, player_transforms;
+    current_sel, socket, players_remote, players_local;
 
+socket = io();
+init();
+socket.on('connect', () => {setup_player(socket.id);} );
+socket.on('usr_connect', (id) => {console.log(id + " has connected");});
+socket.on('server_player_updates', (players_from_server) => {players_remote = players_from_server;});
+socket.on('usr_disconnect', (id) => {
+	console.log(id + " has disconnected");
+	const l = players_local[id];
+	if (l !== undefined) {
+		scene.remove(l.mesh);
+		delete players_local[id];
+	}
+});
 
 function init() {
 
-	socket = io();
-	socket.on('usr_connect', (data) => console.log(data));
-
+	players_local = {};
 	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
 	scene = new THREE.Scene();
@@ -28,12 +39,6 @@ function init() {
 	raycaster = new THREE.Raycaster();
 	current_sel = null;
 	editor = new Editor(renderer);
-
-	player = new Player();
-	console.log(player.ID);
-	player.transform.position.z -= grid.spacing/2;
-	player.transform.add( camera );
-	scene.add(player.transform);
 	
 	const room_geo = new THREE.BoxBufferGeometry( 
 		grid.x*grid.spacing, 
@@ -67,7 +72,7 @@ function init() {
 	}
 	scene.add(point_lights);
 	point_lights.position.y = 1;
-	const hemisphereLight = new THREE.HemisphereLight(0x8899cc, 0x334455);
+	const hemisphereLight = new THREE.HemisphereLight(0xaabbcc, 0x667766);
 	scene.add(hemisphereLight);
 
 	window.addEventListener('resize', onWindowResize, false);
@@ -77,6 +82,30 @@ function init() {
 	document.addEventListener('keyup', keypress.bind(null,false));
 
 	start_time = Date.now();
+}
+
+function setup_player(id) {
+	player = new Player(id);
+	//console.log(player.ID);
+	player.transform.position.z -= grid.spacing/2;
+	player.transform.add( camera );
+	scene.add(player.transform);
+	setInterval( send_position_to_server, 250 );
+	render();
+}
+
+function send_position_to_server() {
+	//console.log(players_remote);
+	//console.log(players_local);
+	const pt = player.transform;
+	//console.log(pt.quaternion);
+	socket.emit('client_update_player', 
+		{ 
+		ID : player.ID,
+		quat : pt.quaternion,
+		position : pt.position,
+		color : player.color
+		});
 }
 
 function render() {
@@ -90,6 +119,29 @@ function render() {
 		player.nudge( get_normal(player.transform.position, grid).multiplyScalar(0.02) );
 	}
 	*/
+
+	for (let id in players_remote) {
+		// skip creating a mesh for our own player
+		if (id === player.id) continue;
+
+		const pr = players_remote[id];
+		if (!(id in players_local)) {
+			if (id === player.id) console.log("this should not happen!");
+			players_local[id] = {
+				ID : id,
+				//quat : pr.quat,
+				//position : pr.position,
+				color : pr.color,
+				mesh : Player.create_player_mesh(pr.color)
+			};
+			scene.add(players_local[id].mesh);
+		}
+		const pm = players_local[id].mesh;
+		// use interpolation here rather than just updating
+		pm.position.copy(pr.position);
+		const q = new THREE.Quaternion(pr.quat._x, pr.quat._y, pr.quat._z, pr.quat._w);
+		pm.setRotationFromQuaternion(q);
+	}
 
 	// update all sculpture uniforms
 	const meshes = sculps.children;
@@ -118,9 +170,6 @@ function render() {
 
 	renderer.render(scene, camera);
 };
-
-init();
-render();
 
 function keypress(down, e) {
 	if (e.key === "Escape" && editor.visible) {
@@ -218,36 +267,4 @@ function create_sculps(grid) {
 		}
 	}
 	return sculptures;
-}
-
-// creates a goofy looking player mesh
-function makePlayerMesh(color) {
-    let mat = new THREE.MeshStandardMaterial({color:color});
-    let geo = new THREE.SphereGeometry(0.2, 50, 50);
-    let m = new THREE.Mesh(geo,mat) 
-    
-    let eyeMat = new THREE.MeshStandardMaterial({color:0xffffff});
-    let eyeGeo = new THREE.SphereGeometry(0.1, 32, 32);
-    let lEye = new THREE.Mesh(eyeGeo, eyeMat);
-    let rEye = new THREE.Mesh(eyeGeo, eyeMat);
-    let pupilMat = new THREE.MeshStandardMaterial({color:0x000000});
-    let pupilGeo = new THREE.SphereGeometry(0.05, 16, 16);
-    let lPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    let rPupil = new THREE.Mesh(pupilGeo, pupilMat);
-    lPupil.position.z += 0.055;
-    rPupil.position.z += 0.055;
-    lEye.add(lPupil);
-    rEye.add(rPupil);
-
-    lEye.position.y += 0.1;
-    lEye.position.x += 0.12;
-    lEye.position.z += 0.085;
-
-    rEye.position.y += 0.1;
-    rEye.position.x -= 0.12;
-    rEye.position.z += 0.085;
-    m.add(lEye);
-    m.add(rEye);
-
-    return m;
 }

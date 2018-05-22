@@ -2,14 +2,17 @@ import * as THREE from './three.module.js';
 
 export class Player {
 
-        constructor() {
+        constructor(id) {
 
 		// Generate ID. This could be replaced with an actual login system
-		this.ID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + 
+		// scratch that. This with now be recieved from server
+		this.ID = id;
+		/*
+			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + 
 			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) +
 			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) +
 			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
-
+		*/
 		this.color = { r : Math.random(), g : Math.random(), b : Math.random() };
 		// initialize this to most recent position
 		this.transform = new THREE.Object3D();
@@ -30,9 +33,9 @@ export class Player {
 	}
 
 	update() {
-		let m = this.movement;
-		let t = this.transform;
-		let dir = new THREE.Vector3();
+		const m = this.movement;
+		const t = this.transform;
+		const dir = new THREE.Vector3();
 		t.getWorldDirection(dir);
 		dir.multiplyScalar(this.move_speed);
 		if (m.forward) this.velocity.sub( dir );
@@ -51,7 +54,7 @@ export class Player {
 	}
 
 	key_event(mode, e) {
-		let m = this.movement;
+		const m = this.movement;
 		switch (e.key) {
 			case 'w':
 				m.forward = mode;
@@ -67,6 +70,38 @@ export class Player {
 				break;
 		}
 	}
+	
+	// creates a goofy looking player mesh
+	static create_player_mesh(color) {
+	    const mat = new THREE.MeshStandardMaterial(
+		{color: new THREE.Color(color.r, color.g, color.b)});
+	    const geo = new THREE.SphereGeometry(0.2, 50, 50);
+	    const m = new THREE.Mesh(geo,mat)
 
+	    const eyeMat = new THREE.MeshStandardMaterial({color:0xffffff});
+	    const eyeGeo = new THREE.SphereGeometry(0.1, 32, 32);
+	    const lEye = new THREE.Mesh(eyeGeo, eyeMat);
+	    const rEye = new THREE.Mesh(eyeGeo, eyeMat);
+	    const pupilMat = new THREE.MeshStandardMaterial({color:0x000000});
+	    const pupilGeo = new THREE.SphereGeometry(0.05, 16, 16);
+	    const lPupil = new THREE.Mesh(pupilGeo, pupilMat);
+	    const rPupil = new THREE.Mesh(pupilGeo, pupilMat);
+	    lPupil.position.z -= 0.055;
+	    rPupil.position.z -= 0.055;
+	    lEye.add(lPupil);
+	    rEye.add(rPupil);
+
+	    lEye.position.y += 0.1;
+	    lEye.position.x += 0.12;
+	    lEye.position.z -= 0.085;
+
+	    rEye.position.y += 0.1;
+	    rEye.position.x -= 0.12;
+	    rEye.position.z -= 0.085;
+	    m.add(lEye);
+	    m.add(rEye);
+
+	    return m;
+	}
 
 }

@@ -8,23 +8,61 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/client'));
 
+const update_period = 250;
+const timeout = 10000;
+const players = {};
+const sculp_edit_states = {};
+
 function onConnection(socket){
-    socket.broadcast.emit('usr_connect', "here's a message" );
-    //socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
+    io.emit('usr_connect', socket.id );
+    console.log(socket.id + " has connected");
+    let interv = setInterval( ((socket) => {send_player_updates(socket);}).bind(this, socket), 250);
+    socket.on('client_update_player', (player) => recieve_player_update(player));
+    socket.on('disconnect', (interv) => {
+	if (interv) clearInterval(interv);
+	console.log(socket.id + " has disconnected");
+	delete players[socket.id];
+	socket.broadcast.emit('usr_disconnect', socket.id);
+    });
 }
 
 io.on('connection', onConnection);
 
 function recieve_player_update(player) {
-	// set last update-time to now
-	// update that players state
+	if (!(player.ID in players)) {
+		players[player.ID] = {
+			ID : player.ID,
+			quat : player.quat, 
+			position : player.position, 
+	       		color : player.color,
+			//last_update : Date.now()
+			};
+	} else {
+		const p = players[player.ID];
+		p.quat = player.quat;
+		p.position = player.position;
+		p.color = player.color;
+		//p.last_update = Date.now();
+	}
 }
 
-function send_player_updates() {
+function send_player_updates(socket) {
+	/*
 	// check if any players have timed out, and broadcast message stating which
+	for (let p in players) {
+		if (Date.now() - players[p].last_update > timeout) {
+			delete players[p];
+			// emit delete message
+			io.emit('player_dis
+		}
+	}
+	*/
+	// volitile means its not super important each message makes it
+	socket.volatile.emit('server_player_updates', players);
+	//io.sockets.volitile.emit('server_player_updates', players);
 }
 
-// when a player compiles/saves a shader others will be told to refetch it from DB
+// when a player compiles/saves a shader broadcast to others to refetch it from DB
 function tell_players_to_update_shader() {
 	
 }
