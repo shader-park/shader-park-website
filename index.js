@@ -47,19 +47,8 @@ function recieve_player_update(player) {
 }
 
 function send_player_updates(socket) {
-	/*
-	// check if any players have timed out, and broadcast message stating which
-	for (let p in players) {
-		if (Date.now() - players[p].last_update > timeout) {
-			delete players[p];
-			// emit delete message
-			io.emit('player_dis
-		}
-	}
-	*/
 	// volitile means its not super important each message makes it
 	socket.volatile.emit('server_player_updates', players);
-	//io.sockets.volitile.emit('server_player_updates', players);
 }
 
 // when a player compiles/saves a shader broadcast to others to refetch it from DB

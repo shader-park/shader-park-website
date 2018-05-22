@@ -4,15 +4,7 @@ export class Player {
 
         constructor(id) {
 
-		// Generate ID. This could be replaced with an actual login system
-		// scratch that. This with now be recieved from server
 		this.ID = id;
-		/*
-			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + 
-			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) +
-			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) +
-			  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
-		*/
 		this.color = { r : Math.random(), g : Math.random(), b : Math.random() };
 		// initialize this to most recent position
 		this.transform = new THREE.Object3D();
