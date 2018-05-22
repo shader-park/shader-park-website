@@ -14,6 +14,8 @@
 	- grid layout?
 		 - helps collisions
 		 - could be infinite
+- Break up main.js into gamestate, generate scene, interface, and network files/classes
+
 - Network
 	- show other players
 	- smooth interpolation between updates
