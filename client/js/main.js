@@ -119,18 +119,16 @@ function render() {
 		player.nudge( get_normal(player.transform.position, grid).multiplyScalar(0.02) );
 	}
 	*/
-
+	
+	// incorporate data from server into the clients scene
 	for (let id in players_remote) {
 		// skip creating a mesh for our own player
-		if (id === player.id) continue;
+		if (id === player.ID) continue;
 
 		const pr = players_remote[id];
 		if (!(id in players_local)) {
-			if (id === player.id) console.log("this should not happen!");
 			players_local[id] = {
 				ID : id,
-				//quat : pr.quat,
-				//position : pr.position,
 				color : pr.color,
 				mesh : Player.create_player_mesh(pr.color)
 			};
@@ -138,9 +136,11 @@ function render() {
 		}
 		const pm = players_local[id].mesh;
 		// use interpolation here rather than just updating
-		pm.position.copy(pr.position);
+		const t = 0.03;
+		pm.position.lerp(pr.position, t);
 		const q = new THREE.Quaternion(pr.quat._x, pr.quat._y, pr.quat._z, pr.quat._w);
-		pm.setRotationFromQuaternion(q);
+		pm.quaternion.slerp(q, t);
+		//pm.setRotationFromQuaternion(q);
 	}
 
 	// update all sculpture uniforms
