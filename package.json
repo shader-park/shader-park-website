@@ -1,0 +1,23 @@
+{
+  "name": "Sculpt",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "keywords": [
+    "shaders",
+    "webgl",
+    "shadertoy",
+    "threejs",
+    "raymarch",
+    "socket.io"
+  ],
+  "dependencies": {
+    "express": "4.9.x",
+    "socket.io": "latest"
+  },
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "Andrew Palmer, Peter Whidden",
+  "license": "MIT"
+}
