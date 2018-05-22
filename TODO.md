@@ -64,9 +64,9 @@ grid of Sculptures, (x,y) coordinates
 - orientation?
 - id/name
 - sculpture edit status
-- timeout?
+- [x] timeout?
 
-- lowish time resolution for polling server: 200ms
+- [x] lowish time resolution for polling server: 200ms
 	- sends player state
 	- poll response should be any updates from the server (other player states)
 - modified shader sends out invalidation message to clients
