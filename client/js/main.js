@@ -14,6 +14,7 @@ var scene, sculps, player, grid, point_lights, room, highlight_box,
 function init() {
 
 	socket = io();
+	socket.on('usr_connect', (data) => console.log(data));
 
 	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
@@ -217,4 +218,36 @@ function create_sculps(grid) {
 		}
 	}
 	return sculptures;
+}
+
+// creates a goofy looking player mesh
+function makePlayerMesh(color) {
+    let mat = new THREE.MeshStandardMaterial({color:color});
+    let geo = new THREE.SphereGeometry(0.2, 50, 50);
+    let m = new THREE.Mesh(geo,mat) 
+    
+    let eyeMat = new THREE.MeshStandardMaterial({color:0xffffff});
+    let eyeGeo = new THREE.SphereGeometry(0.1, 32, 32);
+    let lEye = new THREE.Mesh(eyeGeo, eyeMat);
+    let rEye = new THREE.Mesh(eyeGeo, eyeMat);
+    let pupilMat = new THREE.MeshStandardMaterial({color:0x000000});
+    let pupilGeo = new THREE.SphereGeometry(0.05, 16, 16);
+    let lPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    let rPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    lPupil.position.z += 0.055;
+    rPupil.position.z += 0.055;
+    lEye.add(lPupil);
+    rEye.add(rPupil);
+
+    lEye.position.y += 0.1;
+    lEye.position.x += 0.12;
+    lEye.position.z += 0.085;
+
+    rEye.position.y += 0.1;
+    rEye.position.x -= 0.12;
+    rEye.position.z += 0.085;
+    m.add(lEye);
+    m.add(rEye);
+
+    return m;
 }
