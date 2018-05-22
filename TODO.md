@@ -1,6 +1,6 @@
 
 ## Backend
-- Make it
+- [x] Make it
 - Database schema + sort (Redis?)
 - Permissions for users
 	- ~~__could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else~~
@@ -14,11 +14,12 @@
 	- grid layout?
 		 - helps collisions
 		 - could be infinite
+		 - somehow handle large grid, dynamic loading
 - Break up main.js into gamestate, generate scene, interface, and network files/classes
 
 - Network
-	- show other players
-	- smooth interpolation between updates
+	- [x] show other players
+	- [x] smooth interpolation between updates
 - the Sculptures
 	- [x] multiple shaders  
 	- [x] bounding boxes/spheres
