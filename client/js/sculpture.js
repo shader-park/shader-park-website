@@ -44,7 +44,7 @@ export class Sculpture {
 		varying vec4 worldPos;
 
 		float sdSphere(vec3 p, float r) {
-			return length(p+0.2*sin(10.0*p+time))-r;
+			return length(p+0.2*sin(10.0*p+time+worldPos.x+0.1*worldPos.z))-r;
 		}
 
 		float map(vec3 pos) {
