@@ -1,6 +1,6 @@
 
 ## Backend
-- Make it
+- [x] Make it
 - Database schema + sort (Redis?)
 - Permissions for users
 	- ~~__could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else~~
@@ -14,11 +14,12 @@
 	- grid layout?
 		 - helps collisions
 		 - could be infinite
+		 - somehow handle large grid, dynamic loading
 - Break up main.js into gamestate, generate scene, interface, and network files/classes
 
 - Network
-	- show other players
-	- smooth interpolation between updates
+	- [x] show other players
+	- [x] smooth interpolation between updates
 - the Sculptures
 	- [x] multiple shaders  
 	- [x] bounding boxes/spheres
@@ -32,6 +33,7 @@
 		- [x] HTML editor for now
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
+		- ability to @export and @import glsl functions to and from a global namespace
 	- [x] culling (handled automatically)
 	- more provided uniforms to shader (mouse coords, closest player coords, light position)
 - Usability
@@ -63,9 +65,9 @@ grid of Sculptures, (x,y) coordinates
 - orientation?
 - id/name
 - sculpture edit status
-- timeout?
+- [x] timeout?
 
-- lowish time resolution for polling server: 200ms
+- [x] lowish time resolution for polling server: 200ms
 	- sends player state
 	- poll response should be any updates from the server (other player states)
 - modified shader sends out invalidation message to clients
