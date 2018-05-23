@@ -27,7 +27,7 @@ socket.on('usr_disconnect', (id) => {
 function init() {
 
 	players_local = {};
-	grid = { x: 3, z: 3, spacing: 4.0, size: 1.0, ceiling: 2.0 };
+	grid = { x: 7, z: 7, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
@@ -95,10 +95,7 @@ function setup_player(id) {
 }
 
 function send_position_to_server() {
-	//console.log(players_remote);
-	//console.log(players_local);
 	const pt = player.transform;
-	//console.log(pt.quaternion);
 	socket.emit('client_update_player', 
 		{ 
 		ID : player.ID,
