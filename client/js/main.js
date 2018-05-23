@@ -191,10 +191,7 @@ function render() {
 	const meshes = sculps.children;
 	for (let s in meshes) {
 		let sc = meshes[s];
-		sc.sculpRef.update_uniforms( {
-			sculpture_center: { value: sc.position },
-			time: { value: t*0.004 }
-		} );
+		sc.sculpRef.update(t*0.001);
 	}
 
 	if (!editor.visible) {
@@ -301,7 +298,7 @@ function create_sculps(grid) {
 				roughness: 0.92,
 				metalness: 0.03	} );
 			const box = new THREE.Mesh( geometry, material );
-			const sculp = new Sculpture("test_obj", 0, 0, 1.0);
+			const sculp = new Sculpture("test_obj", i, j, 1.0);
 			sculp.mesh.sculpRef = sculp;
 			sculp.mesh.position.x =  grid.spacing*(i-half_grid_x);
 			sculp.mesh.position.z =  grid.spacing*(j-half_grid_z);
