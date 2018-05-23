@@ -27,7 +27,7 @@ socket.on('usr_disconnect', (id) => {
 function init() {
 
 	players_local = {};
-	grid = { x: 27, z: 27, spacing: 4.0, size: 1.0, ceiling: 2.0 };
+	grid = { x: 27, z: 7, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
