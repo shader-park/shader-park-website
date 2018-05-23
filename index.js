@@ -4,9 +4,46 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const fs = require('fs');
+const mongo_client = require('mongodb').MongoClient;
 const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/client'));
+
+const login_file = 'dblogin.json';
+
+if (fs.existsSync(login_file)) {
+	// running locally
+	const raw = fs.readFileSync(login_file);  
+	let login = JSON.parse(raw);  
+} else {
+	// running on heroku
+	let login = {
+		url: process.env.URL,
+		db_name: process.env.DB_NAME
+	};
+}
+
+mongo_client.connect(login.url, function (err, client) {
+	if (err) throw err;
+	console.log("Database connected");
+	
+	const db = client.db(login.db_name);
+	db.listCollections().toArray(function(err, collections){
+		console.log("Found collections: " );
+		console.log(collections);
+		
+		/* this could create a new collection if none is found
+		db.createCollection("sculpts", function(err, res) {
+			if (err) throw err;
+			console.log("Created collection 'sculpts'");
+		});
+		*/
+		
+	});
+
+	client.close();
+});
 
 const update_period = 250;
 const timeout = 10000;

@@ -13,7 +13,8 @@
   ],
   "dependencies": {
     "express": "4.9.x",
-    "socket.io": "latest"
+    "socket.io": "latest",
+    "mongodb": "3.0.8"
   },
   "scripts": {
     "start": "node index"
