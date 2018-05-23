@@ -50,29 +50,75 @@ function init() {
 		roughness: 0.82,
 		metalness: 0.01,
        		side: THREE.BackSide } );
-	
+
 	room = new THREE.Mesh( room_geo, room_mat );
 	scene.add( room );
 
 	highlight_box = create_hl_box(grid);
 	scene.add( highlight_box );
+	
+	/*
+	const floor_geo = new THREE.PlaneBufferGeometry(
+			grid.x*(grid.spacing+grid.size), 
+			grid.z*(grid.spacing+grid.size));
+
+	const floor_mat = new THREE.MeshStandardMaterial({
+		roughness: 0.8,
+		//shininess: 20,
+		color: 0xffffff,
+		metalness: 0.2,
+		bumpScale: 0.05,
+		side: THREE.BackSide
+		});
+
+	const tex_loader = new THREE.TextureLoader();
+	const load_tex_into_mat = (loader, mat, url, maptype) => {
+		loader.load( url, ( map ) => {
+			map.wrapS = THREE.RepeatWrapping;
+			map.wrapT = THREE.RepeatWrapping;
+			map.anisotropy = 4;
+			map.repeat.set( 64, 24 );
+			mat[maptype] = map;
+			mat.needsUpdate = true;
+		} );
+	};
+	
+	/*
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/wood/Wood_floor_004_COLOR.jpg', 'map');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/wood/Wood_floor_004_DISP.jpg', 'displacementMap');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/wood/Wood_floor_004_NRM.jpg', 'normalMap');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/wood/Wood_floor_004_OCC.jpg', 'aoMap');
+	//load_tex_into_mat(tex_loader, floor_mat, 'textures/wood/Wood_floor_004_SPEC.jpg', 'specularMap');
+	* /
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/brick/Brick_Wall_012_COLOR.jpg', 'map');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/brick/Brick_Wall_012_DISP.png', 'bumpMap');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/brick/Brick_Wall_012_NORM.jpg', 'normalMap');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/brick/Brick_Wall_012_OCC.jpg', 'aoMap');
+	load_tex_into_mat(tex_loader, floor_mat, 'textures/brick/Brick_Wall_012_ROUGH.jpg', 'roughnessMap');
+
+
+	const floor = new THREE.Mesh( floor_geo, floor_mat );
+	floor.position.y -= grid.ceiling*0.49;
+	floor.rotation.x = Math.PI/2.0;
+	scene.add(floor);
+	*/
 
 	sculps = create_sculps(grid, grid.spacing, grid.size);
 	scene.add( sculps );
 
 	// setup lights
 	point_lights = new THREE.Group();
-	const l_count = 4;
-	for (let i=0; i<4; i++) {
+	const l_count = 5;
+	for (let i=0; i<l_count; i++) {
 		const pl = new THREE.PointLight(0xdddddd, 0.4);
 		const ang = i*2.0*Math.PI/l_count;
-		pl.position.x = Math.sin(ang)*grid.spacing/2;
-		pl.position.z = Math.cos(ang)*grid.spacing/2;
+		pl.position.x = 3.0*Math.sin(ang)*grid.spacing/2;
+		pl.position.z = 3.0*Math.cos(ang)*grid.spacing/2;
 		point_lights.add(pl);
 	}
 	scene.add(point_lights);
 	point_lights.position.y = 1;
-	const hemisphereLight = new THREE.HemisphereLight(0xaabbcc, 0x667766);
+	const hemisphereLight = new THREE.HemisphereLight(0x889999, 0x445555);
 	scene.add(hemisphereLight);
 
 	window.addEventListener('resize', onWindowResize, false);
@@ -89,6 +135,7 @@ function setup_player(id) {
 	//console.log(player.ID);
 	player.transform.position.z -= grid.spacing/2;
 	player.transform.add( camera );
+	//player.transform.add( point_lights );
 	scene.add(player.transform);
 	setInterval( send_position_to_server, 250 );
 	render();
@@ -109,7 +156,7 @@ function render() {
 	
 	requestAnimationFrame( render );
 	const t = Date.now()-start_time;
-
+	point_lights.position.copy(player.transform.position);
 	player.update();
 	/*
 	if (collides_grid( player.transform.position, grid)) {
@@ -251,8 +298,8 @@ function create_sculps(grid) {
 					Math.random(), 
 					Math.random(), 
 					Math.random()),
-				roughness: 0.82,
-				metalness: 0.01	} );
+				roughness: 0.92,
+				metalness: 0.03	} );
 			const box = new THREE.Mesh( geometry, material );
 			const sculp = new Sculpture("test_obj", 0, 0, 1.0);
 			sculp.mesh.sculpRef = sculp;
