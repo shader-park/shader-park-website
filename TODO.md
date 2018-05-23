@@ -33,6 +33,7 @@
 		- [x] HTML editor for now
 			- [CodeMirror](http://codemirror.net)
 		- compile/save(push to database) buttons
+		- ability to @export and @import glsl functions to and from a global namespace
 	- [x] culling (handled automatically)
 	- more provided uniforms to shader (mouse coords, closest player coords, light position)
 - Usability
