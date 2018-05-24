@@ -14,7 +14,8 @@
   "dependencies": {
     "express": "4.9.x",
     "socket.io": "latest",
-    "mongodb": "3.0.8"
+    "mongodb": "3.0.8",
+    "node-cleanup": "2.1.2"
   },
   "scripts": {
     "start": "node index"

@@ -2,17 +2,26 @@ import * as THREE from './three.module.js';
 
 export class Sculpture {
 
-	constructor(name, x, y, scale, user_shader = Sculpture.default_frag_source) {
+	constructor(id, name, auth, x, y, save_func, user_shader) {
 		this.name = name;
+		this.ID = id;
+		this.author = auth;
+		this.user_shader_source = user_shader === undefined ? 
+			Sculpture.default_frag_source : user_shader;
 		this.x = x;
 		this.y = y;
-		//this.id = generateID();
-		this.scale = scale;
-		this.user_shader_source = user_shader;
-		//user_shader === undefined ? 
-		//Sculpture.default_frag_source : user_shader;
+		this.save = save_func.bind(this, this);
 		this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
 		this.mesh = new THREE.Mesh(this.geometry, this.generate_material());
+	}
+
+	get_info() {
+		return {
+			_id : this.ID,
+			name : this.name,
+			author : this.author,
+			source : this.user_shader_source
+		};
 	}
 
 	// move these long static strings to a different file?
@@ -110,7 +119,10 @@ export class Sculpture {
 		// update sculpture_center	
 	}
 
-	set_shader_source(source) {
+	// this should also take a name, author parameter and update those as well
+	set_shader_source(source, name, auth) {
+		if (name) this.name = name;
+		if (auth) this.author = auth;
 		this.user_shader_source = source;
 		this.refresh_material();
 		// save source to db
@@ -135,7 +147,9 @@ export class Sculpture {
 		let errors = [];
 		var res;
 		while(res = re.exec(log)) {
-			errors.push({ line: parseInt(res[2])-7/*number of lines in prefix*/, item: res[3], message: res[4] });
+			errors.push({ 
+				line: parseInt(res[2])-7/*number of lines in prefix*/, 
+				item: res[3], message: res[4] });
 		}
 		return errors;
 	}

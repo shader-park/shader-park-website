@@ -11,8 +11,16 @@ var scene, sculps, player, grid, point_lights, room, highlight_box,
     current_sel, socket, players_remote, players_local;
 
 socket = io();
-init();
-socket.on('connect', () => {setup_player(socket.id);} );
+socket.on('initial_sculps', (existing_sculps) => {init(socket.id, existing_sculps);});
+socket.on('single_sculpt_update', (updated_sculpt_info) => {
+	const sculpt_to_update = sculps.children.filter( 
+			s => s.sculpRef.ID === updated_sculpt_info._id)[0].sculpRef;
+	sculpt_to_update.set_shader_source(
+			updated_sculpt_info.source, 
+			updated_sculpt_info.name, 
+			updated_sculpt_info.author );
+	console.log("reloaded " + updated_sculpt_info._id);
+});
 socket.on('usr_connect', (id) => {console.log(id + " has connected");});
 socket.on('server_player_updates', (players_from_server) => {players_remote = players_from_server;});
 socket.on('usr_disconnect', (id) => {
@@ -24,7 +32,7 @@ socket.on('usr_disconnect', (id) => {
 	}
 });
 
-function init() {
+function init(socket_id, existing_sculps) {
 
 	players_local = {};
 	grid = { x: 27, z: 7, spacing: 4.0, size: 1.0, ceiling: 2.0 };
@@ -101,9 +109,9 @@ function init() {
 	floor.position.y -= grid.ceiling*0.49;
 	floor.rotation.x = Math.PI/2.0;
 	scene.add(floor);
-	*/
+	//*/
 
-	sculps = create_sculps(grid, grid.spacing, grid.size);
+	sculps = create_sculps(grid, existing_sculps);
 	scene.add( sculps );
 
 	// setup lights
@@ -127,15 +135,15 @@ function init() {
 	document.addEventListener('keydown', keypress.bind(null,true));
 	document.addEventListener('keyup', keypress.bind(null,false));
 
+	setup_player(socket_id);
+
 	start_time = Date.now();
 }
 
 function setup_player(id) {
 	player = new Player(id);
-	//console.log(player.ID);
 	player.transform.position.z -= grid.spacing/2;
 	player.transform.add( camera );
-	//player.transform.add( point_lights );
 	scene.add(player.transform);
 	setInterval( send_position_to_server, 250 );
 	render();
@@ -283,13 +291,14 @@ function create_hl_box(grid) {
 }
 
 /* create background scene */
-function create_sculps(grid) {
+function create_sculps(grid, existing_sculps) {
 	// create grid of cubes
 	const half_grid_x = Math.floor(grid.x / 2);
 	const half_grid_z = Math.floor(grid.z / 2);
 	const geometry = 
 		new THREE.BoxBufferGeometry( grid.size, grid.size, grid.size);
 	const sculptures = new THREE.Group();
+	let loaded_count = 0;
 	// Create Objects in a loop
 	for (let i = 0; i < grid.x; i++ ) {
 		for (let j = 0; j < grid.z; j++) {
@@ -301,7 +310,24 @@ function create_sculps(grid) {
 				roughness: 0.92,
 				metalness: 0.03	} );
 			const box = new THREE.Mesh( geometry, material );
-			const sculp = new Sculpture("test_obj", 0, 0, 1.0);
+			const sculp_ID = (i+","+j);
+			let existing = existing_sculps.filter( s => s._id === sculp_ID);
+			const exists = existing.length === 1;
+			if (exists) {
+				existing = existing[0];
+				loaded_count++;
+			}
+			const sculp = new Sculpture(
+					sculp_ID,
+					exists ? existing.name : 'Fresh',
+					exists ? existing.author : 'Naturally Occurring', 
+					i, j,
+					(sculpt) => {
+						socket.emit(
+						'update_sculpt_in_db',
+						sculpt.get_info());
+					},
+					exists ? existing.source : undefined );
 			sculp.mesh.sculpRef = sculp;
 			sculp.mesh.position.x =  grid.spacing*(i-half_grid_x);
 			sculp.mesh.position.z =  grid.spacing*(j-half_grid_z);
@@ -310,5 +336,6 @@ function create_sculps(grid) {
 			sculptures.add( sculp.mesh );
 		}
 	}
+	console.log("loaded " + loaded_count + " shaders")
 	return sculptures;
 }
