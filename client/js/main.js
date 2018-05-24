@@ -199,10 +199,7 @@ function render() {
 	const meshes = sculps.children;
 	for (let s in meshes) {
 		let sc = meshes[s];
-		sc.sculpRef.update_uniforms( {
-			sculpture_center: { value: sc.position },
-			time: { value: t*0.004 }
-		} );
+		sc.sculpRef.update(t*0.001);
 	}
 
 	if (!editor.visible) {

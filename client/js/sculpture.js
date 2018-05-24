@@ -11,6 +11,7 @@ export class Sculpture {
 		this.x = x;
 		this.y = y;
 		this.save = save_func.bind(this, this);
+		this.coord = [ x, y ];
 		this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
 		this.mesh = new THREE.Mesh(this.geometry, this.generate_material());
 	}
@@ -27,77 +28,68 @@ export class Sculpture {
 	// move these long static strings to a different file?
 	static get vertex_source() {
 		return `
-			varying vec2 vUv;
 			varying vec4 worldPos;
 			void main()
 			{
-				vUv = uv;
-				//pos = position;
 				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-				worldPos = modelMatrix*vec4(position,1.0);//mvPosition;
+				worldPos = modelMatrix*vec4(position,1.0);
 
 				gl_Position = projectionMatrix * mvPosition;
 			}
 			`;
 	}
 
+	static get default_frag_header() {
+return `uniform mat4 projectionMatrix;
+uniform float time;
+uniform vec3 sculptureCenter;
+varying vec4 worldPos;
+
+
+`;
+	}
+
 	static get default_frag_source() {
-		return `
+		return Sculpture.default_frag_header +
+`float map(vec3 p) {
+	return length(p+0.2*sin(10.0*p+time*4.0+worldPos.x+0.1*worldPos.z))-0.3;
+}
 
-		uniform mat4 projectionMatrix;
-		uniform float time;
-		uniform float scale;
-		uniform vec3 sculpture_center;
-		uniform float box_size;
-		varying vec2 vUv;
-		varying vec4 worldPos;
+float intersect(vec3 ro, vec3 rd) {
+	float t = 0.;
+	for(int i = 0; i < 128; ++i) {
+		float h = map((ro+rd*t) - sculptureCenter);
+		if(h < 0.001 || t>1.) break;
+		t += h*0.9;
+	}
+	return t;
+}
 
-		float sdSphere(vec3 p, float r) {
-			return length(p+0.2*sin(10.0*p+time+worldPos.x+0.1*worldPos.z))-r;
-		}
+vec3 shade(vec3 p) {
+	return sin(p.xyz*8.0)*0.5 + 0.5;
+}
 
-		float map(vec3 pos) {
-			float d;
-			d = sdSphere(pos,0.3);
-			return d;	
-		}
+void main() {
+	vec3 ro = worldPos.xyz;
+	vec3 rd = normalize(worldPos.xyz-cameraPosition);
 
-		float intersect(vec3 ro, vec3 rd) {
-			float t = 0.;
-			for(int i = 0; i < 128; ++i) {
-				float h = map((ro+rd*t) - sculpture_center);
-				if(h < 0.001 || t>1.) break;
-				t += h*0.9;
-			}
-			return t;
-		}
-
-		void main() {
-			vec3 ro = worldPos.xyz;
-			vec3 rd = normalize(worldPos.xyz-cameraPosition);
-
-			float t = intersect(ro, rd);
-			if(t < 1.) {
-				vec3 p = (ro + rd*t);
-				vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
-				gl_FragColor = vec4(sin(p.xyz*8.0)*0.5 + 0.5, 1.0);
-				gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
-			} else {
-				discard;
-			}
-		}
-
-		`;			
+	float t = intersect(ro, rd);
+	if(t < 1.) {
+		vec3 p = (ro + rd*t);
+		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
+		gl_FragColor = vec4(shade(p), 1.0);
+		gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
+	} else {
+		discard;
+	}
+}`;
 	}
 
 	generate_material() {
 		let m = new THREE.ShaderMaterial( {
 			uniforms: { 
 				time: { value: 0.0 },
-				scale: { value: 1.0 },
-				camera_pos: { value: new THREE.Vector3() },
-				sculpture_center: { value: new THREE.Vector3() },
-				box_size : { value: 1.0 }
+				sculptureCenter: { value: new THREE.Vector3() },
 			},
 			vertexShader: Sculpture.vertex_source,
 			fragmentShader: this.user_shader_source
@@ -111,12 +103,9 @@ export class Sculpture {
 		this.mesh.material = this.generate_material();
 	}
 
-	update_uniforms( uniforms ) {
-		for (let u in uniforms) {
-			this.mesh.material.uniforms[u] = uniforms[u];
-		}
-	//	this.mesh.material.uniforms.sculpture_center.value = this.mesh.position;
-		// update sculpture_center	
+	update(time) {
+		this.mesh.material.uniforms['time'].value = time;
+		this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
 	}
 
 	// this should also take a name, author parameter and update those as well
@@ -135,9 +124,7 @@ export class Sculpture {
 		#extension GL_EXT_frag_depth : enable
 		precision highp float;
 		precision highp int;
-		uniform mat4 viewMatrix;
-		uniform vec3 cameraPosition;
-		`;
+		` ;
 		gl.shaderSource(s, prefix+this.user_shader_source);
 		gl.compileShader(s);
 		let log = gl.getShaderInfoLog(s);
