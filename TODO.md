@@ -1,7 +1,7 @@
 
 ## Backend
 - [x] Make it
-- Database schema + sort (Redis?)
+- [x] Database schema ~~+ sort (Redis?)~~ MongoDB
 - Permissions for users
 	- ~~__could__ issue hashcodes/passwords to allow the original author to edit their own shader while keeping the shader readonly for everyone else~~
 	- lock shaders while actively editing
@@ -32,7 +32,7 @@
 		- [x] still need to be able to move camera
 		- [x] HTML editor for now
 			- [CodeMirror](http://codemirror.net)
-		- compile/save(push to database) buttons
+		- [x] compile/save(push to database) buttons
 		- ability to @export and @import glsl functions to and from a global namespace
 	- [x] culling (handled automatically)
 	- more provided uniforms to shader (mouse coords, closest player coords, light position)
