@@ -124,6 +124,8 @@ void main() {
 		#extension GL_EXT_frag_depth : enable
 		precision highp float;
 		precision highp int;
+		uniform vec3 cameraPosition;
+		uniform mat4 viewMatrix;
 		` ;
 		gl.shaderSource(s, prefix+this.user_shader_source);
 		gl.compileShader(s);
