@@ -22,7 +22,9 @@
 	- [x] smooth interpolation between updates
 - the Sculptures
 	- [x] multiple shaders  
-	- [x] bounding boxes/spheres
+	- bounding boxes/spheres
+		- need to be bigger or autocalculated
+		- allow varying xz dimensions?
 	- [x] depth magic
 	- handle bad shaders
 		- priortize faster to load shaders
@@ -41,6 +43,7 @@
 	
 - Social media features  :)
 	- "like" objects
+	- chat room?
 
 - Permissions for users
 	- lock shaders while actively editing
