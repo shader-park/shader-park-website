@@ -38,7 +38,7 @@ function init(socket_id, existing_sculps) {
 	grid = { x: 27, z: 7, spacing: 4.0, size: 1.0, ceiling: 2.0 };
 
 	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 80 );
+	camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.03, 180 );
 	renderer = new THREE.WebGLRenderer({antialias:false});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setPixelRatio( window.devicePixelRatio );

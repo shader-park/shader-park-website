@@ -52,7 +52,7 @@ varying vec4 worldPos;
 	static get default_frag_source() {
 		return Sculpture.default_frag_header +
 `float map(vec3 p) {
-	return length(p+0.2*sin(10.0*p+time*4.0+worldPos.x+0.1*worldPos.z))-0.3;
+	return length(p/*+0.2*sin(10.0*p+time*4.0+worldPos.x+0.1*worldPos.z)*/)-0.3;
 }
 
 float intersect(vec3 ro, vec3 rd) {
@@ -65,7 +65,17 @@ float intersect(vec3 ro, vec3 rd) {
 	return t;
 }
 
+vec3 calcNormal( in vec3 pos )
+{
+    vec2 e = vec2(1.0,-1.0)*0.0005;
+    return normalize( e.xyy*map( pos + e.xyy ) + 
+		      e.yyx*map( pos + e.yyx ) + 
+		      e.yxy*map( pos + e.yxy ) + 
+		      e.xxx*map( pos + e.xxx ) );
+}
+
 vec3 shade(vec3 p) {
+	vec3 lightdir = normalize(vec3(0.1, 0.9, 0.1));
 	return sin(p.xyz*8.0)*0.5 + 0.5;
 }
 
