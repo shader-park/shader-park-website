@@ -13,12 +13,16 @@ export class Editor {
 		document.getElementById('editor-save-button').onclick = this.save.bind(this);
 		document.getElementById('editor-compile-button').onclick = this.compile.bind(this);
 		document.getElementById('editor-close-button').onclick = this.close.bind(this);
+		this.shader_title_box = document.getElementById('editor-shader-title');
+		this.author_name_box = document.getElementById('editor-author-name');
 	}
 
 	show(sculpture) {
 		this.cm.setValue(sculpture.user_shader_source);
 		this.sculpture = sculpture;
 		this.edit_div.style.visibility = "visible";
+		this.shader_title_box.value = this.sculpture.name;
+		this.author_name_box.value = this.sculpture.author;
 	}
 
 	save() {
@@ -27,7 +31,7 @@ export class Editor {
 	}
 
 	compile() {
-		this.sculpture.set_shader_source(this.cm.getValue());
+		this.sculpture.set_shader_source(this.cm.getValue(), this.shader_title_box.value, this.author_name_box.value);
 		let errors = this.sculpture.get_shader_errors(this.renderer);
 		this.cm.operation(() => {
 		while(this.error_widgets.length > 0){
