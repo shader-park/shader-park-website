@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 const update_period = 250;
 const timeout = 10000;
 const players = {};
+const banned_players = new Set();
 const sculp_edit_states = {};
 
 app.use(express.static(__dirname + '/client'));
@@ -82,13 +83,14 @@ function on_server_connection(socket) {
     socket.on('disconnect', (interv) => {
 	if (interv) clearInterval(interv);
 	console.log(socket.id + " has disconnected");
+	banned_players.add(socket.id);
 	delete players[socket.id];
 	socket.broadcast.emit('usr_disconnect', socket.id);
     });
 }
 
 function recieve_player_update(player) {
-	if (!(player.ID in players)) {
+	if (!(player.ID in players) && !banned_players.has(player.ID)) {
 		players[player.ID] = {
 			ID : player.ID,
 			quat : player.quat, 

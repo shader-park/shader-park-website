@@ -105,10 +105,6 @@ function setup_player(id) {
 }
 
 function send_position_to_server() {
-	console.log("remotes:");
-	console.log(players_remote);
-	console.log("local:");
-	console.log(players_local);
 	const pt = player.transform;
 	socket.emit('client_update_player', 
 		{ 
