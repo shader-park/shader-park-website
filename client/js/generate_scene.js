@@ -1,4 +1,4 @@
-
+import { Sculpture } from './sculpture.js';
 import * as THREE from './three.module.js';
 
 export function create_hl_box(grid) {
