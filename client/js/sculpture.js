@@ -80,8 +80,8 @@ vec3 calcNormal( in vec3 pos )
 
 // Here you can define how your object at point p will be colored.
 vec3 shade(vec3 p) {
-	vec3 lightdir = normalize(0.0, 1.0, 0.0);
-	return dot(calcNormal(p), lightdir);
+	vec3 lightdir = normalize(vec3(0.0, 1.0, 0.0));
+	return vec3(dot(calcNormal(p), lightdir)+0.025);
 }
 
 void main() {
@@ -93,7 +93,9 @@ void main() {
 	if(t < 1.) {
 		vec3 p = (ro + rd*t);
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
-		gl_FragColor = vec4(shade(p), 1.0);
+		vec3 c = shade(p);
+		c = pow(p, vec3(0.45));
+		gl_FragColor = vec4(c, 1.0);
 		gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
 	} else {
 		discard;
