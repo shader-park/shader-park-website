@@ -51,10 +51,12 @@ varying vec4 worldPos;
 
 	static get default_frag_source() {
 		return Sculpture.default_frag_header +
-`float map(vec3 p) {
-	return length(p/*+0.2*sin(10.0*p+time*4.0+worldPos.x+0.1*worldPos.z)*/)-0.3;
+`// Define the signed distance function (SDF) of you object here
+float map(vec3 p) {
+	return length(p)-0.3;
 }
 
+// Compute intersection of ray and SDF. You probably won't need to modify this.
 float intersect(vec3 ro, vec3 rd) {
 	float t = 0.;
 	for(int i = 0; i < 128; ++i) {
@@ -65,6 +67,7 @@ float intersect(vec3 ro, vec3 rd) {
 	return t;
 }
 
+// Calculate the normal of a SDF
 vec3 calcNormal( in vec3 pos )
 {
     pos -= sculptureCenter;
@@ -75,12 +78,14 @@ vec3 calcNormal( in vec3 pos )
 		      e.xxx*map( pos + e.xxx ) );
 }
 
+// Here you can define how your object at point p will be colored.
 vec3 shade(vec3 p) {
-	vec3 lightdir = normalize(vec3(sin(time+worldPos.x*0.1), 0.9, cos(time+worldPos.z*0.11)));
-	return dot(calcNormal(p), lightdir)*(sin(p.xyz*8.0)*0.5 + 0.5);
+	vec3 lightdir = normalize(0.0, 1.0, 0.0);
+	return dot(calcNormal(p), lightdir);
 }
 
 void main() {
+
 	vec3 ro = worldPos.xyz;
 	vec3 rd = normalize(worldPos.xyz-cameraPosition);
 
