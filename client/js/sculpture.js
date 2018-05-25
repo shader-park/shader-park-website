@@ -82,7 +82,7 @@ vec3 calcNormal( in vec3 pos )
 vec3 shade(vec3 p) {
 	vec3 lightdir = normalize(vec3(0.0, 1.0, 0.0));
 	vec3 normal = calcNormal(p);
-	float value = clamp(dot(normal), lightdir),0.0, 1.0);
+	float value = clamp(dot(normal, lightdir),0.0, 1.0);
 	return vec3(value + 0.035);
 }
 
