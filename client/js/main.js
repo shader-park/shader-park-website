@@ -66,7 +66,7 @@ function init(socket_id, existing_sculps) {
 	highlight_box = create_hl_box(grid);
 	scene.add( highlight_box );
 	
-	sculps = create_sculps(grid, existing_sculps);
+	sculps = create_sculps(grid, existing_sculps, socket);
 	scene.add( sculps );
 
 	// setup lights

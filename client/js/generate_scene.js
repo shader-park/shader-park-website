@@ -27,7 +27,7 @@ export function create_hl_box(grid) {
 }
 
 /* create background scene */
-export function create_sculps(grid, existing_sculps) {
+export function create_sculps(grid, existing_sculps, socket) {
 	// create grid of cubes
 	const half_grid_x = Math.floor(grid.x / 2);
 	const half_grid_z = Math.floor(grid.z / 2);
