@@ -67,6 +67,7 @@ float intersect(vec3 ro, vec3 rd) {
 
 vec3 calcNormal( in vec3 pos )
 {
+    pos -= sculptureCenter;
     vec2 e = vec2(1.0,-1.0)*0.0005;
     return normalize( e.xyy*map( pos + e.xyy ) + 
 		      e.yyx*map( pos + e.yyx ) + 
@@ -75,8 +76,8 @@ vec3 calcNormal( in vec3 pos )
 }
 
 vec3 shade(vec3 p) {
-	vec3 lightdir = normalize(vec3(0.1, 0.9, 0.1));
-	return sin(p.xyz*8.0)*0.5 + 0.5;
+	vec3 lightdir = normalize(vec3(sin(time+worldPos.x*0.1), 0.9, cos(time+worldPos.z*0.11)));
+	return dot(calcNormal(p), lightdir)*(sin(p.xyz*8.0)*0.5 + 0.5);
 }
 
 void main() {
