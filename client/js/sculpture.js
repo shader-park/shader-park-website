@@ -81,7 +81,8 @@ vec3 calcNormal( in vec3 pos )
 // Here you can define how your object at point p will be colored.
 vec3 shade(vec3 p) {
 	vec3 lightdir = normalize(vec3(0.0, 1.0, 0.0));
-	return vec3(dot(calcNormal(p), lightdir)+0.025);
+	float value = clamp(dot(calcNormal(p), lightdir),0.0, 1.0);
+	return vec3(value + 0.035);
 }
 
 void main() {
