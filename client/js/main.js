@@ -301,9 +301,9 @@ function create_sculps(grid, existing_sculps) {
 		for (let j = 0; j < grid.z; j++) {
 			const material = new THREE.MeshStandardMaterial( { 
 				color: new THREE.Color( 
-					Math.random(), 
-					Math.random(), 
-					Math.random()),
+					0.2,//Math.random(), 
+					0.2,//Math.random(), 
+					0.2),//Math.random()),
 				roughness: 0.92,
 				metalness: 0.03	} );
 			const box = new THREE.Mesh( geometry, material );
