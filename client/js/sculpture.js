@@ -94,7 +94,6 @@ void main() {
 		vec3 p = (ro + rd*t);
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
 		vec3 c = shade(p);
-		c = pow(p, vec3(0.45));
 		gl_FragColor = vec4(c, 1.0);
 		gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
 	} else {
