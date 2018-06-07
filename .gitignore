@@ -1,5 +1,4 @@
 **/*.swp
 node_modules
 dblogin.json
-/Users/tblankensmith/Documents/GitHub/SculpturePark/client/js/config.js
-/Users/tblankensmith/Documents/GitHub/SculpturePark/client/js/config.js
+/client/js/config.js
