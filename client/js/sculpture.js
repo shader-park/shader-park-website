@@ -105,14 +105,19 @@ void main() {
 	}
 
 	generate_material() {
-		let m = new THREE.ShaderMaterial( {
-			uniforms: { 
+		let m = new THREE.ShaderMaterial({
+			uniforms: {
 				time: { value: 0.0 },
 				sculptureCenter: { value: new THREE.Vector3() },
 			},
 			vertexShader: Sculpture.vertex_source,
-			fragmentShader: this.user_shader_source
-			} );
+			fragmentShader: this.user_shader_source,
+			transparent: true,
+			depthTest: false,
+			depthWrite: false,
+			// side: THREE.BackSide
+		}
+		);
 		m.extensions.fragDepth = true;
 		return m;
 	}

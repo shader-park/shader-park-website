@@ -6,6 +6,7 @@ import { create_hl_box, create_sculps } from './generate_scene.js';
 import { collides_grid, get_normal } from './collider.js';
 import { Player } from './player.js';
 import { Editor } from './editor.js';
+import WEBVR from './webvr.js';
 
 var scene, sculps, player, grid, point_lights, room, highlight_box,
     camera, renderer, start_time, editor, mouse, raycaster,
@@ -43,7 +44,11 @@ function init(socket_id, existing_sculps) {
 	renderer = new THREE.WebGLRenderer({antialias:false});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setAnimationLoop(render);
+	renderer.vr.enabled = true;
+	renderer.vr.userHeight = 0;
 	document.body.appendChild( renderer.domElement );
+	document.body.appendChild(WEBVR.createButton(renderer));
 	mouse = new THREE.Vector2();
 	raycaster = new THREE.Raycaster();
 	current_sel = null;
@@ -117,7 +122,7 @@ function send_position_to_server() {
 
 function render() {
 	
-	requestAnimationFrame( render );
+	// requestAnimationFrame( render );
 	const t = Date.now()-start_time;
 	point_lights.position.copy(player.transform.position);
 	player.update();
