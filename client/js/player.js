@@ -1,4 +1,5 @@
 import * as THREE from './three.module.js';
+import { DaydreamController } from './DaydreamController.js';
 
 export class Player {
 
@@ -14,6 +15,8 @@ export class Player {
 		this.vel_damp = 0.85;
 		this.look_speed = 0.012;
 		this.rot_damp = 0.8;
+		this.controller = new DaydreamController();
+		
 		this.movement = {
 			forward: false,
 			backward: false,
@@ -25,15 +28,19 @@ export class Player {
 	}
 
 	update() {
+		this.controller.update();
 		const m = this.movement;
 		const t = this.transform;
 		const dir = new THREE.Vector3();
 		t.getWorldDirection(dir);
 		dir.multiplyScalar(this.move_speed);
-		if (m.forward) this.velocity.sub( dir );
+		
+		const tpState = this.controller.getTouchPadState() === true;
+		if (m.forward || tpState ) this.velocity.sub( dir );
 		if (m.backward) this.velocity.add( dir );
 		if (m.left) this.rot_vel += this.look_speed;
 		if (m.right) this.rot_vel -= this.look_speed;
+		
 		this.rot_vel *= this.rot_damp;
 		t.rotation.y += this.rot_vel;
 		this.velocity.multiplyScalar(this.vel_damp);
