@@ -11,7 +11,8 @@ import * as THREE from 'three';
 //import {create_hl_box, create_sculps} from './generate-scene.js';
 import {Player} from './player.js';
 import {Editor} from './editor.js';
-import {dbConfig} from './dbConfig.js'
+import {dbConfig} from './dbConfig.js';
+import {Sculpture} from './SculptureN.js';
 
 import io from 'socket.io-client';
 // import {config} from '../firebase_config.js';
@@ -26,7 +27,6 @@ const router = new VueRouter({routes: routes, mode: 'history'});
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
 	if (requiresAuth && !currentUser) {
 		next('/sign-in');
 	} else if (requiresAuth && currentUser) {
@@ -43,9 +43,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 const scene = store.state.scene;
 scene.background = new THREE.Color(1, 1, 1);
-const camera = new THREE.PerspectiveCamera(
-	75, window.innerWidth / window.innerHeight, 0.03, 1000);
-	camera.position.z = 120;
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.03, 180);
+camera.position.z = 1.2;
 const renderer = new THREE.WebGLRenderer({antialias: false});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -61,24 +60,18 @@ scene.add(hemisphereLight);
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('click', onMouseClick, false);
 document.addEventListener('mousemove', onMouseMove, false);
-// document.addEventListener('keydown', keypress.bind(null, true));
-// document.addEventListener('keyup', keypress.bind(null, false));
-var geometry = new THREE.TorusKnotGeometry(10, 3, 192, 96);
 
-var material = new THREE.MeshStandardMaterial({ color: 0x33aaee }); // color is in hexidecimal
-var torus = new THREE.Mesh(geometry, material);
-scene.add(torus);
+const sculpTest = new Sculpture();
+scene.add(sculpTest.mesh);
+store.state.displayedSculptures.push(sculpTest);
+
 render();
-// const displayedSculptures = store.state.displayedSculptures;
+
 function render() {
 	requestAnimationFrame(render);
 	const t = Date.now() - startTime;
-	torus.rotation.x += 0.005;
-	torus.rotation.y += 0.005;
-	// console.log(store.state.displayedSculptures);
-	// console.log(displayedSculptures);
 	store.state.displayedSculptures.forEach(sculpture => {
-		sculpture.render();
+		sculpture.render(t);
 	})
 	renderer.render(scene, camera);	
 }
