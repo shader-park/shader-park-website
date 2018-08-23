@@ -21,7 +21,7 @@ import firebase from "firebase";
 export default {
   computed: {
     user() {
-      return this.$store.getters.getUser;
+        return this.$store.getters.getUser;
     }
   },
   methods: {
@@ -29,7 +29,7 @@ export default {
       firebase.auth()
         .signOut()
         .then(() => {
-          this.$router.replace('sign-in');
+            this.$router.replace('sign-in');
         });
     }
   }
@@ -127,7 +127,4 @@ export default {
         opacity: 0.5;
     }
 }
-
-
-
 </style>

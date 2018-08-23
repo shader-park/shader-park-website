@@ -12,30 +12,30 @@
 <script>
 import Firebase from "firebase";
 export default {
-  data: function() {
-    return {
-      email: "",
-      password: ""
-    };
-  },
-  computed: {
-      isDisabled : function () {
-          return !(this.email.length > 0 && this.password.length > 0);
-      }
-  },
-  methods: {
-    signIn: function() {
-      Firebase.auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            this.$router.replace('profile');
-          },
-          error => {
-            alert(error.message);
-          }
-        );
-    }
-  }
+	data: function() {
+		return {
+			email: "",
+			password: ""
+		};
+	},
+	computed: {
+		isDisabled : function () {
+			return !(this.email.length > 0 && this.password.length > 0);
+		}
+	},
+	methods: {
+		signIn: function() {
+			Firebase.auth()
+			.signInWithEmailAndPassword(this.email, this.password)
+			.then(
+				user => {
+					this.$router.replace('profile');
+				},
+				error => {
+					alert(error.message);
+				}
+			);
+		}
+	}
 };
 </script>
