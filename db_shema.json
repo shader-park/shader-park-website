@@ -1,0 +1,84 @@
+
+{
+    "users" : [{
+        "id" : null,
+        "timestamp" : null, //date created
+        "username" : "",
+        "email" : "",
+        "website" : "",
+        "bio" : "",
+        "profile-picture" : "",
+        "favorites" : [], //ids 
+        "sketches" : [], //ids
+        "followers" : [],  //user id
+        "following" : [], // user id,
+        "notifications" : []
+    }],
+    
+    "usernames" : [], //check if username is available
+
+    "sketches" : [{
+        "id" : null,
+        "author" : null,
+        "title" : "",
+        "description" : "",
+        "tags" : "",
+        "timestamp" : "",
+        "favorites" : 0,
+        "views": 0,
+        "comments" : 0,
+        "forks" : 0,
+        "fork" : null, //if a fork set to id
+        "featured" : false, 
+        "code": "",
+        "image" : "",
+        "visibility" : "", //draft, public, private
+        "license" : ""
+    }],
+
+    "favorites" : [{
+        "id" : null,
+        "sketch-id": null,
+        "timestamp" : null,
+        "uid" : null
+    }],
+
+    "forks" : [{
+        "id" : null,
+        "sketch-id" : null,
+        "timestamp" : null,
+        "uid" : null
+    }],
+
+    "views": [{
+        "id": null,
+        "sketch-id": null,
+        "timestamp": null,
+        "uid": null
+    }],
+
+    "comments" : [{
+        "id" : null,
+        "sketch-id" : null,
+        "uid" : null,
+        "timestamp" : null
+    }],
+
+    "featured" : [{
+        "id" : null,
+        "timestamp" : null,
+        "sketch-id" : null
+    }],
+
+    "trending" : [{
+            "id": null,
+            "timestamp": null,
+            "sketch-id": null
+    }],
+
+    "newest" : [{
+        "id" : null,
+        "timestamp" : null,
+        "sketch-id" : null
+    }]
+}

@@ -1,0 +1,39 @@
+[v-cloak] {
+  display: none;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+}
+#editor {
+  position: absolute;
+  top: 135px;
+  right: 8px;
+  width: 40%;
+  height: 80%;
+  visibility: visible;
+}
+#editor-controls {
+  padding-bottom: 3px;
+}
+.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+.error-span {
+  background-color: red;
+  color: white;
+}
+body {
+  background: white;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  letter-spacing: 1.05px;
+  margin: 0;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}

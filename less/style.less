@@ -1,0 +1,87 @@
+@font-family: 'Poppins', sans-serif;
+
+@font-size: 40px;
+
+
+[v-cloak] {
+    display: none;
+}
+
+canvas { width: 100%; height: 100% }
+#editor {
+	position: absolute;
+	top: 135px;
+	right: 8px;
+	width: 40%;
+	height: 80%;
+	visibility: visible;
+}
+#editor-controls {
+	padding-bottom: 3px;
+}
+.CodeMirror {
+	width: 100%;
+	height: 100%;
+}
+.error-span {
+	background-color: red;
+	color: white;
+}
+
+body {
+    background: white;
+    font-family: @font-family;
+    overflow: hidden;
+    letter-spacing: 1.05px;
+    margin: 0;
+}
+
+// textarea {
+//     background: white;
+//     height: 40vh;
+//     width: 60vw;
+//     padding: 10px;
+//     // height: 56px;
+//     font-family: @font-family;
+//     font-weight: 300;
+//     font-size: @font-size;
+//     -webkit-appearance: none;
+//     border: none;
+//     border-bottom: 5px solid #64C7CC;
+// }
+// select {
+//     border: none;
+//     border-color: lightgray;
+//     background-color: white;
+//     height: 60px;
+//     font-family: @font-family;
+//     font-size: @font-size;
+// }
+// span {
+//     text-transform: uppercase;
+//     display: inline-block;
+// }
+
+// button {
+//     font-size: 30px;
+//     font-family: @font-family;
+//     border:none;
+//     cursor: pointer;
+//     padding: 10px;
+//     border: 5px solid black;
+// }
+
+// .footer {
+//     text-align: center;
+//     position: absolute;
+//     width: 100%;
+//     bottom: 20px;
+    
+// }
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}

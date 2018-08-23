@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Shader Park</title>
+		<script src="codemirror/codemirror.js"></script>
+		<link rel="stylesheet" href="codemirror/codemirror.css">
+		<script src="codemirror/clike-mode.js"></script>
+		<script src="codemirror/sublime-keymap.js"></script>
+
+		<!-- <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script> -->
+		<!-- <script>
+			// Initialize Firebase
+			
+		</script> -->
+		<script src="/socket.io/socket.io.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="/normalize.css">
+		<link rel="stylesheet" href="/webflow.css">
+		<link rel="stylesheet" href="/style.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- <meta name="viewport" content="width=device-width, user-scalable=yes"> -->
+	</head>
+	<body>
+		<div id="editor">
+			<div id="editor-controls">
+				<button id="editor-save-button">Save</button>
+				<button id="editor-compile-button">Compile</button>
+				<button id="editor-close-button">Close</button>
+				<input type="text" id="editor-shader-title" size="60"></input>
+				<span>by</span>
+				<input type="text" id="editor-author-name" size="30"></input>
+			</div>
+		</div>
+
+		<div id="app">
+			<h1>Shader Park</h1>
+		</div>
+		<script src="/bundle.js"></script>
+	</body>
+</html>
