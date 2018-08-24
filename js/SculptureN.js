@@ -4,12 +4,17 @@ import {defaultVertexSource, defaultFragSource} from './default-shader.js'
 
 export class Sculpture {
     constructor(fragmentShader = defaultFragSource) {
-      this.vertexShader = defaultVertexSource;
-      this.fragmentShader = fragmentShader;
-      this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
-      this.mesh = new THREE.Mesh(
-          this.geometry,
-          this.generateMaterial(defaultVertexSource, fragmentShader));
+        this.vertexShader = defaultVertexSource;
+        this.fragmentShader = fragmentShader;
+        this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
+        this.mesh = new THREE.Mesh(
+            this.geometry,
+            this.generateMaterial(defaultVertexSource, fragmentShader));
+        const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
+        const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95) });
+        this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
+        this.pedestal.position.set(0, -.75, 0);
+        this.mesh.add(this.pedestal);
     }
 
     generateMaterial(vertexShader, fragmentShader) {
@@ -63,9 +68,3 @@ export class Sculpture {
 
 }
 
-// class Pedestal {
-//     constructor() {
-
-//     }
-
-// }

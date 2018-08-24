@@ -14,8 +14,7 @@ import {Editor} from './editor.js';
 import {dbConfig} from './dbConfig.js';
 import {Sculpture} from './SculptureN.js';
 
-import io from 'socket.io-client';
-// import {config} from '../firebase_config.js';
+// import io from 'socket.io-client';
 
 firebase.initializeApp(dbConfig);
 Vue.use(VueRouter);
@@ -45,6 +44,7 @@ const scene = store.state.scene;
 scene.background = new THREE.Color(1, 1, 1);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.03, 180);
 camera.position.z = 1.2;
+
 const renderer = new THREE.WebGLRenderer({antialias: false});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
