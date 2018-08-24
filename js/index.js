@@ -61,10 +61,6 @@ window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('click', onMouseClick, false);
 document.addEventListener('mousemove', onMouseMove, false);
 
-const sculpTest = new Sculpture();
-scene.add(sculpTest.mesh);
-store.state.displayedSculptures.push(sculpTest);
-
 render();
 
 function render() {

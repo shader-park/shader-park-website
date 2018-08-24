@@ -11,37 +11,45 @@
 
 <script>
 
-import Sculpture from '../sculpture.js';
+import {Sculpture} from '../SculptureN.js';
 import * as THREE from 'three';
 import { defaultFragSource } from '../default-shader.js'
 
 export default {
-    props: ['sculp-data'],
+    props: ['sculpdata'],
     data: function() {
         return {
-            id : this.sculp-data.id,
-            author : this.sculp-data.author,
-            title : this.sculp-data.title,
-            description : this.sculp-data.description,
-            tags : this.sculp-data.tags,
-            timestamp : this.sculp-data.timestamp,
-            favorites : this.sculp-data.favorites? this.sculp-data.favorites : 0,
-            views: this.sculp-data.views? this.sculp-data.views : 0,
-            comments : this.sculp-data.comments? this.sculp-data.comments : 0,
-            forks : this.sculp-data.views? this.sculp-data.views : 0,
-            fork : this.sculp-data.fork, //if a fork set to id
-            featured : this.sculp-data.featured? this.sculp-data.featured : false, 
-            visibility : this.sculp-data.visibility? this.sculp-data.visibility : 'public', //draft, public, private
-            license : this.sculp-data.visibility? this.sculp-data.visibility : '', 
-            shaderSource: this.sculp-data.shaderSource? this.sculp-data.shaderSource: defaultFragSource,
+            // id : this.sculp-data.id,
+            // author : this.sculp-data.author,
+            // title : this.sculp-data.title,
+            // description : this.sculp-data.description,
+            // tags : this.sculp-data.tags,
+            // timestamp : this.sculp-data.timestamp,
+            // favorites : this.sculp-data.favorites? this.sculp-data.favorites : 0,
+            // views: this.sculp-data.views? this.sculp-data.views : 0,
+            // comments : this.sculp-data.comments? this.sculp-data.comments : 0,
+            // forks : this.sculp-data.views? this.sculp-data.views : 0,
+            // fork : this.sculp-data.fork, //if a fork set to id
+            // featured : this.sculp-data.featured? this.sculp-data.featured : false, 
+            // visibility : this.sculp-data.visibility? this.sculp-data.visibility : 'public', //draft, public, private
+            // license : this.sculp-data.visibility? this.sculp-data.visibility : '', 
+            // shaderSource: this.sculp-data.shaderSource? this.sculp-data.shaderSource: defaultFragSource,
+            id: '',
+            title: '',
+            favorites: 0,
+            views: 0,
+            comments: 0,
+            forks: 0,
             sculpture: null
         };
     },
     mounted() {
+        console.log('testttt');
+        console.log(this.sculpdata);
         this.sculpture = new Sculpture();
-        
+        this.$store.state.scene.add(this.sculpture.mesh);
         this.$store.state.displayedSculptures.push(this.sculpture);
-
+        
         // console.log(this.$store.state.scene);
 
         // let grid = {x: 1, z: 1, spacing: 4.0, size: 1.0, ceiling: 2.0};
@@ -65,27 +73,7 @@ export default {
         }
     },
     methods: {
-        update() {
-            if(this.sculpture) {
-                this.sculpture.update();
-            }
-        }
-        // },
-        // generate_material() {
-        //     let m = new THREE.ShaderMaterial( {
-        //         uniforms: { 
-        //             time: { value: 0.0 },
-        //             sculptureCenter: { value: new THREE.Vector3() },
-        //         },
-        //         vertexShader: Sculpture.vertex_source,
-        //         fragmentShader: this.user_shader_source
-        //         } );
-        //     m.extensions.fragDepth = true;
-        //     return m;
-        // },
-        // refresh_material() {
-        //     this.mesh.material = this.generate_material();
-        // }
+
 
     },
     destroyed: function() {
