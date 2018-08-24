@@ -36,7 +36,8 @@ export default {
 		});
 	},
     checkUsername(username) {
-		return this.$db.object(`usernames/${username.toLowercase()}`);
+		console.log('TODO: check username');
+		// return this.$db.object(`usernames/${username.toLowercase()}`);
     }
   }
 };

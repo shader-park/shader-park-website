@@ -12,11 +12,13 @@
 <script>
 import Header from './components/Header.vue';
 import Sculpture from './components/Sculpture.vue';
+import Editor from './components/Editor.vue';
 // import { codemirror } from 'vue-codemirror-lite'
 
 export default {
 	components: {
 		navMain: Header,
+		editor: Editor
 		// codemirror
 	},
 	methods: {

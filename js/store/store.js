@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
 		getUser: state => {
 			return state.user;
 		},
-		getSelectedSculpture: state => {
+		selectedSculpture: state => {
 			return state.selectedSculpture;
 		}
 	},

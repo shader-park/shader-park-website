@@ -13,7 +13,7 @@
 
 import Sculpture from '../sculpture.js';
 import * as THREE from 'three';
-import { defaultVertexSource, defaultFragSource } from '../default-shader.js'
+import { defaultFragSource } from '../default-shader.js'
 
 export default {
     props: ['sculp-data'],
