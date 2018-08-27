@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
 		scene: new THREE.Scene(),
 		socket: null,
 		selectedSculpture: null,
-		displayedSculptures: [],
+		objectsToUpdate: [],
 		currentSculptures: [],
 		currSculptureDisplayIndex: 0
 	},

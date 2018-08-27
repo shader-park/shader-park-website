@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import {defaultVertexSource, defaultFragSource} from './default-shader.js'
-
+import { createPedestalEdges } from './create-pedestal-edges.js'
 export class Sculpture {
     constructor(fragmentShader = defaultFragSource) {
         this.vertexShader = defaultVertexSource;
@@ -15,6 +15,9 @@ export class Sculpture {
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
         this.pedestal.position.set(0, -.75, 0);
         this.mesh.add(this.pedestal);
+        const pedestalEdges = createPedestalEdges(1.0, 0.5);
+        pedestalEdges.position.set(0, -.75, 0);
+        this.mesh.add(pedestalEdges);
     }
 
     generateMaterial(vertexShader, fragmentShader) {
@@ -34,7 +37,7 @@ export class Sculpture {
         this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader);
     }
 
-    render(time) {
+    update(time) {
         this.mesh.material.uniforms['time'].value = time;
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
     }

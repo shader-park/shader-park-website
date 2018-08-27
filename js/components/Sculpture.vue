@@ -48,7 +48,7 @@ export default {
         console.log(this.sculpdata);
         this.sculpture = new Sculpture();
         this.$store.state.scene.add(this.sculpture.mesh);
-        this.$store.state.displayedSculptures.push(this.sculpture);
+        this.$store.state.objectsToUpdate.push(this.sculpture);
         
         // console.log(this.$store.state.scene);
 
