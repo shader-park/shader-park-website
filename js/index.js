@@ -18,6 +18,7 @@ import {Sculpture} from './SculptureN.js';
 
 firebase.initializeApp(dbConfig);
 Vue.use(VueRouter);
+Vue.config.devtools = true;
 Vue.config.productionTip = false;
 window.db = firebase.database();
 
@@ -60,8 +61,10 @@ scene.add(hemisphereLight);
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('click', onMouseClick, false);
 document.addEventListener('mousemove', onMouseMove, false);
+const canvas = document.querySelector('canvas');
 
 render();
+
 
 function render() {
 	requestAnimationFrame(render);
@@ -69,6 +72,20 @@ function render() {
 	store.state.objectsToUpdate.forEach(sculpture => {
 		sculpture.update(t);
 	})
+
+	const objectsToRaycast = store.state.objectsToRaycast;
+	if(objectsToRaycast) {
+		raycaster.setFromCamera(mouse, camera);
+		const intersects = raycaster.intersectObjects(objectsToRaycast);
+		if(intersects.length > 0) {
+			canvas.style.cursor = 'pointer';
+			store.state.intersectedObject = intersects[0].object;
+		} else {
+			canvas.style.cursor = 'auto';
+			store.state.intersectedObject = null;
+		}
+	}
+
 	renderer.render(scene, camera);	
 }
 
@@ -277,6 +294,13 @@ function onMouseMove(event) {
 }
 
 function onMouseClick(event) {
+	if (store.state.intersectedObject != null) {
+		console.log('clicked on object');
+		canvas.style.cursor = 'auto';
+		store.state.selectedObject = store.state.intersectedObject;
+	} else {
+          store.state.selectedObject = null;
+        }
 	// if (selectedSculpture !== null && !editor.visible) {
 	// 	editor.show(selectedSculpture);
 	// 	selectedSculpture = null;

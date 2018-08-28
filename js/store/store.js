@@ -12,6 +12,9 @@ export const store = new Vuex.Store({
 		socket: null,
 		selectedSculpture: null,
 		objectsToUpdate: [],
+		objectsToRaycast: [],
+		selectedObject: null,
+		intersectedObject : null,
 		currentSculptures: [],
 		currSculptureDisplayIndex: 0
 	},

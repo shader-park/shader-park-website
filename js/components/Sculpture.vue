@@ -14,7 +14,7 @@
 import {Sculpture} from '../SculptureN.js';
 import * as THREE from 'three';
 import { defaultFragSource } from '../default-shader.js'
-
+import {mapGetters} from 'vuex';
 export default {
     props: ['sculpdata'],
     data: function() {
@@ -44,12 +44,11 @@ export default {
         };
     },
     mounted() {
-        console.log('testttt');
-        console.log(this.sculpdata);
         this.sculpture = new Sculpture();
         this.$store.state.scene.add(this.sculpture.mesh);
         this.$store.state.objectsToUpdate.push(this.sculpture);
-        
+        this.sculpture.mesh.name = 'test';
+        this.$store.state.objectsToRaycast.push(this.sculpture.mesh);
         // console.log(this.$store.state.scene);
 
         // let grid = {x: 1, z: 1, spacing: 4.0, size: 1.0, ceiling: 2.0};
@@ -65,11 +64,20 @@ export default {
             if(this.sculpture) {
                 this.sculpture.refresh_material();
             }
+        },
+        selectedObject: function (obj) {
+            if(obj && obj.name == this.sculpture.mesh.name) {
+                console.log('selected!!');
+                return this.$store.state.selectedSculpture = this.sculpture;
+            }
         }
     },
     computed: {
         currUserID () {
             return this.$store.getters.getUser.uid
+        },
+        selectedObject() {
+            return this.$store.state.selectedObject;
         }
     },
     methods: {
