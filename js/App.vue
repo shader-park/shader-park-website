@@ -4,6 +4,7 @@
 			<nav-main></nav-main>
 			<router-view></router-view>
 			<sculpture sculpdata="tempSculp"></sculpture>
+			<editor></editor>
 			<!-- <codemirror v-model="code"></codemirror> -->
 		</div>
 	</main>

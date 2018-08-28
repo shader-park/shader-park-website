@@ -68,7 +68,7 @@ export default {
         selectedObject: function (obj) {
             if(obj && obj.name == this.sculpture.mesh.name) {
                 console.log('selected!!');
-                return this.$store.state.selectedSculpture = this.sculpture;
+                this.$store.state.selectedSculpture = this.$data;
             }
         }
     },
