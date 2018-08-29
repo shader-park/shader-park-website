@@ -2,7 +2,7 @@
 
 <div v-show="selectedSculpture != null" class="editor">
     <div class="controls">
-        <button @click="save" class="save">Save</button>
+        <button @click="save" class="save">{{saveText}}</button>
         <button @click="play" class="play">Play</button>
         <button @click="close" class="close">Close</button>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
@@ -24,6 +24,17 @@ export default {
         }
     },
     computed : {
+        saveText() {
+            if(this.selectedSculpture) {
+                if(this.selectedSculpture.uid == null || this.selectedSculpture.uid == this.$store.getters.getUser.uid) {
+                    return 'Save';
+                } else {
+                    return "Save as Fork";
+                }
+            } else {
+                return "Save as Fork";
+            }
+        },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
         }
@@ -55,7 +66,8 @@ export default {
         updateSculpture() {
             const fragmentShader = this.cm.editor.getValue();
             const currSculp = this.selectedSculpture;
-            if(currSculp) {
+            console.log(!this.codeContainsErrors + 'does not cointains err')
+            if(currSculp && this.cm.errorsDisplay.widgets.length !== 1) {
                 currSculp.sculpture.refreshMaterial(fragmentShader);
             }
             console.log('updated code');
@@ -81,6 +93,7 @@ export default {
                     menu: false,
                     frag_header : prefix
                 });
+                window.cm = this.cm;
                 this.cm.editor.setValue(shader);
                 this.cm.editor.on('change', () => this.updateSculpture());	
             });

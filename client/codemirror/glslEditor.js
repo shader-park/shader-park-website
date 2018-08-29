@@ -19603,13 +19603,13 @@ var ErrorsDisplay = (function () {
             var re = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
             var matches = re.exec(args.error);
             if (matches) {
-                var line = parseInt(matches[1]) - 1;
+                var line = parseInt(matches[1]) - 7;
                 var er = matches[2];
                 var msg = document.createElement('div');
 
                 var icon = msg.appendChild(document.createElement('span'));
                 icon.className = 'ge-error-icon';
-                icon.innerHTML = 'x';
+                // icon.innerHTML = 'x';
                 msg.appendChild(document.createTextNode(er));
                 msg.className = 'ge-error';
                 this.widgets.push(this.main.editor.addLineWidget(line, msg)); //, { coverGutter: false, noHScroll: true }));
