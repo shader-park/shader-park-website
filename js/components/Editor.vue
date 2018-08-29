@@ -23,6 +23,11 @@ export default {
             initialized: false
         }
     },
+    mounted() {
+        console.log('mounted editor');
+        document.addEventListener('keydown', this.keypress.bind(null, true));
+        document.addEventListener('keyup', this.keypress.bind(null, false));
+    },
     computed : {
         saveText() {
             if(this.selectedSculpture) {
@@ -37,7 +42,10 @@ export default {
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
-        }
+        },
+        currUser () {
+			return this.$store.getters.getUser;
+		}
     },
     watch : {
         selectedSculpture(obj) {
@@ -54,6 +62,11 @@ export default {
     },
     methods: {
         save() {
+            if(this.currUser != null) {
+
+            } else {
+                this.$router.push('sign-in');
+            }
             console.log('save');
         },
         play() {
@@ -62,6 +75,14 @@ export default {
         },
         close() {
             this.$store.state.selectedSculpture = null;
+        },
+        keypress(down, e) {
+            if (e.key === 'Escape') {
+            	this.close();
+            }
+            if (e.key === 'Enter') {
+            	this.play();
+            }
         },
         updateSculpture() {
             const fragmentShader = this.cm.editor.getValue();

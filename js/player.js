@@ -3,25 +3,24 @@ import * as THREE from 'three';
 export class Player {
 
         constructor(id) {
-
-		this.ID = id;
-		this.color = { r : Math.random(), g : Math.random(), b : Math.random() };
-		// initialize this to most recent position
-		this.transform = new THREE.Object3D();
-		this.velocity = new THREE.Vector3();
-		this.rot_vel = 0.0;
-		this.move_speed = 0.012;
-		this.vel_damp = 0.85;
-		this.look_speed = 0.012;
-		this.rot_damp = 0.8;
-		this.movement = {
-			forward: false,
-			backward: false,
-			left: false,
-			right: false,
-			up: false,
-			down: false
-		};
+			this.ID = id;
+			this.color = { r : Math.random(), g : Math.random(), b : Math.random() };
+			// initialize this to most recent position
+			this.transform = new THREE.Object3D();
+			this.velocity = new THREE.Vector3();
+			this.rot_vel = 0.0;
+			this.move_speed = 0.012;
+			this.vel_damp = 0.85;
+			this.look_speed = 0.012;
+			this.rot_damp = 0.8;
+			this.movement = {
+				forward: false,
+				backward: false,
+				left: false,
+				right: false,
+				up: false,
+				down: false
+			};
 	}
 
 	update() {
@@ -45,7 +44,7 @@ export class Player {
 		this.velocity.add(dir);
 	}
 
-	key_event(mode, e) {
+	keyEvent(mode, e) {
 		const m = this.movement;
 		switch (e.key) {
 			case 'w':
@@ -65,8 +64,7 @@ export class Player {
 	
 	// creates a goofy looking player mesh
 	static create_player_mesh(color) {
-	    const mat = new THREE.MeshStandardMaterial(
-		{color: new THREE.Color(color.r, color.g, color.b)});
+	    const mat = new THREE.MeshStandardMaterial({color: new THREE.Color(color.r, color.g, color.b)});
 	    const geo = new THREE.SphereGeometry(0.2, 50, 50);
 	    const m = new THREE.Mesh(geo,mat)
 

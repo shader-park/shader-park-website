@@ -53,6 +53,7 @@ export default {
     padding: 0px 60px 25px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
     background-color: white;
+    z-index: 102;
     
     .nav-text {
         .centerY();

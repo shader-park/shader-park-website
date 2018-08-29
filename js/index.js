@@ -6,13 +6,9 @@ import VueRouter from 'vue-router';
 import { store } from './store/store';
 import { routes } from './router/routes';
 
-// var _ = require('lodash');
 import * as THREE from 'three';
-//import {create_hl_box, create_sculps} from './generate-scene.js';
 import {Player} from './player.js';
-import {Editor} from './editor.js';
 import {dbConfig} from './dbConfig.js';
-import {Sculpture} from './SculptureN.js';
 
 // import io from 'socket.io-client';
 
@@ -44,8 +40,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 const scene = store.state.scene;
 scene.background = new THREE.Color(1, 1, 1);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.03, 180);
-camera.position.z = 3.2;
 window.camera = camera;
+
+const player = new Player('testId');
+player.transform.position.z = -2;
+player.transform.add(camera);
+scene.add(player.transform);
 
 const renderer = new THREE.WebGLRenderer({antialias: false});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -54,7 +54,6 @@ document.body.appendChild(renderer.domElement);
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
-const selectedSculpture = null;
 const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
 scene.add(hemisphereLight);
@@ -62,10 +61,11 @@ scene.add(hemisphereLight);
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('click', onMouseClick, false);
 document.addEventListener('mousemove', onMouseMove, false);
+document.addEventListener('keydown', keyPress.bind(null, true));
+document.addEventListener('keyup', keyPress.bind(null, false));
 const canvas = document.querySelector('canvas');
 
 render();
-
 
 function render() {
 	requestAnimationFrame(render);
@@ -86,7 +86,7 @@ function render() {
 			store.state.intersectedObject = null;
 		}
 	}
-
+	player.update();
 	renderer.render(scene, camera);	
 }
 
@@ -288,6 +288,13 @@ socket.on('usr_disconnect', (id) => {
     }
   }
 */
+
+function keyPress(down, e) {
+	if (e.target.nodeName === 'BODY') {
+		player.keyEvent(down, e);
+	}
+}
+
 // Raycast to sculptures
 function onMouseMove(event) {
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -300,12 +307,8 @@ function onMouseClick(event) {
 		canvas.style.cursor = 'auto';
 		store.state.selectedObject = store.state.intersectedObject;
 	} else {
-          store.state.selectedObject = null;
-        }
-	// if (selectedSculpture !== null && !editor.visible) {
-	// 	editor.show(selectedSculpture);
-	// 	selectedSculpture = null;
-	// }
+		store.state.selectedObject = null;
+	}
 }
 
 function onWindowResize() {
