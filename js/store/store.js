@@ -147,6 +147,25 @@ export const store = new Vuex.Store({
           .once('value')
           .then(data => data.val())
           .catch(error => console.log(error));
-    }
+	},
+	fetchAllSculptures({ commit, getters }) {
+		  commit('setLoading', true);
+		  const user = getters.getUser;
+		  return firebase.database()
+			  .ref(`sculptures`)
+			  .once('value')
+			  .then(data => {
+				  const sculptures = data.val();
+				  let output = [];
+				  Object.keys(sculptures).forEach(key => {
+					  Object.keys(sculptures[key]).forEach(sculptureKey => {
+						  const sculpture = sculptures[key][sculptureKey];
+						  output.push(sculpture);
+					  })
+				  });
+				  return output;
+			  })
+			  .catch(error => console.log(error));
+	  }
   }
 });
