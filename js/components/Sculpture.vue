@@ -1,12 +1,12 @@
 
 <template>
-    <div>
+    <!-- <div>
         <span>Title {{title}} </span>
         <span>Favorites {{favorites}}</span>
         <span>Views {{views}}</span>
         <span>Comments {{comments}}</span>
         <span>Forks {{forks}}</span>
-    </div>
+    </div> -->
 </template>
 
 <script>

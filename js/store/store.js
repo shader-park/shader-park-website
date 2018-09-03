@@ -51,6 +51,7 @@ export const store = new Vuex.Store({
 		const oldId = payload.oldId;
 		const newId = payload.newId;
 		const obj = state.scene.getObjectByName(oldId);
+		state.selectedSculpture.id = newId;
 		obj.name = newId;
 	},
     removeObjectFromUpdate(state, payload) {

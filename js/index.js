@@ -38,7 +38,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 const scene = store.state.scene;
 scene.background = new THREE.Color(1, 1, 1);
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.03, 180);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
+// var camera = new THREE.OrthographicCamera(
+//   window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 window.camera = camera;
 
 const player = new Player('testId');
@@ -249,7 +251,7 @@ socket.on('usr_disconnect', (id) => {
     for (let id in players_remote) {
       // skip creating a mesh for our own player
       if (id === player.ID) continue;
-
+    
       const pr = players_remote[id];
       if (!(id in players_local)) {
         players_local[id] = {
