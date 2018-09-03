@@ -34,7 +34,6 @@ router.beforeEach((to, from, next) => {
 
 firebase.auth().onAuthStateChanged(function(user) {
 	new Vue({el: '#app', store: store, router: router, render: h => h(App)});
-	Vue.prototype.$db = firebase.database;
 });
 
 const scene = store.state.scene;
@@ -43,11 +42,13 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 window.camera = camera;
 
 const player = new Player('testId');
-player.transform.position.z = -2;
 player.transform.add(camera);
+player.transform.position.z = 2;
+window.player = player;
+
 scene.add(player.transform);
 
-const renderer = new THREE.WebGLRenderer({antialias: false});
+const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
@@ -89,6 +90,35 @@ function render() {
 	player.update();
 	renderer.render(scene, camera);	
 }
+
+function keyPress(down, e) {
+  if (e.target.nodeName === 'BODY') {
+    player.keyEvent(down, e);
+  }
+}
+
+// Raycast to sculptures
+function onMouseMove(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onMouseClick(event) {
+  if (store.state.intersectedObject != null) {
+    console.log('clicked on object');
+    canvas.style.cursor = 'auto';
+    store.state.selectedObject = store.state.intersectedObject;
+  } else {
+    store.state.selectedObject = null;
+  }
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
 
 /*
 var scene, sculps, player, grid, point_lights, room, highlight_box, camera,
@@ -288,31 +318,3 @@ socket.on('usr_disconnect', (id) => {
     }
   }
 */
-
-function keyPress(down, e) {
-	if (e.target.nodeName === 'BODY') {
-		player.keyEvent(down, e);
-	}
-}
-
-// Raycast to sculptures
-function onMouseMove(event) {
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-function onMouseClick(event) {
-	if (store.state.intersectedObject != null) {
-		console.log('clicked on object');
-		canvas.style.cursor = 'auto';
-		store.state.selectedObject = store.state.intersectedObject;
-	} else {
-		store.state.selectedObject = null;
-	}
-}
-
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-}

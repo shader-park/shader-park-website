@@ -33,9 +33,12 @@ export class Sculpture {
         return material;
     }
 
-    refreshMaterial(fragmentShader = this.fragmentShader) {
-      this.mesh.material =
-          this.generateMaterial(this.vertexShader, fragmentShader);
+    setShaderSource(fragmentShader) {
+        this.fragmentShader = fragmentShader;
+    }
+
+    refreshMaterial() {
+        this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader);
     }
 
     update(time) {

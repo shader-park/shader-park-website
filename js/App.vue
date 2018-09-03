@@ -3,9 +3,9 @@
 		<div class="container">
 			<nav-main></nav-main>
 			<router-view></router-view>
-			<sculpture sculpdata="tempSculp"></sculpture>
+			
+			<!-- <sculpture sculpData="tempSculp"></sculpture> -->
 			<editor></editor>
-			<!-- <codemirror v-model="code"></codemirror> -->
 		</div>
 	</main>
 </template>

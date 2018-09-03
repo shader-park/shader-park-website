@@ -63,7 +63,7 @@ export default {
     methods: {
         save() {
             if(this.currUser != null) {
-
+                this.$store.dispatch('saveSculpture', this.selectedSculpture);
             } else {
                 this.$router.push('sign-in');
             }
@@ -75,6 +75,7 @@ export default {
         },
         close() {
             this.$store.state.selectedSculpture = null;
+            this.$store.state.selectedObject = null;
         },
         keypress(down, e) {
             if (e.key === 'Escape') {
@@ -84,15 +85,20 @@ export default {
             	this.play();
             }
         },
-        updateSculpture() {
+        updateSculpture(){
+        // _.debounce(function (e) {
+  
             const fragmentShader = this.cm.editor.getValue();
             const currSculp = this.selectedSculpture;
             console.log(!this.codeContainsErrors + 'does not cointains err')
             if(currSculp && this.cm.errorsDisplay.widgets.length !== 1) {
-                currSculp.sculpture.refreshMaterial(fragmentShader);
+                currSculp.shaderSource = fragmentShader;
+                // currSculp.sculpture.setShaderSource(fragmentShader);
+                // currSculp.sculpture.refreshMaterial();
             }
             console.log('updated code');
-        },
+        // }),
+        },   
         initCodeMirror(shader) {
             
             const prefix = `

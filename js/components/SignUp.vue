@@ -27,9 +27,10 @@ export default {
 		.createUserWithEmailAndPassword(this.email, this.password)
 		.then(output => {
 			const uid = output.user.uid;
-			const dbUser = new User(this.username, this.email);
+            const dbUser = new User(this.username, this.email);
+            firebase.database().ref("users").child(user.uid).set(dbUser);
 			this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
-			this.$router.replace('profile');
+            this.$router.replace('profile');
 		},
 		error => {
 			alert(error.message);
