@@ -28,7 +28,6 @@ class PlayerRoomPositions {
         //     this.playersToUpdateThisInterval[player.room] = new Set();
         // }
         // this.playersToUpdateThisInterval[player.room].add(player.id);
-        console.log(player);
         this.rooms[player.room][player.id] = player;
         
         this.players[player.id] = player;
@@ -81,6 +80,8 @@ function onServerConnection(socket) {
             const player = playerRoomPositions.players[socket.id];
             playerRoomPositions.removePlayerFromRoom(player.roomName, socket.id);
         }
+        // playerRoomPositions.rooms = {};
+        // playerRoomPositions.players = {};
         console.log(socket.id + " has disconnected");
         socket.broadcast.emit('userDisconnect', socket.id);
     });

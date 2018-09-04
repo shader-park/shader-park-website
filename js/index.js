@@ -45,12 +45,7 @@ window.camera = camera;
 const socket = io();
 store.state.socket = socket;
 
-const player = new Player(socket.id);
-player.transform.add(camera);
-player.transform.position.z = 2;
-window.player = player;
-
-scene.add(player.transform);
+let player;
 
 setInterval(sendPlayerPosToServer, 250);
 // used to update positions of players in the same room
@@ -77,6 +72,12 @@ socket.on('serverTellPlayersUpdate', playersInRoom => {
 });
 
 socket.on('userConnect', (id) => {
+	player = new Player(id);
+	player.transform.add(camera);
+	player.transform.position.z = 2;
+	window.player = player;
+
+	scene.add(player.transform);
 	player.id = id;
 	console.log(id + ' has connected');
 });
@@ -96,7 +97,7 @@ socket.on('userDisconnect', (id) => {
 function updateRemotePlayers() {
 	for (let id in remotePlayers) {
 		// skip creating a mesh for our own player
-		if (id === player.id) continue;
+		if (player.id && id === player.id) continue;
 
 		const pr = remotePlayers[id];
 		if (!(id in localPlayers)) {
@@ -105,6 +106,7 @@ function updateRemotePlayers() {
 				color: pr.color,
 				mesh: Player.createPlayerMesh(pr.color)
 			};
+			localPlayers[id].mesh.position.set(pr.position.x, pr.position.y, pr.position.z);
 			scene.add(localPlayers[id].mesh);
 		}
 		const pm = localPlayers[id].mesh;
@@ -157,7 +159,7 @@ function render() {
 		}
 	}
 	
-	player.update();
+	if(player) player.update();
 	updateRemotePlayers();
 	renderer.render(scene, camera);	
 }
