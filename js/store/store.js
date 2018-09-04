@@ -12,6 +12,7 @@ export const store = new Vuex.Store({
     user: null,
     scene: new THREE.Scene(),
     socket: null,
+    currentRoom: null,
     selectedSculpture: null,
     objectsToUpdate: [],
     objectsToRaycast: [],
@@ -46,14 +47,14 @@ export const store = new Vuex.Store({
     },
     updateSelectedSculpture(state, payload) {
       state.selectedSculpture = Object.assign(state.selectedSculpture, payload);
-	},
-	updateSculptureId(state, payload) {
-		const oldId = payload.oldId;
-		const newId = payload.newId;
-		const obj = state.scene.getObjectByName(oldId);
-		state.selectedSculpture.id = newId;
-		obj.name = newId;
-	},
+    },
+    updateSculptureId(state, payload) {
+      const oldId = payload.oldId;
+      const newId = payload.newId;
+      const obj = state.scene.getObjectByName(oldId);
+      obj.name = newId;
+      state.selectedSculpture.id = newId;
+    },
     removeObjectFromUpdate(state, payload) {
       const index = state.objectsToUpdate.indexOf(payload);
       if (index != -1) {
@@ -62,12 +63,20 @@ export const store = new Vuex.Store({
     },
     removeObjectFromRaycast(state, payload) {
       const index = state.objectsToRaycast.indexOf(payload);
-	  if (index != -1) {
+      if (index != -1) {
         state.objectsToRaycast.splice(index, 1);
       }
     },
     removeObjectFromSceneByName(state, name) {
       state.scene.remove(state.scene.getObjectByName(name));
+    },
+    joinRoom(state, roomName) {
+      state.socket.emit('joinRoom', roomName);
+      state.currentRoom = roomName;
+    },
+    leaveRoom(state, roomName) {
+      state.socket.emit('leaveRoom', roomName);
+      state.currentRoom = null;
     }
   },
   actions: {
@@ -89,14 +98,16 @@ export const store = new Vuex.Store({
 
       // date.toISOString();
 
-      if (sculpture.id) {  
-		if (sculpture.author.uid === user.uid) {  // update existing sculpture
-			firebase.database().ref(`sculptures/${user.uid}/${sculpture.id}`).update(sculpture)
-			// TODO: save to vuex state
+      if (sculpture.id) {
+        if (sculpture.author.uid === user.uid) {  // update existing sculpture
+          firebase.database()
+              .ref(`sculptures/${user.uid}/${sculpture.id}`)
+              .update(sculpture)
+          // TODO: save to vuex state
         } else {  // Save as a fork
           console.log('save as fork');
         }
-	  } else {// sculpture has never been saved before
+      } else {  // sculpture has never been saved before
         // TODO : get user should also put username into the global object
         firebase.database().ref(`users/${user.uid}`).once('value')
             .then(data => data.val().username)
@@ -148,25 +159,26 @@ export const store = new Vuex.Store({
           .once('value')
           .then(data => data.val())
           .catch(error => console.log(error));
-	},
-	fetchAllSculptures({ commit, getters }) {
-		  commit('setLoading', true);
-		  const user = getters.getUser;
-		  return firebase.database()
-			  .ref(`sculptures`)
-			  .once('value')
-			  .then(data => {
-				  const sculptures = data.val();
-				  let output = [];
-				  Object.keys(sculptures).forEach(key => {
-					  Object.keys(sculptures[key]).forEach(sculptureKey => {
-						  const sculpture = sculptures[key][sculptureKey];
-						  output.push(sculpture);
-					  })
-				  });
-				  return output;
-			  })
-			  .catch(error => console.log(error));
-	  }
+    },
+    fetchAllSculptures({commit, getters}) {
+      commit('setLoading', true);
+      const user = getters.getUser;
+      return firebase.database()
+          .ref(`sculptures`)
+          .once('value')
+          .then(data => {
+            const sculptures = data.val();
+            let output = [];
+            Object.keys(sculptures)
+                .forEach(
+                    key => {
+                        Object.keys(sculptures[key]).forEach(sculptureKey => {
+                          const sculpture = sculptures[key][sculptureKey];
+                          output.push(sculpture);
+                        })});
+            return output;
+          })
+          .catch(error => console.log(error));
+    }
   }
 });

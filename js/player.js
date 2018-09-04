@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export class Player {
 
         constructor(id) {
-			this.ID = id;
+			this.id = id;
 			this.color = { r : Math.random(), g : Math.random(), b : Math.random() };
 			// initialize this to most recent position
 			this.transform = new THREE.Object3D();
@@ -63,7 +63,7 @@ export class Player {
 	}
 	
 	// creates a goofy looking player mesh
-	static create_player_mesh(color) {
+	static createPlayerMesh(color) {
 	    const mat = new THREE.MeshStandardMaterial({color: new THREE.Color(color.r, color.g, color.b)});
 	    const geo = new THREE.SphereGeometry(0.2, 50, 50);
 	    const m = new THREE.Mesh(geo,mat)

@@ -10,6 +10,7 @@ export default {
 	data: function() {
 		return {
 			sculptures: [],
+			roomName: "Global Room"
 		}
 	},
 	components : {
@@ -22,9 +23,13 @@ export default {
 			Object.keys(sculptures).forEach(key => {
 				temp.push(sculptures[key]);
 			})
-			this.sculptures = temp;
-			console.log(this.sculptures)
+			this.sculptures = temp; //array.push isn't tracked by state, resetting is
+			console.log(this.sculptures);
+			this.$store.commit('joinRoom', this.roomName);
 		})
+	},
+	destroyed() {
+		this.$store.commit('leaveRoom', this.roomName);
 	}
 };
 </script>

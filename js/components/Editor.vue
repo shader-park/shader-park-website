@@ -30,12 +30,9 @@ export default {
     },
     computed : {
         saveText() {
-            if(this.selectedSculpture) {
-                if(this.selectedSculpture.uid == null || this.selectedSculpture.uid == this.$store.getters.getUser.uid) {
-                    return 'Save';
-                } else {
-                    return "Save as Fork";
-                }
+            if((this.selectedSculpture && this.selectedSculpture.author.uid) &&
+               (this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid)) {
+                return 'Save';
             } else {
                 return "Save as Fork";
             }
