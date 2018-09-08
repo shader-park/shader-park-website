@@ -83,13 +83,31 @@ export const store = new Vuex.Store({
     setUser: context => {
       context.commit('setUser');
     },
+    getUserName({commit, getters}) {
+      const user = getters.getUser;
+      return firebase.database().ref(`users/${user.uid}`).once('value')
+        .then(data => data.val().username);
+    },
     setDBUser(context, payload) {
       let uid = payload.uid;
       let dbUser = payload.user;
       firebase.database().ref('users/' + uid).set(dbUser);
       firebase.database().ref('usernames/' + dbUser.username).set(uid);
     },
-    saveSculpture({commit, getters}, sculptureObj) {
+    saveNewSculpture({ commit, dispatch, getters }, sculpture) {
+      const user = getters.getUser;
+      const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
+      sculpture.id = sculpID;
+
+      firebase.database().ref(`sculptures/${user.uid}/${sculpID}`).update(sculpture)
+        .catch(error => console.log(error));
+
+      firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
+        .catch(error => console.log(error));
+      return sculpID;
+    },
+    saveSculpture({commit, dispatch, getters}, sculptureObj) {
+      commit('setLoading', true);
       let sculpture = Object.assign({}, sculptureObj);
       delete sculpture.sculpture;
       // firebase.database().ref('sculptures').child(sculpture.id).update(sculpture);
@@ -103,52 +121,39 @@ export const store = new Vuex.Store({
           firebase.database()
               .ref(`sculptures/${user.uid}/${sculpture.id}`)
               .update(sculpture)
+              .then(() => {
+                commit('setLoading', false);
+              })
           // TODO: save to vuex state
         } else {  // Save as a fork
           console.log('save as fork');
         }
       } else {  // sculpture has never been saved before
         // TODO : get user should also put username into the global object
-        firebase.database().ref(`users/${user.uid}`).once('value')
-            .then(data => data.val().username)
-            .then(username => {
-              console.log(username);
-              sculpture.author = {uid: user.uid, username: username};
-              console.log(sculpture.author);
-              sculpture.timestamp = Date.now();
-              const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
-              sculpture.id = sculpID;
-			  
-			  firebase.database().ref(`sculptures/${user.uid}/${sculpID}`).update(sculpture)
-				  .catch(error => console.log(error));
-				  
-              firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
-                  .catch(error => console.log(error));
-			  commit('updateSelectedSculpture', sculpture);
-			  const payload = {
-				  oldId : sculpture._uid,
-				  newId: sculpID
-				};
-			  commit('updateSculptureId', payload);
+        // firebase.database().ref(`users/${user.uid}`).once('value')
+        //     .then(data => data.val().username)
+        dispatch('getUsername')
+          .then(username => {
+            console.log(username);
+            sculpture.author = {uid: user.uid, username: username};
+            console.log(sculpture.author);
+            sculpture.timestamp = Date.now();
+            const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
+            sculpture.id = sculpID;
 
-            });
+            firebase.database().ref(`sculptures/${user.uid}/${sculpID}`).update(sculpture)
+              .catch(error => console.log(error));
 
-
-        // //save sculp to vuex
-        // const sculpId =
-        // firebase.database().ref('sculptures').push(sculpture); let updates =
-        // {}; updates[`users/${user.uid}/sculptures/${sculpId}`] = sculpture;
-        // updates[`sculptures/${sculpId}`] = postData;
-
-        // .then(data => {
-        //   const key = data.key;
-        //   firebase.database().ref(`users/${user.uid}/sculptures`).push(sculpID);
-        //   sculpture.id = key;
-        //   console.log(sculpture);
-        //   console.log('success!');
-        //   // commit('setSculpture', sculpture);
-        // })
-        // .catch(error => console.log(error));
+            firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
+              .catch(error => console.log(error));
+            commit('updateSelectedSculpture', sculpture);
+            const payload = {
+              oldId : sculpture._uid,
+              newId: sculpID
+            };
+            commit('updateSculptureId', payload);
+            commit('setLoading', false);
+          });
       }
     },
     fetchUserSculptures({commit, getters}) {
@@ -157,7 +162,11 @@ export const store = new Vuex.Store({
       return firebase.database()
           .ref(`sculptures/${user.uid}`)
           .once('value')
-          .then(data => data.val())
+          .then(data => {
+            
+            commit('setLoading', false);
+            return data.val();
+          })
           .catch(error => console.log(error));
     },
     fetchAllSculptures({commit, getters}) {
@@ -176,6 +185,7 @@ export const store = new Vuex.Store({
                           const sculpture = sculptures[key][sculptureKey];
                           output.push(sculpture);
                         })});
+            commit('setLoading', false);
             return output;
           })
           .catch(error => console.log(error));

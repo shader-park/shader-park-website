@@ -1,15 +1,15 @@
 <template>
 
-<div v-show="selectedSculpture != null" class="editor">
+<div  v-show="selectedSculpture != null" class="editor">
     <div class="controls">
-        <button @click="save" class="save">{{saveText}}</button>
-        <button @click="play" class="play">Play</button>
-        <button @click="close" class="close">Close</button>
+        <button @click.stop="save" class="save">{{saveText}}</button>
+        <button @click.stop="play" class="play">Play</button>
+        <button @click.stop="close" class="close">Close</button>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
     </div>
-    <div ref="codeMirror" class="code-editor"> </div>
+    <div @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
 </div>
 
 </template>
@@ -30,12 +30,22 @@ export default {
     },
     computed : {
         saveText() {
-            if((this.selectedSculpture && this.selectedSculpture.author.uid) &&
-               (this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid)) {
-                return 'Save';
-            } else {
-                return "Save as Fork";
+            if(this.selectedSculpture) {
+                if(!this.selectedSculpture.author.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid) {
+                    return 'Save';
+                } else {
+                    return 'Save as Fork';
+                }
             }
+            return 'Save';
+            // if((this.selectedSculpture && this.selectedSculpture.author.uid) &&
+            //    (this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid)) {
+            //     return 'Save';
+            // } else if(!this.selectedSculpture.author.uid) {
+            //     return 'Save'
+            // }else {
+            //     return "Save as Fork";
+            // }
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
@@ -126,8 +136,23 @@ export default {
 }
 
 </script>
-<style>
+<style lang="less">
+
 @import '../codemirror/glslEditor.css';
+
+button {
+    padding: 5px 15px 5px 15px;
+    /* border: 1px solid lightgrey; */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+    transition: color 300ms ease-in-out;
+        color: #777;
+        -webkit-transition: color 300ms ease-in-out ;
+    &:hover {
+        color: #000;
+    }        
+
+}
 
 .ge_editor {
     height: auto;

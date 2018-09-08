@@ -1,6 +1,8 @@
 <template>
     <div>
-        <sculpture v-if="sculptureGeomotries.length == sculptures.length" v-for="(sculpture, index) in sculptures" :key="sculpture.id" :sculpGeom="sculptureGeomotries[index]" :sculpData="sculpture"></sculpture>
+        <sculpture v-if="sculptureGeomotries.length == sculptures.length" 
+                   v-for="(sculpture, index) in sculptures" :key="sculpture.id" 
+                   :sculpGeom="sculptureGeomotries[index]" :sculpData="sculpture"></sculpture>
     </div>
 </template>
 
