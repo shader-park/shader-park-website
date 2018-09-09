@@ -11,7 +11,7 @@
 
 <script>
 import firebase from "firebase";
-import {User} from "../schema/User.js";
+import {userSchema} from "../schema/User.js";
 
 export default {
 	data: function() {
@@ -20,27 +20,27 @@ export default {
 			username: "",
 			password: ""
 		};
-	},
-  methods: {
-	signUp: function() {
-		firebase.auth()
-		.createUserWithEmailAndPassword(this.email, this.password)
-		.then(output => {
-			const uid = output.user.uid;
-            const dbUser = new User(this.username, this.email);
-            firebase.database().ref("users").child(user.uid).set(dbUser);
-			this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
-            this.$router.replace('profile');
-		},
-		error => {
-			alert(error.message);
-		});
-	},
-    checkUsername(username) {
-		console.log('TODO: check username');
-		// return this.$db.object(`usernames/${username.toLowercase()}`);
+    },
+    methods: {
+        signUp() {
+            firebase.auth()
+            .createUserWithEmailAndPassword(this.email, this.password)
+            .then(output => {
+                const uid = output.user.uid;
+                const dbUser = Object.assign(userSchema, {'username': this.username, 'email' : this.email});
+                firebase.database().ref("users").child(uid).set(dbUser);
+                this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
+                this.$router.replace('profile');
+            },
+            error => {
+                alert(error.message);
+            });
+        },
+        checkUsername(username) {
+            console.log('TODO: check username');
+            // return this.$db.object(`usernames/${username.toLowercase()}`);
+        }
     }
-  }
 };
 </script>
 

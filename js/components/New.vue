@@ -9,7 +9,7 @@ export default {
 	data: function() {
 		return {
 			tempSculp: {
-				id : null
+				id : this._uid
 			}
 		}
 	},

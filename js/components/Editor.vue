@@ -7,7 +7,7 @@
         <button @click.stop="close" class="close">Close</button>
         
         <input class="checkbox" v-if="isAdmin" type="checkbox" id="example" value="Example" v-model="isExample">
-        <label for="example">Is Example</label>
+        <label v-if="isAdmin" for="example">Is Example</label>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -60,7 +60,7 @@ export default {
         isAdmin() { //TEMPORARY TODO: add actual admin check
             return this.$store.getters.getUser && 
                    (this.$store.getters.getUser.uid === "9FchFuDdR1aDFOru4l1YSKyTjhV2" || 
-                   this.$store.getters.getUser.uid === "dh9VVEbZlshHbtURGstu3Q44fgk1");
+                   this.$store.getters.getUser.uid === "K3lAQQTKbiTiVXlwRZouH4OrWyv1");
         }
     },
     watch : {
@@ -101,7 +101,10 @@ export default {
             	this.close();
             }
             if (e.key === 'Enter') {
-            	this.play();
+                if(this.selectedSculpture) {
+                    this.play();
+                }
+            	
             }
         },
         updateSculpture(){
