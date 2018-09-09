@@ -102,7 +102,7 @@ export const store = new Vuex.Store({
       const user = getters.getUser;
       const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
       sculpture.id = sculpID;
-      if(sculpture.example) {
+      if(sculpture.isExample) {
         firebase.database().ref(`examples/${user.uid}/${sculpID}`).update(sculpture)
           .catch(error => console.log(error));
       } else {
@@ -126,9 +126,16 @@ export const store = new Vuex.Store({
 
       if (sculpture.id) {
         if (sculpture.author.uid === user.uid) {  // update existing sculpture
-          firebase.database().ref(`sculptures/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
-            commit('setLoading', false);
-          })
+          if(sculpture.isExample) {
+            firebase.database().ref(`examples/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
+              commit('setLoading', false);
+            })
+          } else {
+            firebase.database().ref(`sculptures/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
+              commit('setLoading', false);
+            })
+          }
+
           // TODO: save to vuex state
         } else {  // Save as a fork
           dispatch('getUserName').then(username => {
@@ -209,7 +216,7 @@ export const store = new Vuex.Store({
       return dispatch('fetchSculptures', 'sculptures');
     },
     fetchExampleSculptures({dispatch}) {
-      return dispatch('fetchSculptures', 'exampleSculptures');
+      return dispatch('fetchSculptures', 'examples');
     }
   }
 });

@@ -36,6 +36,7 @@ export default {
                 username : this.sculpData.author? this.sculpData.author.username: null,
             },
             title : this.sculpData.title || null,
+            isExample: this.sculpData.isExample || false,
             description : this.sculpData.description || null,
             tags : this.sculpData.tags || null,
             timestamp : this.sculpData.timestamp || Date.now(),

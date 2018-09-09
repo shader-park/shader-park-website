@@ -66,6 +66,7 @@ export default {
     watch : {
         isExample(value) {
             this.selectedSculpture.isExample = value;
+            console.log('set sculpture isExample to ' + value);
         },
         selectedSculpture(obj) {
             console.log('found Sculp form editor');
@@ -75,6 +76,7 @@ export default {
                     this.initCodeMirror(obj.sculpture.fragmentShader);
                 } else {
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
+                    this.isExample = this.selectedSculpture.isExample
                 }
             }
         }

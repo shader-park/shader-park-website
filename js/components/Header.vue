@@ -7,6 +7,7 @@
         <h1 class="nav-text">Featured</h1>
         <div class="nav-right">        
             <router-link to="/" class="link" active-class="active" exact>Home</router-link>
+            <router-link to="/examples" class="link" active-class="active">Examples</router-link>
             <router-link to="/new" class="link" active-class="active">New</router-link>
             <router-link to="sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link>
             <router-link to="sign-up" class="link" v-if="!user" active-class="active">Sign Up</router-link>
@@ -83,13 +84,13 @@ export default {
     .link {
         margin-right: 40px;
         border-bottom: 2px solid hsla(0, 0%, 100%, 0) !important;
-        -webkit-transition: color 300ms ease-in-out ;
-        transition: color 300ms ease-in-out;
-        color: #777;
         font-size: 18px;
         line-height: 0px;
         font-weight: 300;
         text-decoration: none;
+        transition: color 300ms ease-in-out;
+        color: #777;
+        -webkit-transition: color 300ms ease-in-out ;
         &:hover {
             color: #000;
         }        

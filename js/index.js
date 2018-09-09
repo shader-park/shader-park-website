@@ -47,7 +47,7 @@ store.state.socket = socket;
 
 let player;
 
-setInterval(sendPlayerPosToServer, 250);
+// setInterval(sendPlayerPosToServer, 250);
 // used to update positions of players in the same room
 let localPlayers = {};
 let remotePlayers = {};
@@ -160,7 +160,7 @@ function render() {
 	}
 	
 	if(player) player.update();
-	updateRemotePlayers();
+	// updateRemotePlayers();
 	renderer.render(scene, camera);	
 }
 
