@@ -58,9 +58,7 @@ export default {
 			return this.$store.getters.getUser;
         },
         isAdmin() { //TEMPORARY TODO: add actual admin check
-            return this.$store.getters.getUser && 
-                   (this.$store.getters.getUser.uid === "9FchFuDdR1aDFOru4l1YSKyTjhV2" || 
-                   this.$store.getters.getUser.uid === "K3lAQQTKbiTiVXlwRZouH4OrWyv1");
+            return this.$store.getters.isAdmin;
         }
     },
     watch : {

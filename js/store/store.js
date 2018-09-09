@@ -30,6 +30,11 @@ export const store = new Vuex.Store({
     },
     getCurrentSculptures: state => {
       return state.currentSculptures;
+    },
+    isAdmin: state => {
+      return state.user &&
+             (state.user.uid === '9FchFuDdR1aDFOru4l1YSKyTjhV2' ||
+             state.user.uid === 'K3lAQQTKbiTiVXlwRZouH4OrWyv1');
     }
   },
   mutations: {
@@ -155,7 +160,7 @@ export const store = new Vuex.Store({
               // firebase.database().ref('forks/' + dbUser.username).set(uid);
             })
           })
-            console.log('save as fork');
+          console.log('save as fork');
         }
       } else {  // sculpture has never been saved before
         
@@ -188,7 +193,11 @@ export const store = new Vuex.Store({
     fetchUserSculptures({commit, getters}) {
       commit('setLoading', true);
       const user = getters.getUser;
-      return firebase.database().ref(`sculptures/${user.uid}`).once('value').then(data => {
+      let route = 'sculptures';
+      if(getters.isAdmin) {
+        route = 'examples';
+      }
+      return firebase.database().ref(`${route}/${user.uid}`).once('value').then(data => {
             commit('setLoading', false);
             return data.val();
           })
