@@ -5,6 +5,9 @@
         <button @click.stop="save" class="save">{{saveText}}</button>
         <button @click.stop="play" class="play">Play</button>
         <button @click.stop="close" class="close">Close</button>
+        
+        <input class="checkbox" v-if="isAdmin" type="checkbox" id="example" value="Example" v-model="isExample">
+        <label for="example">Is Example</label>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -20,7 +23,8 @@ export default {
     data () {
         return {
             cm: null,
-            initialized: false
+            initialized: false,
+            isExample: false
         }
     },
     mounted() {
@@ -52,9 +56,17 @@ export default {
         },
         currUser () {
 			return this.$store.getters.getUser;
-		}
+        },
+        isAdmin() { //TEMPORARY TODO: add actual admin check
+            return this.$store.getters.getUser && 
+                   (this.$store.getters.getUser.uid === "9FchFuDdR1aDFOru4l1YSKyTjhV2" || 
+                   this.$store.getters.getUser.uid === "dh9VVEbZlshHbtURGstu3Q44fgk1");
+        }
     },
     watch : {
+        isExample(value) {
+            this.selectedSculpture.isExample = value;
+        },
         selectedSculpture(obj) {
             console.log('found Sculp form editor');
             if(obj) {
@@ -145,13 +157,23 @@ button {
     /* border: 1px solid lightgrey; */
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
-    transition: color 300ms ease-in-out;
+    transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
         color: #777;
-        -webkit-transition: color 300ms ease-in-out ;
+    -webkit-transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
     &:hover {
         color: #000;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     }        
 
+}
+
+label {
+    display: inline;
+}
+
+.checkbox {
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .ge_editor {

@@ -30,18 +30,15 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('fetchUserSculptures').then(sculptures => {
-			// console.log(sculptures.val());
-			// this.sculptures = sculptures;
-			let temp = [];
-			Object.keys(sculptures).forEach(key => {
-				temp.push(sculptures[key]);
-			})
-			this.sculptures = temp;
-			// console.log('sculptures from fb' + this.sculptures.length)
-			console.log(this.sculptures)
-			// if(this.sculptures && this.sculptures.length > 0) {
-				// this.tempSculp = sculptures[0];
-			// }
+			if(sculptures) {
+				let temp = [];
+				Object.keys(sculptures).forEach(key => {
+					temp.push(sculptures[key]);
+				})
+				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+			}
+			console.log(this.sculptures);
+			this.$store.commit('joinRoom', this.roomName);
 		})
 		console.log(this.currUserID);
 		// console.log(this.$store.state.scene);

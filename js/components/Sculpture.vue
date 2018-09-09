@@ -30,6 +30,7 @@ export default {
     data: function() {
         return {
             id : this.sculpData.id || null,
+            vueId: this._uid,
             author : {  
                 uid : this.sculpData.author? this.sculpData.author.uid: null,
                 username : this.sculpData.author? this.sculpData.author.username: null,
