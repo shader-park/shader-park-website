@@ -4,7 +4,7 @@
         <div class="nav-left">
             <input type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search">
         </div>
-        <h1 class="nav-text">Featured</h1>
+        <h1 class="nav-text">{{title}}</h1>
         <div class="nav-right">        
             <router-link to="/" class="link" active-class="active" exact>Home</router-link>
             <router-link to="/examples" class="link" active-class="active">Examples</router-link>
@@ -23,6 +23,9 @@ export default {
   computed: {
     user() {
         return this.$store.getters.getUser;
+    },
+    title() {
+        return this.$route.meta.title;
     }
   },
   methods: {

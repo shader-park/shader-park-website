@@ -16,7 +16,7 @@ export const routes = [{
     name: 'home',
     component: Home,
     meta: {
-        title: 'Home',
+        title: 'All Sculptures',
     }
 },
 {
