@@ -32,9 +32,7 @@ export const store = new Vuex.Store({
       return state.currentSculptures;
     },
     isAdmin: state => {
-      return state.user &&
-             (state.user.uid === '9FchFuDdR1aDFOru4l1YSKyTjhV2' ||
-             state.user.uid === 'K3lAQQTKbiTiVXlwRZouH4OrWyv1');
+      return state.user && state.user.uid === 'K3lAQQTKbiTiVXlwRZouH4OrWyv1';
     }
   },
   mutations: {

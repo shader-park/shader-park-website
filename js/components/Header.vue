@@ -95,8 +95,9 @@ export default {
             color: #000;
         }        
     }
-    .link, .active {
-        border-bottom: 2px solid #50e3c2;
+    .link.active {
+        color: #000;
+        border-bottom: 2px solid #50e3c2 !important;
         -webkit-transition: border-color 300ms ease-in-out;
         transition: border-color 300ms ease-in-out;
     }
