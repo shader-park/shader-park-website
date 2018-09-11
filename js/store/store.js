@@ -19,7 +19,9 @@ export const store = new Vuex.Store({
     selectedObject: null,
     intersectedObject: null,
     currentSculptures: [],
-    loading: false
+    loading: false,
+    profileBadgeCount: 0
+
   },
   getters: {
     getUser: state => {
@@ -33,6 +35,9 @@ export const store = new Vuex.Store({
     },
     isAdmin: state => {
       return state.user && state.user.uid === 'K3lAQQTKbiTiVXlwRZouH4OrWyv1';
+    },
+    getProfileBadgeCount: state => {
+      return state.profileBadgeCount;
     }
   },
   mutations: {
@@ -47,6 +52,12 @@ export const store = new Vuex.Store({
     },
     setLoading(state, payload) {
       state.loading = payload;
+    },
+    incrementProfileBadgeCount(state) {
+      state.profileBadgeCount += 1;
+    },
+    setProfileBadgeCount(state, payload) {
+      state.profileBadgeCount = payload;
     },
     updateSelectedSculpture(state, payload) {
       state.selectedSculpture = Object.assign(state.selectedSculpture, payload);
@@ -148,6 +159,7 @@ export const store = new Vuex.Store({
           });
         } else {  // Save as a fork
           console.log('save as fork');
+          commit('incrementProfileBadgeCount');
           const newForkCount = sculpture.forks += 1;
           //update existing sculpture fork count
           let route = sculpture.isExample? 'examples' : 'sculptures'; //they don't have to be an admin to fork

@@ -11,7 +11,7 @@
             <router-link to="/new" class="link" active-class="active">New</router-link>
             <router-link to="sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link>
             <router-link to="sign-up" class="link" v-if="!user" active-class="active">Sign Up</router-link>
-            <router-link to="profile" class="link" v-if="user" active-class="active">Profile</router-link>
+            <router-link v-bind:data-badge="profileBadgeCount" to="profile" v-bind:class="{ dynamicBadge: profileBadgeCount > 0 }" class="link" v-if="user" active-class="active">Profile</router-link>
             <a class="link" v-on:click="signOut" v-if="user" active-class="active">Sign Out</a>
         </div>
     </div>
@@ -20,23 +20,26 @@
 <script>
 import firebase from "firebase";
 export default {
-  computed: {
-    user() {
-        return this.$store.getters.getUser;
+    computed: {
+        profileBadgeCount() {
+            return this.$store.getters.getProfileBadgeCount;
+        },
+        user() {
+            return this.$store.getters.getUser;
+        },
+        title() {
+            return this.$route.meta.title;
+        }
     },
-    title() {
-        return this.$route.meta.title;
+    methods: {
+        signOut: function() {
+            firebase.auth()
+            .signOut()
+            .then(() => {
+                this.$router.replace('sign-in');
+            });
+        }
     }
-  },
-  methods: {
-    signOut: function() {
-      firebase.auth()
-        .signOut()
-        .then(() => {
-            this.$router.replace('sign-in');
-        });
-    }
-  }
 };
 </script>
 
@@ -48,6 +51,35 @@ export default {
     -ms-transform: translate(0px, -50%);
     transform: translate(0px, -50%);
 };
+
+.dynamicBadge {
+  position:relative;
+}
+
+.dynamicBadge[data-badge]:after {
+  content:attr(data-badge);
+
+  position:absolute;
+  top:-15px;
+  right:-18px;
+
+  font-size:11px;
+  font-family:"Roboto","Helvetica","Arial",sans-serif;
+  font-weight:600;
+
+  text-align:center;
+  line-height:23px;
+
+  background:#50e3c2;
+  color:white;
+
+  width:22px;
+  height:22px;           
+
+  border-radius:50%;
+  /* box-shadow:1px 2px 5px #888; */
+}
+
 .nav-bar {
     position: fixed;
     left: 0px;

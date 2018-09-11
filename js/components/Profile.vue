@@ -29,6 +29,7 @@ export default {
 		}
 	},
 	mounted() {
+		this.$store.commit('setProfileBadgeCount', 0);
 		this.$store.dispatch('fetchUserSculptures').then(sculptures => {
 			if(sculptures) {
 				let temp = [];
