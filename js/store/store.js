@@ -101,91 +101,76 @@ export const store = new Vuex.Store({
       firebase.database().ref('users/' + uid).set(dbUser);
       firebase.database().ref('usernames/' + dbUser.username).set(uid);
     },
-    saveNewSculpture({getters}, sculpture) {
+    saveNewSculpture({commit, getters}, sculpture) {
       const user = getters.getUser;
+      sculpture.author = { uid: user.uid, username: user.displayName };
+      sculpture.timestamp = Date.now();
+      const idHistory = {
+        oldId: sculpture.id || sculpture.vueId,
+        newId: ''
+      };
+      
       const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
       sculpture.id = sculpID;
-      if(sculpture.isExample) {
-        firebase.database().ref(`examples/${user.uid}/${sculpID}`).update(sculpture)
-          .catch(error => console.log(error));
-      } else {
-        firebase.database().ref(`sculptures/${user.uid}/${sculpID}`).update(sculpture)
-          .catch(error => console.log(error));
-      }
+      let route = sculpture.isExample && getters.isAdmin  ? 'examples' : 'sculptures';
+      firebase.database().ref(`${route}/${user.uid}/${sculpID}`).update(sculpture)
+        .catch(error => console.error(error));
 
+      //update list of sculptures in user's profile
       firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
-        .catch(error => console.log(error));
+        .catch(error => console.error(error));
+
+      idHistory.newId = sculpID;
+      commit('updateSelectedSculpture', sculpture);
+      commit('updateSculptureIdInScene', idHistory);
+      commit('setLoading', false);
       return sculpID;
     },
     saveSculpture({commit, dispatch, getters}, sculptureObj) {
       commit('setLoading', true);
       let sculpture = Object.assign({}, sculptureObj);
-      delete sculpture.sculpture;
-      // firebase.database().ref('sculptures').child(sculpture.id).update(sculpture);
+      delete sculpture.sculpture; //remove the three.js 3d object
+      
       console.log('saving sculpture');
       const user = getters.getUser;
+      if(!user) {
+        console.error('Tried to Save Sculpture when a User is not logged in');
+        return;
+      }
 
-      // date.toISOString();
-
-      if (sculpture.id) {
+      if (!sculpture.id) {
+        dispatch('saveNewSculpture', sculpture);
+      } else {
         if (sculpture.author.uid === user.uid) {  // update existing sculpture
-          if(sculpture.isExample) {
-            firebase.database().ref(`examples/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
-              commit('setLoading', false);
-            })
-          } else {
-            firebase.database().ref(`sculptures/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
-              commit('setLoading', false);
-            })
+          let route = sculpture.isExample && getters.isAdmin ? 'examples' : 'sculptures'; //must be admin to update example
+          firebase.database().ref(`${route}/${user.uid}/${sculpture.id}`).update(sculpture).then(() => {
+            commit('setLoading', false);
+          });
+        } else {  // Save as a fork
+          console.log('save as fork');
+          sculpture.forks += 1;
+          //update existing sculpture fork count
+          let route = sculpture.isExample? 'examples' : 'sculptures'; //they don't have to be an admin to fork
+          firebase.database().ref(`${route}/${sculpture.author.uid}/${sculpture.id}`).update(sculpture);
+          sculpture.isExample = false;//fork isn't an example
+          sculpture.forks = 0;
+          sculpture.author = {uid: user.uid, username: user.displayName}; //new author
+          sculpture.fork = sculpture.id; //save the id of the original sculpture 
+          
+          const fork = {
+            author: sculpture.author,
+            timestamp: Date.now(),
+            shaderSourceHistory: sculpture.shaderSource,
           }
 
-          // TODO: save to vuex state
-        } else {  // Save as a fork
-          dispatch('getUserName').then(username => {
-            sculpture.author = { uid: user.uid, username: username };
-            sculpture.forks += 1;
-            //update existing sculpture fork count
-            firebase.database().ref(`sculptures/${user.uid}/${sculpture.id}`).update(sculpture);
-            sculpture.fork = sculpture.id;
-
-            // "forks" : [{
-            //   "id": null,
-            //   "sketch-id": null,
-            //   "timestamp": null,
-            //   "uid": null
-            // }],
-            dispatch('saveNewSculpture', sculpture).then(newId => {
-              // firebase.database().ref('forks/' + dbUser.username).set(uid);
-            })
-          })
-          console.log('save as fork');
-        }
-      } else {  // sculpture has never been saved before
-        
-        dispatch('getUserName').then(username => {
-            sculpture.author = {uid: user.uid, username: username};
-            sculpture.timestamp = Date.now();
-            const idHistory = {
-              oldId: sculpture.vueId,
-              newId: ''
-            };
-            // const sculpID = firebase.database().ref(`sculptures/${user.uid}`).push().key;
-            // sculpture.id = sculpID;
-            // idHistory.newId = sculpID;
-
-            // firebase.database().ref(`sculptures/${user.uid}/${sculpID}`).update(sculpture)
-            //   .catch(error => console.log(error));
-
-            // firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
-            //   .catch(error => console.log(error));
-            // console.log(sculpture)
-            dispatch('saveNewSculpture', sculpture).then(newId => {
-              idHistory.newId = newId;
-              commit('updateSelectedSculpture', sculpture);
-              commit('updateSculptureIdInScene', idHistory);
+          const originalSculptureId = sculpture.id
+          dispatch('saveNewSculpture', sculpture).then(newId => {
+            fork['newSculptureId'] = newId;
+            firebase.database().ref(`forks/${originalSculptureId}`).push(fork).then(() => {
               commit('setLoading', false);
             });
-          });
+          })
+        }
       }
     },
     fetchUserSculptures({commit, getters}) {

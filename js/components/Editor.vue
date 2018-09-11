@@ -74,7 +74,8 @@ export default {
                     this.initCodeMirror(obj.sculpture.fragmentShader);
                 } else {
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
-                    this.isExample = this.selectedSculpture.isExample
+                    this.isExample = this.selectedSculpture.isExample;
+                    console.log('ID:' + this.selectedSculpture.id)
                 }
             }
         }

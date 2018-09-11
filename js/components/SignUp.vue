@@ -26,6 +26,9 @@ export default {
             firebase.auth()
             .createUserWithEmailAndPassword(this.email, this.password)
             .then(output => {
+                output.user.updateProfile({
+                    displayName: this.username
+                });
                 const uid = output.user.uid;
                 const dbUser = Object.assign(userSchema, {'username': this.username, 'email' : this.email});
                 firebase.database().ref("users").child(uid).set(dbUser);
