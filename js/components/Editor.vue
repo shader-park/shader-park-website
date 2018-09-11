@@ -5,9 +5,11 @@
         <button @click.stop="save" class="save">{{saveText}}</button>
         <button @click.stop="play" class="play">Play</button>
         <button @click.stop="close" class="close">Close</button>
-        
-        <input class="checkbox" v-if="isAdmin" type="checkbox" id="example" value="Example" v-model="isExample">
-        <label v-if="isAdmin" for="example">Is Example</label>
+        <input class="checkbox" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
+        <label for="AutoUpdate">Auto Update</label>
+
+        <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
+        <label v-if="isAdmin" for="Example">Is Example</label>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -24,7 +26,8 @@ export default {
         return {
             cm: null,
             initialized: false,
-            isExample: false
+            isExample: false,
+            autoUpdate: true
         }
     },
     mounted() {
@@ -145,7 +148,11 @@ export default {
                 });
                 window.cm = this.cm;
                 this.cm.editor.setValue(shader);
-                this.cm.editor.on('change', () => this.updateSculpture());	
+                this.cm.editor.on('change', () => {
+                    if(this.autoUpdate) {
+                        this.updateSculpture();
+                    }
+                });	
             });
         }
     }
