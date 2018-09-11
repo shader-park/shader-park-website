@@ -148,10 +148,10 @@ export const store = new Vuex.Store({
           });
         } else {  // Save as a fork
           console.log('save as fork');
-          sculpture.forks += 1;
+          const newForkCount = sculpture.forks += 1;
           //update existing sculpture fork count
           let route = sculpture.isExample? 'examples' : 'sculptures'; //they don't have to be an admin to fork
-          firebase.database().ref(`${route}/${sculpture.author.uid}/${sculpture.id}`).update(sculpture);
+          firebase.database().ref(`${route}/${sculpture.author.uid}/${sculpture.id}/forks`).set(newForkCount);
           sculpture.isExample = false;//fork isn't an example
           sculpture.forks = 0;
           sculpture.author = {uid: user.uid, username: user.displayName}; //new author
