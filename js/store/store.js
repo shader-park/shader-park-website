@@ -185,6 +185,23 @@ export const store = new Vuex.Store({
         }
       }
     },
+    deleteSculpture({commit, getters}, sculpture) {
+      commit('setLoading', true);
+      const user = getters.getUser;
+      if (sculpture.author && sculpture.author.uid == user.uid) {
+        let route = sculpture.isExample && getters.isAdmin ? 'examples' : 'sculptures'; //must be admin to update example
+        firebase.database().ref(`${route}/${user.uid}/${sculpture.id}`).delete().catch(error => console.error(error));
+
+        firebase.database().ref(`users/${user.uid}/sculptures/${sculpture.id}`).delete().then(() => {
+          commit('setLoading', false);
+        }).catch(error => console.error(error));
+          
+      } else {
+        console.error('Tried to delete another user\'s sculpture');
+      }
+      
+
+    },
     fetchUserSculptures({commit, getters}) {
       commit('setLoading', true);
       const user = getters.getUser;

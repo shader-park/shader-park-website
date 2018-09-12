@@ -1,6 +1,7 @@
 <template>
 
 <div  v-show="selectedSculpture != null" class="editor">
+    <v-dialog/>
     <div class="controls">
         <button @click.stop="save" class="save">{{saveText}}</button>
         <button @click.stop="play" class="play">Play</button>
@@ -10,6 +11,8 @@
 
         <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
         <label v-if="isAdmin" for="Example">Is Example</label>
+
+        <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete">Delete</button>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -20,7 +23,8 @@
 </template>
 
 <script>
-
+import {sculptureStarterCode} from '../starter-code.js'
+window.startercode = sculptureStarterCode;
 export default {
     data () {
         return {
@@ -45,14 +49,6 @@ export default {
                 }
             }
             return 'Save';
-            // if((this.selectedSculpture && this.selectedSculpture.author.uid) &&
-            //    (this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid)) {
-            //     return 'Save';
-            // } else if(!this.selectedSculpture.author.uid) {
-            //     return 'Save'
-            // }else {
-            //     return "Save as Fork";
-            // }
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
@@ -62,6 +58,9 @@ export default {
         },
         isAdmin() { //TEMPORARY TODO: add actual admin check
             return this.$store.getters.isAdmin;
+        },
+        displayDelete() {
+            return this.selectedSculpture && this.currUser.uid && this.selectedSculpture.author.uid === this.currUser.uid;
         }
     },
     watch : {
@@ -100,6 +99,24 @@ export default {
             this.$store.state.selectedSculpture = null;
             this.$store.state.selectedObject = null;
         },
+        deleteSculpture() {
+            this.$modal.show('dialog', {
+                title: 'Delete Sculpture',
+                text: 'Are you sure you want to delete this sculpture?',
+                buttons: [{
+                    title: 'Cancel',
+                    handler: () => this.$modal.hide('dialog')
+                },
+                {
+                    title: 'Delete',       // Button title
+                    default: true,    // Will be triggered by default if 'Enter' pressed.
+                    handler: () => {
+                        alert('delete');
+                        this.$modal.hide('dialog');
+                    }
+                }]
+            })
+        },
         keypress(down, e) {
             if (e.key === 'Escape') {
             	this.close();
@@ -113,27 +130,27 @@ export default {
         },
         updateSculpture(){
         // _.debounce(function (e) {
-  
+            
             const fragmentShader = this.cm.editor.getValue();
             const currSculp = this.selectedSculpture;
-            console.log(!this.codeContainsErrors + 'does not cointains err')
             if(currSculp && this.cm.errorsDisplay.widgets.length !== 1) {
                 currSculp.shaderSource = fragmentShader;
-                // currSculp.sculpture.setShaderSource(fragmentShader);
-                // currSculp.sculpture.refreshMaterial();
             }
             console.log('updated code');
+            
+
         // }),
         },   
         initCodeMirror(shader) {
             
-            const prefix = `
+            let prefix = `
             #extension GL_EXT_frag_depth : enable
             precision highp float;
             precision highp int;
             uniform vec3 cameraPosition;
             uniform mat4 viewMatrix;
             ` ;
+            // prefix += sculptureStarterCode;
 
             this.$nextTick(function() {
 				this.cm = new GlslEditor(this.$refs.codeMirror, { 
@@ -176,6 +193,22 @@ button {
         box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     }        
 
+}
+
+.delete {
+    float: right;
+    margin-right: 10px;
+}
+.dialog-c-text {
+    padding: 0px 20px 10px 20px;
+}
+.dialog-c-title {
+    text-align: center;
+    font-size: 17px;
+}
+
+.vue-dialog-button {
+    font-size: 14px !important;
 }
 
 label {

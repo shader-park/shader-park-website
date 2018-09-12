@@ -1,19 +1,22 @@
-import Vue from 'vue';
-import App from './App.vue';
 import firebase from 'firebase';
-
-import VueRouter from 'vue-router';
-import { store } from './store/store';
-import { routes } from './router/routes';
-
-import * as THREE from 'three';
-import {Player} from './player.js';
-import {dbConfig} from './dbConfig.js';
-
 import io from 'socket.io-client';
+import * as THREE from 'three';
+import Vue from 'vue';
+import VModal from 'vue-js-modal'
+import VueRouter from 'vue-router';
+
+import App from './App.vue';
+import {dbConfig} from './dbConfig.js';
+import {Player} from './player.js';
+import {routes} from './router/routes';
+import {store} from './store/store';
+
 
 firebase.initializeApp(dbConfig);
 Vue.use(VueRouter);
+
+Vue.use(VModal, {dialog: true});
+// Vue.use(window['vue-js-modal'].default, { dialog: true });
 Vue.config.devtools = true;
 Vue.config.productionTip = false;
 window.db = firebase.database();
