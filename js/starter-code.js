@@ -1,5 +1,10 @@
 const sculptureStarterCode = `
-#define PI acos(-1.);
+const float PI = acos(-1.);
+const float TAU = 2.0 * acos(-1.);
+const float TWO_PI = 2.0 * acos(-1.);
+
+
+///////////Primitives
 
 float line(vec3 p, vec3 a, vec3 b) {
 	vec3 pa = p-a;
@@ -8,6 +13,7 @@ float line(vec3 p, vec3 a, vec3 b) {
   	return length(pa - ba*t);
 }
 
+//line with radius
 float line( vec3 p, vec3 a, vec3 b, float radius ){
     vec3 pa = p - a, ba = b - a;
     float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
@@ -64,6 +70,7 @@ float hexPrism( vec3 p, vec2 h )
     vec3 q = abs(p);
     return max(q.z-h.y,max((q.x*0.866025+q.y*0.5),q.y)-h.x);
 }
+
 float triPrism( vec3 p, vec2 h )
 {
     vec3 q = abs(p);
@@ -152,6 +159,13 @@ float repeat1D(inout float p, float size)
   	p = mod(p + halfSize, size)-halfSize;
   	return c;
 }
+
+mat2 rot2(float a){
+    float c = cos(a); float s = sin(a);
+	return mat2(c, s, -s, c);
+}
+
+
 
 // vec3 translate( vec3 p, mat4 m ) {
 //      vec3 q = invert(m)*p;
