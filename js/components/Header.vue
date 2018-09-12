@@ -159,9 +159,14 @@ export default {
     font-weight: 200;
     letter-spacing: 1.1px;
     text-indent: 0px;
-    transition: opacity 300ms ease-in-out;
+    transition: opacity 300ms ease-in-out, color 300ms ease-in-out;
     
-    &.disabled {
+    &:hover {
+        color: black;
+    }
+
+    &:disabled {
+        color: white;
         opacity: 0.5;
     }
 }

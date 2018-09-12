@@ -101,6 +101,10 @@ export const store = new Vuex.Store({
     setUser: context => {
       context.commit('setUser');
     },
+    getAllUserNames() {
+      return firebase.database().ref(`usernames`).once('value')
+        .then(data => data.val());
+    },
     getUserName({getters}) {
       const user = getters.getUser;
       return firebase.database().ref(`users/${user.uid}`).once('value')

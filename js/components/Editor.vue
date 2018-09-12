@@ -60,7 +60,7 @@ export default {
             return this.$store.getters.isAdmin;
         },
         displayDelete() {
-            return this.selectedSculpture && this.currUser.uid && this.selectedSculpture.author.uid === this.currUser.uid;
+            return this.selectedSculpture && this.currUser && this.currUser.uid && this.selectedSculpture.author.uid === this.currUser.uid;
         }
     },
     watch : {

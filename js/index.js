@@ -10,12 +10,14 @@ import {dbConfig} from './dbConfig.js';
 import {Player} from './player.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
+import Vuelidate from 'vuelidate';
 
 
 firebase.initializeApp(dbConfig);
 Vue.use(VueRouter);
 
 Vue.use(VModal, {dialog: true});
+Vue.use(Vuelidate);
 // Vue.use(window['vue-js-modal'].default, { dialog: true });
 Vue.config.devtools = true;
 Vue.config.productionTip = false;

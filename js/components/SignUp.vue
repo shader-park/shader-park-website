@@ -1,10 +1,13 @@
 <template>
     <div class="auth-container">
         <form v-on:submit.prevent>
-            <input class="input w-input" type="email" placeholder="email:" v-model="email">
-            <input class="input w-input" type="text" placeholder="username:" v-model="username">
-            <input class="input w-input" type="password" placeholder="password:" v-model="password">
-            <button type="submit" class="button" :class="{ disabled: isDisabled }" :disabled="isDisabled"  v-on:click="signUp">Sign Up</button>
+            <span v-show="$v.email.$error">please enter a valid email</span>
+            <input class="input w-input" @blur="$v.email.$touch()" type="email" placeholder="email:" v-model="email">
+            <span v-show="!$v.username.unique">username is taken</span>
+            <input class="input w-input" @blur="$v.username.$touch()" type="text" placeholder="username:" v-model="username">
+            <span v-show="$v.password.$error">password must be 6 or more characters</span>
+            <input class="input w-input" @blur="$v.password.$touch()" type="password" placeholder="password:" v-model="password">
+            <button type="submit" class="button"  :disabled="$v.$invalid"  v-on:click="signUp">Sign Up</button>
         </form>
     </div>
 </template>
@@ -12,14 +15,38 @@
 <script>
 import firebase from "firebase";
 import {userSchema} from "../schema/User.js";
+import {required, email, minLength} from 'vuelidate/lib/validators'
 
 export default {
 	data: function() {
 		return {
 			email: "",
 			username: "",
-			password: ""
+            password: "",
+            allUserNames: []
 		};
+    },
+    created() {
+		this.$store.dispatch('getAllUserNames').then(userNames => {
+            this.allUserNames = Object.keys(userNames);
+		});
+	},
+    validations: {
+        email: {
+            required,
+            email
+        },
+        username: {
+            required,
+            unique: (val, vm) => {
+                if(val == '') return true;
+                return !vm.allUserNames.includes(val);
+            }
+        },
+        password: {
+            required,
+            minLength: minLength(6)
+        }  
     },
     methods: {
         signUp() {
@@ -48,6 +75,7 @@ export default {
 </script>
 
 <style lang="less">
+
 .auth-container {
     z-index: 101;
     background: white;
