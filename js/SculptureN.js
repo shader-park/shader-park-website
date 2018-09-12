@@ -42,7 +42,7 @@ export class Sculpture {
     }
 
     update(time) {
-        this.mesh.material.uniforms['time'].value = time;
+        this.mesh.material.uniforms['time'].value = time * 0.001;
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
     }
 
