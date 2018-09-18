@@ -105,6 +105,10 @@ export const store = new Vuex.Store({
       return firebase.database().ref(`usernames`).once('value')
         .then(data => data.val());
     },
+    getUserIdFromUsername(context, username) {
+      return firebase.database().ref(`usernames/${username}`).once('value')
+        .then(data => data.val());
+    },
     getUserName({getters}) {
       const user = getters.getUser;
       return firebase.database().ref(`users/${user.uid}`).once('value')
@@ -206,18 +210,19 @@ export const store = new Vuex.Store({
       
 
     },
-    fetchUserSculptures({commit, getters}) {
+    fetchUserSculptures({commit, getters}, uid) {
       commit('setLoading', true);
-      const user = getters.getUser;
+      const userId = uid || getters.getUser.uid;
+      
       let route = 'sculptures';
       if(getters.isAdmin) {
         route = 'examples';
       }
-      return firebase.database().ref(`${route}/${user.uid}`).once('value').then(data => {
-            commit('setLoading', false);
-            return data.val();
-          })
-          .catch(error => console.log(error));
+      return firebase.database().ref(`${route}/${userId}`).once('value').then(data => {
+        commit('setLoading', false);
+        return data.val();
+      })
+      .catch(error => console.log(error));
     },
     fetchSculptures({commit, getters}, reference) {
       commit('setLoading', true);

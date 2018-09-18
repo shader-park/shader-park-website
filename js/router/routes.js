@@ -11,62 +11,61 @@ import SignUp from '../components/SignUp.vue';
 // For a the most basic route just set
 // the path & component to load
 
-export const routes = [{
+export const routes = [
+  {
     path: '',
     name: 'home',
     component: Home,
     meta: {
-        title: 'All Sculptures',
+      title: 'All Sculptures',
     }
-},
-{
+  },
+  {
     path: '/examples',
     name: 'examples',
     component: Examples,
     meta: {
-        title: 'Examples',
+      title: 'Examples',
     }
-},
-{
+  },
+  {
     path: '/new',
     name: 'new',
     component: New,
     meta: {
-        title: 'New Sculpture',
+      title: 'New Sculpture',
     }
-},
-{
+  },
+  {
     path: '/sign-in',
     name: 'signIn',
     component: SignIn,
     meta: {
-        title: 'Sign In',
+      title: 'Sign In',
     }
-},
-{
+  },
+  {
     path: '/sign-up',
     name: 'signUp',
     component: SignUp,
     meta: {
-        title: 'Sign Up',
+      title: 'Sign Up',
     }
-},
-{
+  },
+  {
     path: '/profile',
     name: 'profile',
     component: Profile,
+    meta: {title: 'Profile', requiresAuth: true}
+  },
+  {
+    path: '/user/:username',
+    name: 'user',
+    component: Profile,
     meta: {
-        title: 'Profile',
-        requiresAuth: true
+      title: 'user',
     }
-},
-{
-    path: '/404',
-    name: '404',
-    component: Error404
-},
-{
-    path: '*',
-    redirect: '/404'
-}
+  },
+  {path: '/404', name: '404', component: Error404},
+  {path: '*', redirect: '/404'}
 ]

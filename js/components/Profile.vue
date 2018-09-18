@@ -21,28 +21,55 @@ export default {
 	},
 	components : {
 		sculpture: Sculpture,
-		room : Room	
+		room : Room,
+		roomName: ''
 	},
 	computed: {
-		currUserID () {
-			return this.$store.getters.getUser.uid
+		currUser () {
+			return this.$store.getters.getUser;
 		}
 	},
 	mounted() {
-		this.$store.commit('setProfileBadgeCount', 0);
-		this.$store.dispatch('fetchUserSculptures').then(sculptures => {
+		console.log(this.$route.params.username);
+
+		// this.$route.params.id;
+		console.log('$route.params.id');
+		const username = this.$route.params.username;
+		
+		if(username) {
+			this.roomName = username;
+			
+			this.$store.dispatch('getUserIdFromUsername', username).then(uid => {
+				if(uid) {
+					this.$store.dispatch('fetchUserSculptures', uid).then(sculptures => {
+						this.setSculpturesAndJoinRoom(sculptures);
+					});
+				} else {
+					alert('Profile Not Found');
+				}
+			});
+		} else {
+			this.roomName = this.currUser.displayName;
+			this.$store.commit('setProfileBadgeCount', 0);
+			this.$store.dispatch('fetchUserSculptures').then(sculptures => {
+				this.setSculpturesAndJoinRoom(sculptures);
+			})
+			console.log(this.currUserID);
+			// console.log(this.$store.state.scene);
+		}
+	},
+	methods : {
+		setSculpturesAndJoinRoom(sculptures) {
 			if(sculptures) {
-				let temp = [];
-				Object.keys(sculptures).forEach(key => {
-					temp.push(sculptures[key]);
-				})
-				this.sculptures = temp; //array.push isn't tracked by state, resetting is
-			}
+					let temp = [];
+					Object.keys(sculptures).forEach(key => {
+						temp.push(sculptures[key]);
+					})
+					this.sculptures = temp; //array.push isn't tracked by state, resetting is
+				}
 			console.log(this.sculptures);
 			this.$store.commit('joinRoom', this.roomName);
-		})
-		console.log(this.currUserID);
-		// console.log(this.$store.state.scene);
+		}
 	}
 };
 

@@ -1,5 +1,5 @@
 <template>
-     <div class="auth-container">
+    <div class="auth-container">
         <form v-on:submit.prevent>
 			<span v-show="$v.email.$error">please enter a valid email</span>
             <input class="input w-input" type="email" @blur="$v.email.$touch()" placeholder="email:" v-model="email">

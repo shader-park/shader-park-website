@@ -1,12 +1,14 @@
 export class Editor {
 	constructor(renderer) {
 		this.edit_div = document.getElementById('editor');
-		this.cm = CodeMirror(this.edit_div, {
-			value: "/* shader source goes here */",
-			mode: "text/x-csrc",
-			keyMap: "sublime",
-			lineNumbers: true
-		});
+                this.cm = CodeMirror(this.edit_div, {
+                  value: '/* shader source goes here */',
+                  mode: 'text/x-csrc',
+                  keyMap: 'sublime',
+                  lineNumbers: true,
+                  menu: true
+                });
+                window.cm = this.cm;
 		this.edit_div.style.visibility = "hidden";
 		this.sculpture = null;
 		this.renderer = renderer;
