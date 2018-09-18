@@ -152,7 +152,7 @@ function render() {
 	})
 
 	const objectsToRaycast = store.state.objectsToRaycast;
-	if(objectsToRaycast) {
+	if (objectsToRaycast && store.state.selectedSculpture === null) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObjects(objectsToRaycast);
 		if(intersects.length > 0) {
