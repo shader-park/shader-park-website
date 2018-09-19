@@ -19,11 +19,13 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('fetchAllSculptures').then(sculptures => {
-			let temp = [];
-			Object.keys(sculptures).forEach(key => {
-				temp.push(sculptures[key]);
-			})
-			this.sculptures = temp; //array.push isn't tracked by state, resetting is
+			if(sculptures) {
+				let temp = [];
+				Object.keys(sculptures).forEach(key => {
+					temp.push(sculptures[key]);
+				})
+				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+			}
 			console.log(this.sculptures);
 			this.$store.commit('joinRoom', this.roomName);
 		})

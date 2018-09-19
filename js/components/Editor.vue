@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import {sculptureStarterCode} from '../starter-code.js'
-window.startercode = sculptureStarterCode;
+import {sculptureStarterCode, fragFooter} from '../default-shader.js'
 export default {
     data () {
         return {
@@ -64,6 +63,11 @@ export default {
         }
     },
     watch : {
+        autoUpdate(value) {
+            if(this.cm) {
+                this.cm.autoUpdate = value;
+            }
+        },
         isExample(value) {
             this.selectedSculpture.isExample = value;
             console.log('set sculpture isExample to ' + value);
@@ -74,10 +78,14 @@ export default {
                 if(!this.initialized) {
                     this.initialized = true;
                     this.initCodeMirror(obj.sculpture.fragmentShader);
+                    console.log('intitalizing code mirror');
                 } else {
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = this.selectedSculpture.isExample;
-                    console.log('ID:' + this.selectedSculpture.id)
+                    setTimeout(() => {
+                        //calling refresh on without setTimeout breaks the editor
+                        this.cm.editor.refresh();    
+                    }, 0);
                 }
             }
         }
@@ -143,7 +151,7 @@ export default {
         },   
         initCodeMirror(shader) {
             
-            let prefix = `
+            this.prefix = `
             #extension GL_EXT_frag_depth : enable
             precision highp float;
             precision highp int;
@@ -153,18 +161,23 @@ export default {
             // prefix += sculptureStarterCode;
 
             this.$nextTick(function() {
-				this.cm = new GlslEditor(this.$refs.codeMirror, { 
-                    canvas_size: 1,
-                    canvas_draggable: false,
-                    theme: 'default',
-                    multipleBuffers: false,
-                    watchHash: false,
-                    fileDrops: false,
-                    menu: false,
-                    frag_header : prefix
-                });
+                if(!this.cm) {   
+                    console.log('reinitializing CM');
+                    this.cm = new GlslEditor(this.$refs.codeMirror, { 
+                        canvas_size: 1,
+                        canvas_draggable: false,
+                        theme: 'default',
+                        multipleBuffers: false,
+                        watchHash: false,
+                        fileDrops: false,
+                        menu: false,
+                        frag_header : this.prefix + sculptureStarterCode,
+                        frag: shader,
+                        frag_footer: fragFooter
+                    });
+                }
                 window.cm = this.cm;
-                this.cm.editor.setValue(shader);
+                // this.cm.editor.setValue(shader);
                 this.cm.editor.on('change', () => {
                     if(this.autoUpdate) {
                         this.updateSculpture();

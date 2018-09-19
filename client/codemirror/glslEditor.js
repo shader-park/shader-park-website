@@ -19603,7 +19603,9 @@ var ErrorsDisplay = (function () {
             var re = /ERROR:\s+\d+:(\d+):\s+('.*)/g;
             var matches = re.exec(args.error);
             if (matches) {
-                var line = parseInt(matches[1]) - 7;
+                const numLines = (this.main.options.frag_header.match(/\r?\n/g) || '').length + 1
+                console.log('Line Pos' + numLines)
+                var line = parseInt(matches[1]) - numLines;
                 var er = matches[2];
                 var msg = document.createElement('div');
 

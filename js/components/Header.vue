@@ -6,7 +6,7 @@
         </div>
         <h1 class="nav-text">{{title}}</h1>
         <div class="nav-right">        
-            <router-link to="/" class="link" active-class="active" exact>Home</router-link>
+            <router-link to="/" class="link" active-class="active" exact>Gallery</router-link>
             <router-link to="/examples" class="link" active-class="active">Examples</router-link>
             <router-link to="/new" class="link" active-class="active">New</router-link>
             <router-link to="sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link>

@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
-import {defaultVertexSource, defaultFragSource} from './default-shader.js'
-import { createPedestalEdges } from './create-pedestal-edges.js'
+import {createPedestalEdges} from './create-pedestal-edges.js'
+import {defaultFragSource, defaultVertexSource, fragFooter, sculptureStarterCode} from './default-shader.js'
+
 export class Sculpture {
     constructor(fragmentShader = defaultFragSource) {
         this.vertexShader = defaultVertexSource;
@@ -21,20 +22,20 @@ export class Sculpture {
     }
 
     generateMaterial(vertexShader, fragmentShader) {
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                time: {value: 0.0},
-                sculptureCenter: {value: new THREE.Vector3()},
-            },
-            vertexShader,
-            fragmentShader
-        });
-        material.extensions.fragDepth = true;
-        return material;
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: {value: 0.0},
+          sculptureCenter: {value: new THREE.Vector3()},
+        },
+        vertexShader,
+        fragmentShader: sculptureStarterCode + fragmentShader + fragFooter
+      });
+      material.extensions.fragDepth = true;
+      return material;
     }
 
     setShaderSource(fragmentShader) {
-        this.fragmentShader = fragmentShader;
+      this.fragmentShader = fragmentShader;
     }
 
     refreshMaterial() {
