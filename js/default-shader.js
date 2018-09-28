@@ -15,9 +15,9 @@ float map(vec3 p) {
 }
 
 // Here you can define how your object at point p will be colored.
-vec3 shade(vec3 p) {
+vec3 shade(vec3 p, vec3 normal) {
     vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-    float light = simpleLighting(p, lightDirection);
+    float light = simpleLighting(p, normal, lightDirection);
     vec3 color = vec3(light, light, light);
 	return color;
 }
@@ -35,6 +35,28 @@ float map(vec3 p);
 const float PI = 3.14159265;
 const float TAU = PI*2.0;
 const float TWO_PI = TAU;
+
+// Simple oscillators 
+
+float osc(float freq, float amp, float base, float phase) {
+    return base+amp*sin(TWO_PI*(freq*time+phase));
+}
+
+float osc(float freq, float amp, float base) {
+    return osc(freq, amp, base, 0.0);
+}
+
+float osc(float freq, float amp) {
+    return osc(freq, amp, 1.0);
+}
+
+float osc(float freq) {
+    return osc(freq, 0.5);
+}
+
+float osc() {
+    return osc(1.0);
+}
 
 // Primitives
 
