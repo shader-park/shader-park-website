@@ -253,8 +253,7 @@ vec3 calcNormal( in vec3 pos )
 		      e.xxx*map( pos + e.xxx ) );
 }
 
-float simpleLighting(vec3 p, vec3 lightdir) {
-	vec3 normal = calcNormal(p);
+float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
     // Simple phong-like shading
     float value = clamp(dot(normal, normalize(lightdir)),0.0, 1.0);
 	return value * 0.3 + 0.7;
@@ -270,7 +269,8 @@ void main() {
 	if(t < 1.) {
 		vec3 p = (rayOrigin + rayDirection*t);
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
-		vec3 c = shade(p);
+		vec3 normal = calcNormal(p);
+		vec3 c = shade(p-sculptureCenter, normal);
 		gl_FragColor = vec4(c, 1.0);
 		gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
 	} else {
