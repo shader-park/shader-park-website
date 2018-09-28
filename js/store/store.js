@@ -1,7 +1,7 @@
+import firebase from 'firebase/app';
+import * as THREE from 'three';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import firebase from 'firebase';
-import * as THREE from 'three';
 
 Vue.use(Vuex);
 

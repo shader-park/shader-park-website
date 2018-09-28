@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Firebase from "firebase";
+import firebase from "firebase/app";
 import {required, email, minLength} from 'vuelidate/lib/validators'
 
 export default {
@@ -38,7 +38,7 @@ export default {
     },
 	methods: {
 		signIn: function() {
-			Firebase.auth()
+			firebase.auth()
 			.signInWithEmailAndPassword(this.email, this.password)
 			.then(
 				user => {

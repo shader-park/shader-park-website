@@ -1,5 +1,4 @@
 import { Sculpture } from './sculpture.js';
-import * as THREE from 'three';
 
 export function create_hl_box(grid) {
 	const edges = new THREE.Group();

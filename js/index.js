@@ -1,16 +1,16 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import io from 'socket.io-client';
 import * as THREE from 'three';
 import Vue from 'vue';
 import VModal from 'vue-js-modal'
 import VueRouter from 'vue-router';
+import Vuelidate from 'vuelidate';
 
 import App from './App.vue';
 import {dbConfig} from './dbConfig.js';
 import {Player} from './player.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
-import Vuelidate from 'vuelidate';
 
 
 firebase.initializeApp(dbConfig);
@@ -42,7 +42,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 const scene = store.state.scene;
-scene.background = new THREE.Color(1, 1, 1);
+scene.background = new THREE.Color(0.98, 0.98, 0.98);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 // var camera = new THREE.OrthographicCamera(
 //   window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
