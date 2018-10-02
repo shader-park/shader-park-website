@@ -59,6 +59,14 @@ export const routes = [
     meta: {title: 'Profile', requiresAuth: true}
   },
   {
+    path: '/sculpture/:id',
+    name: 'sculpture',
+    component: New,
+    meta: {
+      title: 'sculpture',
+    }  
+  },
+  {
     path: '/user/:username',
     name: 'user',
     component: Profile,
