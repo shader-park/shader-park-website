@@ -155,7 +155,8 @@ const startTime = Date.now();
 scene.add(hemisphereLight);
 
 window.addEventListener('resize', onWindowResize, false);
-window.addEventListener('click', onMouseClick, false);
+window.addEventListener('mousedown', onMouseDown, false);
+window.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('mousemove', onMouseMove, false);
 document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
@@ -202,8 +203,27 @@ function onMouseMove(event) {
 	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
+let tempIntersectedObject;
+function onMouseDown(event) {
+	if(store.state.intersectedObject) {
+        tempIntersectedObject = store.state.intersectedObject;
+	} else {
+		store.state.selectedObject = null;
+	}
+}
+
+function onMouseUp(event) {
+	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
+		store.state.selectedObject = store.state.intersectedObject;
+		canvas.style.cursor = 'auto';
+	} else {
+		store.state.selectedObject = null;
+	}
+	tempIntersectedObject = null;
+}
+
 function onMouseClick(event) {
-	if (store.state.intersectedObject != null) {
+	if (store.state.intersectedObject) {
 		console.log('clicked on object');
 		canvas.style.cursor = 'auto';
 		store.state.selectedObject = store.state.intersectedObject;
