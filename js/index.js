@@ -1,9 +1,8 @@
 import firebase from 'firebase/app';
 import io from 'socket.io-client';
 import * as THREE from 'three';
-
-// window.THREE = THREE;
 import * as OrbitControls from  './THREE_Helpers/OrbitControls.js'
+import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
 import VModal from 'vue-js-modal'
 import VueRouter from 'vue-router';
@@ -147,6 +146,7 @@ controls.keys = {
   RIGHT: 68,
   BOTTOM: 83
 };
+window.controls = controls;
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
@@ -161,10 +161,16 @@ document.addEventListener('mousemove', onMouseMove, false);
 document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
 const canvas = document.querySelector('canvas');
+canvas.setAttribute('tabindex', '0');
+canvas.addEventListener('click', (event) => {
+	console.log(event.target);
+	event.target.focus();
+});
+	
 
 render();
 
-function render() {
+function render(time) {
 	requestAnimationFrame(render);
 	const t = Date.now() - startTime;
 	store.state.objectsToUpdate.forEach(sculpture => {
@@ -183,7 +189,7 @@ function render() {
 			store.state.intersectedObject = null;
 		}
 	}
-	
+	TWEEN.update(time);
 	if(player) player.update();
 	// updateRemotePlayers();
 	controls.update();
@@ -213,9 +219,36 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
+	if(store.state.selectedObject) return;
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		store.state.selectedObject = store.state.intersectedObject;
 		canvas.style.cursor = 'auto';
+		let endTargetPos = new THREE.Vector3();
+		endTargetPos.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
+		// endTargetPos.x += 1;
+		
+		let camTarget = new THREE.Vector3().copy(controls.target);
+		let tweenControlsTarget = new TWEEN.Tween(camTarget)
+			.to(endTargetPos, 1000)
+			.easing(TWEEN.Easing.Quadratic.InOut)
+			.onUpdate(function () {
+				controls.target.set(camTarget.x, camTarget.y, camTarget.z);
+				console.log('tweaning target');
+			});
+		let camPos = new THREE.Vector3().copy(camera.position);
+		let endCamPos = new THREE.Vector3().copy(endTargetPos);
+		endCamPos.z += 2;
+		let tweenCamera = new TWEEN.Tween(camPos)
+			.to(endCamPos, 1000)
+			.easing(TWEEN.Easing.Quadratic.InOut)
+			.onUpdate(function () {
+				console.log('tweaning cama');
+				camera.position.set(camPos.x, camPos.y, camPos.z);
+			});
+		tweenCamera.start();
+		tweenControlsTarget.start();
+		
+		
 	} else {
 		store.state.selectedObject = null;
 	}
@@ -227,6 +260,7 @@ function onMouseClick(event) {
 		console.log('clicked on object');
 		canvas.style.cursor = 'auto';
 		store.state.selectedObject = store.state.intersectedObject;
+		
 	} else {
 		store.state.selectedObject = null;
 	}
