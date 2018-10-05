@@ -1,6 +1,9 @@
 import firebase from 'firebase/app';
 import io from 'socket.io-client';
 import * as THREE from 'three';
+
+// window.THREE = THREE;
+import * as OrbitControls from  './THREE_Helpers/OrbitControls.js'
 import Vue from 'vue';
 import VModal from 'vue-js-modal'
 import VueRouter from 'vue-router';
@@ -44,6 +47,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 const scene = store.state.scene;
 scene.background = new THREE.Color(0.98, 0.98, 0.98);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
+camera.position.z = 2;
+
 // var camera = new THREE.OrthographicCamera(
 //   window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 window.camera = camera;
@@ -76,16 +81,16 @@ socket.on('serverTellPlayersUpdate', playersInRoom => {
 	remotePlayers = playersInRoom;
 });
 
-socket.on('userConnect', (id) => {
-	player = new Player(id);
-	player.transform.add(camera);
-	player.transform.position.z = 2;
-	window.player = player;
+// socket.on('userConnect', (id) => {
+// 	player = new Player(id);
+// 	player.transform.add(camera);
+// 	player.transform.position.z = 2;
+// 	window.player = player;
 
-	scene.add(player.transform);
-	player.id = id;
-	console.log(id + ' has connected');
-});
+// 	scene.add(player.transform);
+// 	player.id = id;
+// 	console.log(id + ' has connected');
+// });
 
 socket.on('userDisconnect', (id) => {
 	console.log(id + ' has disconnected');
@@ -129,6 +134,20 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
+console.log(controls);
+console.log('ORBITcontrols');
+controls.enableDamping = true;
+controls.dampingFactor = 0.25;
+controls.zoomSpeed = 0.5;
+controls.rotateSpeed = 0.5;
+controls.keys = {
+  LEFT: 65,
+  UP: 87,
+  RIGHT: 68,
+  BOTTOM: 83
+};
+
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
@@ -166,7 +185,9 @@ function render() {
 	
 	if(player) player.update();
 	// updateRemotePlayers();
+	controls.update();
 	renderer.render(scene, camera);	
+
 }
 
 function keyPress(down, e) {

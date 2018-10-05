@@ -55,6 +55,8 @@ export default {
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
         if(!this.sculpture) {
+            console.log('asdflkajsdflj')
+            console.log(this.shaderSource);
             this.sculpture = new Sculpture(this.shaderSource);
         }
         if(this.id) {

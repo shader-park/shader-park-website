@@ -59,6 +59,15 @@ export const routes = [
     meta: {title: 'Profile', requiresAuth: true}
   },
   {
+    path: '/sculpture/:id',
+    name: 'sculpture',
+    component: New,
+    props: (route) => ({ example: route.query.example, embed: route.query.embed }),
+    meta: {
+      title: 'sculpture',
+    }  
+  },
+  {
     path: '/user/:username',
     name: 'user',
     component: Profile,
