@@ -141,6 +141,12 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.zoomSpeed = 0.5;
 controls.rotateSpeed = 0.5;
+controls.keys = {
+  LEFT: 65,
+  UP: 87,
+  RIGHT: 68,
+  BOTTOM: 83
+};
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();

@@ -17,7 +17,7 @@
         <!-- <span>by</span> -->
         <!-- <input type="text" id="editor-author-name" size="30"></input> -->
     </div>
-    <div @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
+    <div @keyup="()=>{}" @keydown.stop="()=>{}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
 </div>
 
 </template>
