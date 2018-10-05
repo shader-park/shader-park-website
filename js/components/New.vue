@@ -1,5 +1,10 @@
 <template>
-	<sculpture sculpData="tempSculp"></sculpture>			
+	<div>
+		<sculpture v-if="finishedLoadingSculp" ref="sculpture" :sculpData="tempSculp"></sculpture>			
+		<modal name="no-sculpture-data-found" class="modal-popup" height="60px" width="500px">
+			¯\_(ツ)_/¯ couldn't find the sculpture you were looking for.
+		</modal>
+	</div>
 </template>
 
 <script>
@@ -10,8 +15,39 @@ export default {
 		return {
 			tempSculp: {
 				id : this._uid
-			}
+			},
+			finishedLoadingSculp: false
 		}
+	},
+	props: ['example', 'embed'],
+	mounted() {
+		if(this.embed && this.embed === 'true') {
+			this.$store.commit('setEmbedded', true);
+			this.$nextTick(function() {
+				const sculp = this.$refs.sculpture;
+				if(sculp) {
+					this.$store.state.selectedSculpture = sculp;
+				}
+			});
+		}
+		const sculpId = this.$route.params.id;
+		if(sculpId) {
+			let payload = {id : sculpId};
+			if(this.example && this.example === 'true') {
+				payload['example'] = true;
+			}
+			this.$store.dispatch('fetchSculpture', payload).then(data => {
+				if(data) {
+					this.tempSculp = data;
+					this.finishedLoadingSculp = true;
+				} else {
+					this.showModal();
+				}
+			});
+		} else {
+			this.finishedLoadingSculp = true;
+		}
+	
 	},
 	components: {
 		sculpture: Sculpture,
@@ -19,8 +55,17 @@ export default {
 	methods: {
 		setUser: function() {
 			this.$store.dispatch('setUser');
+		},
+		showModal() {
+			this.$modal.show('no-sculpture-data-found');
 		}
 	}
 };
 </script>
 
+<style>
+.v--modal {
+	text-align: center !important;
+	padding-top: 20px !important;
+}
+</style>

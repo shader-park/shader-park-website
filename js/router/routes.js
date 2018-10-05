@@ -62,6 +62,7 @@ export const routes = [
     path: '/sculpture/:id',
     name: 'sculpture',
     component: New,
+    props: (route) => ({ example: route.query.example, embed: route.query.embed }),
     meta: {
       title: 'sculpture',
     }  

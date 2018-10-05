@@ -20,8 +20,8 @@ export const store = new Vuex.Store({
     intersectedObject: null,
     currentSculptures: [],
     loading: false,
-    profileBadgeCount: 0
-
+    profileBadgeCount: 0,
+    embedded: false
   },
   getters: {
     getUser: state => {
@@ -38,11 +38,17 @@ export const store = new Vuex.Store({
     },
     getProfileBadgeCount: state => {
       return state.profileBadgeCount;
+    },
+    getEmbedded: state => {
+      return state.embedded;
     }
   },
   mutations: {
     setUser: state => {
       state.user = firebase.auth().currentUser;
+    },
+    setEmbedded(state, embedded) {
+      state.embedded = embedded;
     },
     setSelectedSculpture(state, sculpture) {
       state.selectedSculpture = sculpture;
@@ -207,8 +213,6 @@ export const store = new Vuex.Store({
       } else {
         console.error('Tried to delete another user\'s sculpture');
       }
-      
-
     },
     fetchUserSculptures({commit, getters}, uid) {
       commit('setLoading', true);
@@ -223,6 +227,26 @@ export const store = new Vuex.Store({
         return data.val();
       })
       .catch(error => console.log(error));
+    },
+    fetchSculpture({commit, getters}, payload) {
+      if (!payload.id) {
+        console.error('No id passed to fetch sculpture');
+        return;
+      }
+      commit('setLoading', true);
+      const reference = payload.example ? 'examples/': 'sculptures/';
+      return firebase.database().ref(`${reference}`).orderByChild(payload.id).limitToLast(1).once('value')
+        .then(data => {
+          commit('setLoading', true);
+          //ends up getting the user's entire profile
+          const userSculpts =  data.val();
+          const keys = Object.keys(userSculpts);
+          if (userSculpts && keys.length > 0) {
+            return userSculpts[keys[0]][payload.id];
+          }
+          return null;
+        })
+        .catch(error => console.log(error));
     },
     fetchSculptures({commit, getters}, reference) {
       commit('setLoading', true);

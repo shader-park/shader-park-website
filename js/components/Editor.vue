@@ -80,6 +80,7 @@ export default {
                     this.initCodeMirror(obj.sculpture.fragmentShader);
                     console.log('intitalizing code mirror');
                 } else {
+                    console.log(this.selectedSculpture.id);
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = this.selectedSculpture.isExample;
                     setTimeout(() => {

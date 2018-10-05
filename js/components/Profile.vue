@@ -1,5 +1,10 @@
 <template>
-	<room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
+	<div>
+		<room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
+		<modal name="no-profile-data-found" class="modal-popup" height="60px" width="500px">
+		¯\_(ツ)_/¯ couldn't find the profile you were looking for
+		</modal>
+	</div>		
 </template>
 
 <script>
@@ -27,7 +32,7 @@ export default {
 
 		// this.$route.params.id;
 		console.log('$route.params.id');
-		const username = this.$route.params.username;
+	const username = this.$route.params.username;
 		
 		if(username) {
 			this.roomName = username;
@@ -38,7 +43,7 @@ export default {
 						this.setSculpturesAndJoinRoom(sculptures);
 					});
 				} else {
-					alert('Profile Not Found');
+					this.showModal();
 				}
 			});
 		} else {
@@ -62,6 +67,9 @@ export default {
 				}
 			console.log(this.sculptures);
 			this.$store.commit('joinRoom', this.roomName);
+		},
+		showModal() {
+			this.$modal.show('no-profile-data-found');
 		}
 	}
 };

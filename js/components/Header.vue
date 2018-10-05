@@ -1,6 +1,6 @@
 <template>
 
-    <div class="nav-bar">
+    <div v-if="!embedded" class="nav-bar">
         <div class="nav-left">
             <input type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search">
         </div>
@@ -21,6 +21,9 @@
 import firebase from "firebase/app";
 export default {
     computed: {
+        embedded() {
+            return this.$store.getters.getEmbedded;
+        },
         profileBadgeCount() {
             return this.$store.getters.getProfileBadgeCount;
         },
