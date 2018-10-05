@@ -3,3 +3,4 @@ node_modules
 dblogin.json
 dbConfig.js
 yarn-error.log
+client/bundle.js
