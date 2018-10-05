@@ -192,7 +192,7 @@ function render() {
 
 function keyPress(down, e) {
 	if (e.target.nodeName === 'BODY') {
-		player.keyEvent(down, e);
+		// player.keyEvent(down, e);
 	}
 }
 

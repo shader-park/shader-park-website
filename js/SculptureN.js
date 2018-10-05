@@ -16,26 +16,41 @@ export class Sculpture {
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
         this.pedestal.position.set(0, -.75, 0);
         this.mesh.add(this.pedestal);
-        const pedestalEdges = createPedestalEdges(1.0, 0.5);
-        pedestalEdges.position.set(0, -.75, 0);
-        this.mesh.add(pedestalEdges);
+        this.pedestalEdges = createPedestalEdges(1.0, 0.5);
+        this.pedestalEdges.position.set(0, -.75, 0);
+        this.mesh.add(this.pedestalEdges);
+        this.selected = false;
+    }
+
+    selectedSculpture(selected) {
+        this.mesh.remove(this.pedestalEdges);
+        if (selected) {
+            this.pedestalEdges = createPedestalEdges(1.0, 0.5, 0.015);
+            this.pedestalEdges.position.set(0, -.75, 0);
+            this.mesh.add(this.pedestalEdges);
+        } else {
+            this.pedestalEdges = createPedestalEdges(1.0, 0.5);
+			this.pedestalEdges.position.set(0, -.75, 0);
+            this.mesh.add(this.pedestalEdges);
+        }
+        this.selected = selected;
     }
 
     generateMaterial(vertexShader, fragmentShader) {
-      const material = new THREE.ShaderMaterial({
-        uniforms: {
-          time: {value: 0.0},
-          sculptureCenter: {value: new THREE.Vector3()},
-        },
-        vertexShader,
-        fragmentShader: sculptureStarterCode + fragmentShader + fragFooter
-      });
-      material.extensions.fragDepth = true;
-      return material;
+		const material = new THREE.ShaderMaterial({
+			uniforms: {
+				time: {value: 0.0},
+				sculptureCenter: {value: new THREE.Vector3()},
+			},
+			vertexShader,
+			fragmentShader: sculptureStarterCode + fragmentShader + fragFooter
+		});
+		material.extensions.fragDepth = true;
+		return material;
     }
 
     setShaderSource(fragmentShader) {
-      this.fragmentShader = fragmentShader;
+        this.fragmentShader = fragmentShader;
     }
 
     refreshMaterial() {
