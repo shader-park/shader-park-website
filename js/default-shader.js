@@ -18,8 +18,8 @@ float map(vec3 p) {
 vec3 shade(vec3 p, vec3 normal) {
     vec3 lightDirection = vec3(0.0, 1.0, 0.0);
     float light = simpleLighting(p, normal, lightDirection);
-    vec3 color = vec3(light, light, light);
-	return color;
+    vec3 color = vec3(1.0, 1.0, 1.0);
+	return color*light;
 }
 `;
 
@@ -27,6 +27,7 @@ export const sculptureStarterCode = `
 uniform mat4 projectionMatrix;
 uniform float time;
 uniform vec3 sculptureCenter;
+uniform vec3 mouse;
 
 varying vec4 worldPos;
 float stepSize = 0.9;
@@ -144,7 +145,7 @@ float cappedCylinder( vec3 p, vec2 h )
   return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 
-float triangularPrism( vec3 p, vec2 h ){
+float triangularPrism( vec3 p, vec2 h ) {
     vec3 q = abs(p);
     return max(q.z-h.y,max(q.x*0.866025+p.y*0.5,-p.y)-h.x*0.5);
 }

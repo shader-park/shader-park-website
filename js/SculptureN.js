@@ -25,6 +25,7 @@ export class Sculpture {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: {value: 0.0},
+	  mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
           sculptureCenter: {value: new THREE.Vector3()},
         },
         vertexShader,

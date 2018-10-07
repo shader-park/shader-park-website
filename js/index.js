@@ -171,15 +171,21 @@ function render() {
 	})
 
 	const objectsToRaycast = store.state.objectsToRaycast;
-	if (objectsToRaycast && store.state.selectedSculpture === null) {
+	if (objectsToRaycast) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObjects(objectsToRaycast);
 		if(intersects.length > 0) {
-			canvas.style.cursor = 'pointer';
-			store.state.intersectedObject = intersects[0].object;
+			const firstIntersect = intersects[0].object;
+			firstIntersect.material.uniforms.mouse.value = intersects[0].point.sub(firstIntersect.position);
+			if (store.state.selectedSculpture === null) {
+				canvas.style.cursor = 'pointer';
+				store.state.intersectedObject = firstIntersect;
+			}
 		} else {
-			canvas.style.cursor = 'auto';
-			store.state.intersectedObject = null;
+			if (store.state.selectedSculpture === null) {
+				canvas.style.cursor = 'auto';
+				store.state.intersectedObject = null;
+			}
 		}
 	}
 	
