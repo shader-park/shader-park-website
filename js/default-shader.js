@@ -30,7 +30,7 @@ uniform vec3 sculptureCenter;
 uniform vec3 mouse;
 
 varying vec4 worldPos;
-float stepSize = 0.9;
+float stepSize = 0.8;
 float map(vec3 p);
 
 const float PI = 3.14159265;
@@ -192,6 +192,26 @@ float add( float d1, float d2 )
     return min(d1,d2);
 }
 
+float add(float d1, float d2, float d3) {
+   return min(d1, min(d2,d3));
+}
+
+float add(float d1, float d2, float d3, float d4) {
+    return min(min(d1,d2),min(d3,d4));
+}
+
+float add(float d1, float d2, float d3, float d4, float d5) {
+    return min(min(min(d1,d2), min(d3,d4)),d5);
+}
+
+float add(float d1, float d2, float d3, float d4, float d5, float d6) {
+    return min(min(min(d1,d2),min(d3,d4)),min(d5,d6));
+}
+
+float add(float d1, float d2, float d3, float d4, float d5, float d6, float d7) {
+    return min(min(min(d1,d2),min(d3,d4)),min(min(d5,d6),d7));
+}
+
 float subtract( float d1, float d2 )
 {
     return max(-d1,d2);
@@ -254,6 +274,37 @@ float noise( in vec2 p )
     return dot( n, vec3(70.0) );
 }
 
+vec3 hash33(vec3 p3)
+{
+    p3 = fract(p3 * vec3(.1031,.11369,.13787));
+    p3 += dot(p3, p3.yxz+19.19);
+    return -1.0 + 2.0 * fract(vec3((p3.x + p3.y)*p3.z, (p3.x+p3.z)*p3.y, (p3.y+p3.z)*p3.x));
+}
+
+// simplex noise from https://www.shadertoy.com/view/4sc3z2
+float noise(vec3 p)
+{
+    const float K1 = 0.333333333;
+    const float K2 = 0.166666667;
+    
+    vec3 i = floor(p + (p.x + p.y + p.z) * K1);
+    vec3 d0 = p - (i - (i.x + i.y + i.z) * K2);
+    
+    // thx nikita: https://www.shadertoy.com/view/XsX3zB
+    vec3 e = step(vec3(0.0), d0 - d0.yzx);
+	vec3 i1 = e * (1.0 - e.zxy);
+	vec3 i2 = 1.0 - e.zxy * (1.0 - e);
+    
+    vec3 d1 = d0 - (i1 - 1.0 * K2);
+    vec3 d2 = d0 - (i2 - 2.0 * K2);
+    vec3 d3 = d0 - (1.0 - 3.0 * K2);
+    
+    vec4 h = max(0.6 - vec4(dot(d0, d0), dot(d1, d1), dot(d2, d2), dot(d3, d3)), 0.0);
+    vec4 n = h * h * h * h * vec4(dot(d0, hash33(i)), dot(d1, hash33(i + i1)), dot(d2, hash33(i + i2)), dot(d3, hash33(i + 1.0)));
+    
+    return dot(vec4(31.316), n);
+}
+
 // Compute intersection of ray and SDF. You probably won't need to modify this.
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
@@ -263,6 +314,11 @@ float intersect(vec3 ro, vec3 rd, float stepFraction) {
 		t += h*stepFraction;
 	}
 	return t;
+}
+
+vec3 mouseIntersection() {
+    vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
+    return mouse+rayDirection*intersect(mouse+sculptureCenter, rayDirection, 0.8);
 }
 
 // Calculate the normal of a SDF
