@@ -92,6 +92,11 @@ export default {
             if(obj && obj.name == this.sculpture.mesh.name) {
                 console.log('selected!!');
                 this.$store.state.selectedSculpture = this.$data;
+                this.sculpture.selectedSculpture(true);
+            } else {
+                if(this.sculpture.selected) {
+                    this.sculpture.selectedSculpture(false);
+                }
             }
         },
         id: function (val) {
