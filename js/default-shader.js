@@ -252,7 +252,7 @@ float smoothSubtract(float a,float b, float k)
     return -smoothAdd(-a,-b,k);
 }
 
-vec2 hash( vec2 p ) // replace this by something better
+vec2 _hash( vec2 p ) // replace this by something better
 {
 	p = vec2( dot(p,vec2(127.1,311.7)),
 			  dot(p,vec2(269.5,183.3)) );
@@ -270,11 +270,11 @@ float noise( in vec2 p )
     vec2 b = a - o + K2;
 	vec2 c = a - 1.0 + 2.0*K2;
     vec3 h = max( 0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
-	vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+	vec3 n = h*h*h*h*vec3( dot(a,_hash(i+0.0)), dot(b,_hash(i+o)), dot(c,_hash(i+1.0)));
     return dot( n, vec3(70.0) );
 }
 
-vec3 hash33(vec3 p3)
+vec3 _hash33(vec3 p3)
 {
     p3 = fract(p3 * vec3(.1031,.11369,.13787));
     p3 += dot(p3, p3.yxz+19.19);
@@ -300,7 +300,7 @@ float noise(vec3 p)
     vec3 d3 = d0 - (1.0 - 3.0 * K2);
     
     vec4 h = max(0.6 - vec4(dot(d0, d0), dot(d1, d1), dot(d2, d2), dot(d3, d3)), 0.0);
-    vec4 n = h * h * h * h * vec4(dot(d0, hash33(i)), dot(d1, hash33(i + i1)), dot(d2, hash33(i + i2)), dot(d3, hash33(i + 1.0)));
+    vec4 n = h * h * h * h * vec4(dot(d0, _hash33(i)), dot(d1, _hash33(i + i1)), dot(d2, _hash33(i + i2)), dot(d3, _hash33(i + 1.0)));
     
     return dot(vec4(31.316), n);
 }
@@ -308,9 +308,9 @@ float noise(vec3 p)
 // Compute intersection of ray and SDF. You probably won't need to modify this.
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
-	for(int i = 0; i < 128; ++i) {
+	for(int i = 0; i < 192; ++i) {
 		float h = map((ro+rd*t) - sculptureCenter);
-		if(h < 0.001 || t>1.) break;
+		if(h < 0.0007 || t>1.5) break;
 		t += h*stepFraction;
 	}
 	return t;
@@ -336,6 +336,22 @@ float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
     // Simple phong-like shading
     float value = clamp(dot(normal, normalize(lightdir)),0.0, 1.0);
 	return value * 0.3 + 0.7;
+}
+
+// From https://www.shadertoy.com/view/XslSWl
+float calcAO(vec3 p,vec3 n) { 
+    const int AO_SAMPLES = 8;
+    const float INV_AO_SAMPLES = 1.0/float(AO_SAMPLES);
+    const float R = 0.9;
+    const float D = 0.8;
+    float r = 0.0;
+    for(int i = 0; i < AO_SAMPLES; i++) {
+        float f = float(i)*INV_AO_SAMPLES;
+        float h = 0.05+f*R;
+        float d = map(p + n * h) - 0.003;
+        r += clamp(h*D-d,0.0,1.0) * (1.0-f);
+    }    
+    return clamp(1.0-r,0.0,1.0);
 }
 `;
 
