@@ -2,15 +2,15 @@
 
     <div v-if="!embedded" class="nav-bar">
         <div class="nav-left">
-            <input type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search">
+            <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search">
         </div>
-        <h1 class="nav-text">{{title}}</h1>
+        <h1 v-if="isMobile" class="nav-text">{{title}}</h1>
         <div class="nav-right">        
             <router-link to="/" class="link" active-class="active" exact>Gallery</router-link>
             <router-link to="/examples" class="link" active-class="active">Examples</router-link>
-            <router-link to="/new" class="link" active-class="active">New</router-link>
+            <router-link v-if="isMobile" to="/new" class="link" active-class="active">New</router-link>
             <router-link to="sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link>
-            <router-link to="sign-up" class="link" v-if="!user" active-class="active">Sign Up</router-link>
+            
             <router-link v-bind:data-badge="profileBadgeCount" to="profile" v-bind:class="{ dynamicBadge: profileBadgeCount > 0 }" class="link" v-if="user" active-class="active">Profile</router-link>
             <a class="link" v-on:click="signOut" v-if="user" active-class="active">Sign Out</a>
         </div>
@@ -32,6 +32,9 @@ export default {
         },
         title() {
             return this.$route.meta.title;
+        },
+        isMobile() {
+            return window.innerWidth > 500;
         }
     },
     methods: {
@@ -119,20 +122,6 @@ export default {
         right: 0px;
         z-index: 1;
     }  
-    .link {
-        margin-right: 40px;
-        border-bottom: 2px solid hsla(0, 0%, 100%, 0) !important;
-        font-size: 18px;
-        line-height: 0px;
-        font-weight: 300;
-        text-decoration: none;
-        transition: color 300ms ease-in-out;
-        color: #777;
-        -webkit-transition: color 300ms ease-in-out ;
-        &:hover {
-            color: #000;
-        }        
-    }
     .link.active {
         color: #000;
         border-bottom: 2px solid #50e3c2 !important;
@@ -149,7 +138,20 @@ export default {
         font-weight: 300;
     }
 }
-
+.link {
+    margin-right: 40px;
+    border-bottom: 2px solid hsla(0, 0%, 100%, 0) !important;
+    font-size: 18px;
+    line-height: 0px;
+    font-weight: 300;
+    text-decoration: none;
+    transition: color 300ms ease-in-out;
+    color: #777;
+    -webkit-transition: color 300ms ease-in-out ;
+    &:hover {
+        color: #000;
+    }        
+}
 
 .button {
     opacity: 1.0;

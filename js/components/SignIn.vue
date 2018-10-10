@@ -6,6 +6,7 @@
             <span v-show="$v.password.$error">password must be 6 or more characters</span>
             <input class="input w-input" type="password" @blur="$v.password.$touch()"  placeholder="password:" v-model="password">
             <button type="submit" class="button"  :disabled="$v.$invalid" v-on:click="signIn">Sign In</button>
+			<router-link to="sign-up" class="link sign-up" v-if="!user" active-class="active">Sign Up</router-link>
         </form>
     </div>
 </template>
@@ -52,3 +53,8 @@ export default {
 	}
 };
 </script>
+<style scoped>
+.sign-up {
+	margin-left: 10px;
+}
+</style>
