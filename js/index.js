@@ -239,7 +239,6 @@ function onMouseUp(event) {
 			.easing(TWEEN.Easing.Quadratic.InOut)
 			.onUpdate(function () {
 				controls.target.set(camTarget.x, camTarget.y, camTarget.z);
-				console.log('tweaning target');
 			});
 		let camPos = new THREE.Vector3().copy(camera.position);
 		let endCamPos = new THREE.Vector3().copy(endTargetPos);
@@ -248,7 +247,6 @@ function onMouseUp(event) {
 			.to(endCamPos, 1000)
 			.easing(TWEEN.Easing.Quadratic.InOut)
 			.onUpdate(function () {
-				console.log('tweaning cama');
 				camera.position.set(camPos.x, camPos.y, camPos.z);
 			});
 		tweenCamera.start();

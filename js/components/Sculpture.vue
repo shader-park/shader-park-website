@@ -29,6 +29,7 @@ export default {
     props: ['sculpData', 'sculpGeom'],
     data: function() {
         return {
+            //This all gets saved to the Database!!!!
             id : this.sculpData.id || null,
             vueId: this._uid,
             author : {  
@@ -49,6 +50,7 @@ export default {
             visibility : this.sculpData.visibility || 'public', //draft, public, private
             license : this.sculpData.license || null, 
             shaderSource: this.sculpData.shaderSource || defaultFragSource,
+            //sculpture is not saved to the db
             sculpture: this.sculpGeom || null
         };
     },

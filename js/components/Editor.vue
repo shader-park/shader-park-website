@@ -142,13 +142,13 @@ export default {
             
             const fragmentShader = this.cm.editor.getValue();
             const currSculp = this.selectedSculpture;
-            if(currSculp && this.cm.errorsDisplay.widgets.length !== 1) {
+            if(currSculp){ //&& this.cm.errorsDisplay.widgets.length !== 1) {
                 currSculp.shaderSource = fragmentShader;
+                // console.log('updated Sculp Code');
+            } else {
+                console.log('Sculp not updated because of Error in code');
             }
-            console.log('updated code');
-            
 
-        // }),
         },   
         initCodeMirror(shader) {
             
@@ -159,7 +159,6 @@ export default {
             uniform vec3 cameraPosition;
             uniform mat4 viewMatrix;
             ` ;
-            // prefix += sculptureStarterCode;
 
             this.$nextTick(function() {
                 if(!this.cm) {   
@@ -178,12 +177,13 @@ export default {
                     });
                 }
                 window.cm = this.cm;
-                // this.cm.editor.setValue(shader);
-                this.cm.editor.on('change', () => {
-                    if(this.autoUpdate) {
+                this.cm.shader.canvas.on('processedShader', (data) => {
+                    // if(!data.error) return;
+                    console.log(!data.containsError);
+                    if(this.autoUpdate && !data.containsError) {
                         this.updateSculpture();
                     }
-                });	
+                });
             });
         }
     }

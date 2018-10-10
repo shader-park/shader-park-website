@@ -15559,6 +15559,16 @@ function create3DContext(canvas, optAttribs) {
 /*
  *	Create a Vertex of a specific type (gl.VERTEX_SHADER/)
  */
+function emitShaderFinishedProcessing(main, source, type, containsError) {
+  let defaultShader = 'void main(){\n\tgl_FragColor = vec4(1.0);\n}';
+  if (type === main.gl.FRAGMENT_SHADER && source != defaultShader) {
+    main.trigger('processedShader', {
+      containsError
+    });
+  }
+}
+
+
 function createShader(main, source, type, offset) {
     var gl = main.gl;
     gl.getExtension('EXT_frag_depth');
@@ -15567,7 +15577,6 @@ function createShader(main, source, type, offset) {
     gl.compileShader(shader);
 
     var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-
     if (!compiled) {
         // Something went wrong during compilation; get the error
         lastError = gl.getShaderInfoLog(shader);
@@ -15580,9 +15589,10 @@ function createShader(main, source, type, offset) {
             offset: offset || 0
         });
         gl.deleteShader(shader);
+        emitShaderFinishedProcessing(main, source, type, true);
         return null;
     }
-
+    emitShaderFinishedProcessing(main, source, type, false);
     return shader;
 }
 
