@@ -3,6 +3,15 @@
 <div  v-show="selectedSculpture != null" class="editor">
     <v-dialog/>
     <div class="controls">
+        <input @keyup="()=>{}" 
+               @keydown.stop="() => {}" 
+               @click.stop="()=>{}" 
+               v-bind:style="titleInput"
+               classs="editor-input" v-model="sculptureTitle" placeholder="title">
+        <span v-if="authorUsername !=='admin' && authorUsername">by 
+            <router-link :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
+        </span>
+        <br/>
         <button @click.stop="save" class="save">{{saveText}}</button>
         <button @click.stop="play" class="play">Play</button>
         <button @click.stop="close" class="close">Close</button>
@@ -11,6 +20,7 @@
 
         <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
         <label v-if="isAdmin" for="Example">Is Example</label>
+        
 
         <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete">Delete</button>
         <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
@@ -30,7 +40,12 @@ export default {
             cm: null,
             initialized: false,
             isExample: false,
-            autoUpdate: true
+            autoUpdate: true,
+            titleInput: {
+                width: '5ch',
+                border: 'none',
+                marginBottom: '5px'
+            }
         }
     },
     mounted() {
@@ -60,6 +75,26 @@ export default {
         },
         displayDelete() {
             return this.selectedSculpture && this.currUser && this.currUser.uid && this.selectedSculpture.author.uid === this.currUser.uid;
+        },
+        authorUsername() {
+            return this.selectedSculpture? this.selectedSculpture.author.username: null;
+        },
+        authorId() {
+            return this.selectedSculpture? this.selectedSculpture.author.uid: null;
+        },
+        userProfileRoute() {
+            return this.selectedSculpture? `/user/${this.selectedSculpture.author.username}`: $router.currentRoute.path;
+        },
+        sculptureTitle: {
+            get : function() {
+                return this.selectedSculpture? this.selectedSculpture.title: '';
+            },
+            set : function(value) {
+                if(this.$store.state.selectedSculpture) {
+                    this.$store.state.selectedSculpture.title = value;
+                    this.titleInput.width = value.length + 'ch';
+                }   
+            }
         }
     },
     watch : {
@@ -75,6 +110,10 @@ export default {
         selectedSculpture(obj) {
             console.log('found Sculp form editor');
             if(obj) {
+                if(obj.title) {
+                    this.titleInput.width = obj.title.length + 'ch';
+                }
+                
                 if(!this.initialized) {
                     this.initialized = true;
                     this.initCodeMirror(obj.sculpture.fragmentShader);
@@ -209,7 +248,12 @@ button {
 
 }
 
-.delete {
+.editor-input {
+    border: none !important;
+    margin-bottom: 5px !important;
+}
+
+.delete, .close {
     float: right;
     margin-right: 10px;
 }
@@ -251,7 +295,7 @@ label {
 .editor {
     
     position: absolute;
-    top: 140px;
+    top: 85px;
     right: 0px;
 }
 

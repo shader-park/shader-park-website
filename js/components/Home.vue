@@ -24,6 +24,7 @@ export default {
 				Object.keys(sculptures).forEach(key => {
 					temp.push(sculptures[key]);
 				})
+				temp.reverse();
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
 			}
 			console.log(this.sculptures);

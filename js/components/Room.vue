@@ -42,7 +42,7 @@ export default {
                 // const currMesh = this.sculptures[index].sculpture.mesh;
                 let pos = newSculp.mesh.position;
                 pos.x = row * this.grid.spacing;
-                pos.z = col * this.grid.spacing;
+                pos.z = col * this.grid.spacing ;
                 console.log('pushed another sculp');
                 this.sculptureGeomotries.push(newSculp);
                 row++;
