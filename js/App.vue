@@ -3,8 +3,6 @@
 		<div class="container">
 			<nav-main></nav-main>
 			<router-view></router-view>
-			
-			<!-- <sculpture sculpData="tempSculp"></sculpture> -->
 			<editor></editor>
 		</div>
 	</main>
@@ -14,27 +12,12 @@
 import Header from './components/Header.vue';
 import Sculpture from './components/Sculpture.vue';
 import Editor from './components/Editor.vue';
-// import { codemirror } from 'vue-codemirror-lite'
 
 export default {
-	data: function() {
-		return {
-			tempSculp: {
-				id : '2',
-				author : 'temp',
-				title : '',
-				description : '',
-				tags : '',
-				timestamp : ''
-			}
-		}
-	},
 	components: {
 		navMain: Header,
 		sculpture: Sculpture,
 		editor: Editor,
-		
-		// codemirror
 	},
 	methods: {
 		setUser: function() {
@@ -47,7 +30,7 @@ export default {
 	// this uses Vuex to check if a user is signed in
 	// check out mutations in the store.js file
 		this.setUser();
-	}
+	},
 };
 </script>
 

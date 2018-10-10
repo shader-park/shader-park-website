@@ -13,10 +13,10 @@ export const store = new Vuex.Store({
     scene: new THREE.Scene(),
     socket: null,
     currentRoom: null,
-    selectedSculpture: null,
+    selectedSculpture: null,  // vue sculpture data
+    selectedObject: null,     // three.js mesh
     objectsToUpdate: [],
     objectsToRaycast: [],
-    selectedObject: null,
     intersectedObject: null,
     currentSculptures: [],
     loading: false,

@@ -1,6 +1,6 @@
 <template>
 
-<div  v-show="selectedSculpture != null" class="editor">
+<div :class="{embeded : isEmbeded}"  v-show="selectedSculpture != null" class="editor">
     <v-dialog/>
     <div class="controls">
         <input @keyup="()=>{}" 
@@ -95,6 +95,9 @@ export default {
                     this.titleInput.width = value.length + 'ch';
                 }   
             }
+        },
+        isEmbeded() {
+            return this.$store.state.embedded;
         }
     },
     watch : {
@@ -293,7 +296,9 @@ label {
 }
 
 .editor {
-    
+    &.embeded {
+        top: 0px;
+    }
     position: absolute;
     top: 85px;
     right: 0px;

@@ -69,6 +69,9 @@ export default {
         this.$store.state.scene.add(this.sculpture.mesh);
         this.$store.state.objectsToUpdate.push(this.sculpture);
         this.$store.state.objectsToRaycast.push(this.sculpture.mesh);
+        if(this.$store.state.selectedObject) {
+            this.setSelectedSculpture(this.$store.state.selectedObject);
+        }
         
         // console.log('this.$data');
         // console.log(this.$data);
@@ -91,15 +94,7 @@ export default {
             }
         },
         selectedObject: function (obj) {
-            if(obj && obj.name == this.sculpture.mesh.name) {
-                console.log('selected!!');
-                this.$store.state.selectedSculpture = this.$data;
-                this.sculpture.selectedSculpture(true);
-            } else {
-                if(this.sculpture.selected) {
-                    this.sculpture.selectedSculpture(false);
-                }
-            }
+            this.setSelectedSculpture(obj);
         },
         id: function (val) {
             console.log('id of sculp changed to' + val);
@@ -116,6 +111,17 @@ export default {
     methods: {
         setPose(pose){
             // this.sculpture.mesh.
+        },
+        setSelectedSculpture(obj) {
+            if(obj && obj.name == this.sculpture.mesh.name) {
+                console.log('selected!!');
+                this.$store.state.selectedSculpture = this.$data;
+                this.sculpture.selectedSculpture(true);
+            } else {
+                if(this.sculpture.selected) {
+                    this.sculpture.selectedSculpture(false);
+                }
+            }
         }
 
     },

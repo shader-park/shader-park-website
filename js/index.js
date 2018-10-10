@@ -29,6 +29,9 @@ const router = new VueRouter({routes: routes, mode: 'history'});
 
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
+	store.state.selectedObject = null;
+	store.state.selectedSculpture = null;
+	sculptureHasBeenSelected = false;
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 	if (requiresAuth && !currentUser) {
 		next('/sign-in');
@@ -134,8 +137,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
-console.log(controls);
-console.log('ORBITcontrols');
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.zoomSpeed = 0.5;
@@ -169,6 +170,7 @@ canvas.addEventListener('click', (event) => {
 	
 
 render();
+let sculptureHasBeenSelected = false;
 
 function render(time) {
 	requestAnimationFrame(render);
@@ -176,6 +178,15 @@ function render(time) {
 	store.state.objectsToUpdate.forEach(sculpture => {
 		sculpture.update(t);
 	})
+
+	if(store.state.selectedSculpture && !sculptureHasBeenSelected) {
+		tweenCameraToSelectedSculpture();	
+		console.log('tweening to Sculpture');
+		// console.log(store.state.selectedSculpture);
+		sculptureHasBeenSelected = true;
+	} else if(!store.state.selectedSculpture) {
+		sculptureHasBeenSelected = false;
+	}
 
 	const objectsToRaycast = store.state.objectsToRaycast;
 	if (objectsToRaycast) {
@@ -229,34 +240,36 @@ function onMouseUp(event) {
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		store.state.selectedObject = store.state.intersectedObject;
 		canvas.style.cursor = 'auto';
-		let endTargetPos = new THREE.Vector3();
-		endTargetPos.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
-		// endTargetPos.x += 1;
-		
-		let camTarget = new THREE.Vector3().copy(controls.target);
-		let tweenControlsTarget = new TWEEN.Tween(camTarget)
-			.to(endTargetPos, 1000)
-			.easing(TWEEN.Easing.Quadratic.InOut)
-			.onUpdate(function () {
-				controls.target.set(camTarget.x, camTarget.y, camTarget.z);
-			});
-		let camPos = new THREE.Vector3().copy(camera.position);
-		let endCamPos = new THREE.Vector3().copy(endTargetPos);
-		endCamPos.z += 2;
-		let tweenCamera = new TWEEN.Tween(camPos)
-			.to(endCamPos, 1000)
-			.easing(TWEEN.Easing.Quadratic.InOut)
-			.onUpdate(function () {
-				camera.position.set(camPos.x, camPos.y, camPos.z);
-			});
-		tweenCamera.start();
-		tweenControlsTarget.start();
-		
-		
+		// tweenCameraToSelectedSculpture();
 	} else {
 		store.state.selectedObject = null;
 	}
 	tempIntersectedObject = null;
+}
+
+function tweenCameraToSelectedSculpture() {
+	let endTargetPos = new THREE.Vector3();
+	endTargetPos.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
+	// endTargetPos.x += 1;
+
+	let camTarget = new THREE.Vector3().copy(controls.target);
+	let tweenControlsTarget = new TWEEN.Tween(camTarget)
+		.to(endTargetPos, 1000)
+		.easing(TWEEN.Easing.Quadratic.InOut)
+		.onUpdate(function () {
+			controls.target.set(camTarget.x, camTarget.y, camTarget.z);
+		});
+	let camPos = new THREE.Vector3().copy(camera.position);
+	let endCamPos = new THREE.Vector3().copy(endTargetPos);
+	endCamPos.z += 2;
+	let tweenCamera = new TWEEN.Tween(camPos)
+		.to(endCamPos, 1000)
+		.easing(TWEEN.Easing.Quadratic.InOut)
+		.onUpdate(function () {
+			camera.position.set(camPos.x, camPos.y, camPos.z);
+		});
+	tweenCamera.start();
+	tweenControlsTarget.start();
 }
 
 function onMouseClick(event) {

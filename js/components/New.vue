@@ -23,12 +23,7 @@ export default {
 	mounted() {
 		if(this.embed && this.embed === 'true') {
 			this.$store.commit('setEmbedded', true);
-			this.$nextTick(function() {
-				const sculp = this.$refs.sculpture;
-				if(sculp) {
-					this.$store.state.selectedSculpture = sculp;
-				}
-			});
+			this.setSelectedSculpture();
 		}
 		const sculpId = this.$route.params.id;
 		if(sculpId) {
@@ -40,12 +35,14 @@ export default {
 				if(data) {
 					this.tempSculp = data;
 					this.finishedLoadingSculp = true;
+					this.setSelectedSculpture();
 				} else {
 					this.showModal();
 				}
 			});
 		} else {
 			this.finishedLoadingSculp = true;
+			this.setSelectedSculpture();
 		}
 	
 	},
@@ -58,6 +55,14 @@ export default {
 		},
 		showModal() {
 			this.$modal.show('no-sculpture-data-found');
+		},
+		setSelectedSculpture() {
+			this.$nextTick(function() {
+				const sculp = this.$refs.sculpture;
+				if(sculp) {
+					this.$store.state.selectedObject = sculp.sculpture.mesh;
+				}
+			});
 		}
 	}
 };
