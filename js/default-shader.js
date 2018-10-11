@@ -26,6 +26,7 @@ vec3 shade(vec3 p, vec3 normal) {
 export const sculptureStarterCode = `
 uniform mat4 projectionMatrix;
 uniform float time;
+uniform float opacity;
 uniform vec3 sculptureCenter;
 uniform vec3 mouse;
 
@@ -366,8 +367,8 @@ void main() {
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
 		vec3 normal = calcNormal(p);
 		vec3 c = shade(p-sculptureCenter, normal);
-		gl_FragColor = vec4(c, 1.0);
-		gl_FragDepthEXT = (sp.z/sp.w) * 0.5 + 0.5;
+		gl_FragColor = vec4(c, opacity);
+		
 	} else {
 		discard;
 	}
