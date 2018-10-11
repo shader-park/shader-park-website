@@ -31,12 +31,16 @@ uniform vec3 sculptureCenter;
 uniform vec3 mouse;
 
 varying vec4 worldPos;
+
 float stepSize = 0.8;
 float map(vec3 p);
 
 const float PI = 3.14159265;
 const float TAU = PI*2.0;
 const float TWO_PI = TAU;
+
+const float max_dist = 4.0;
+const float intersection_threshold = 0.00007;
 
 // Simple oscillators 
 
@@ -310,8 +314,8 @@ float noise(vec3 p)
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
 	for(int i = 0; i < 192; ++i) {
-		float h = map((ro+rd*t) - sculptureCenter);
-		if(h < 0.0007 || t>1.5) break;
+		float h = map(ro+rd*t);
+		if(h < intersection_threshold || t>max_dist) break;
 		t += h*stepFraction;
 	}
 	return t;
@@ -319,7 +323,7 @@ float intersect(vec3 ro, vec3 rd, float stepFraction) {
 
 vec3 mouseIntersection() {
     vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
-    return mouse+rayDirection*intersect(mouse+sculptureCenter, rayDirection, 0.8);
+    return mouse+rayDirection*intersect(mouse, rayDirection, 0.8);
 }
 
 // Calculate the normal of a SDF
@@ -339,8 +343,13 @@ float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
 	return value * 0.3 + 0.7;
 }
 
+float shadow(vec3 p, vec3 lightDirection, float amount) {
+    float t = intersect(p+0.001*lightDirection, lightDirection, stepSize);
+    return t < (max_dist - 0.1) ? 1.0-amount : 1.0;
+}
+
 // From https://www.shadertoy.com/view/XslSWl
-float calcAO(vec3 p,vec3 n) { 
+float occlusion(vec3 p,vec3 n) { 
     const int AO_SAMPLES = 8;
     const float INV_AO_SAMPLES = 1.0/float(AO_SAMPLES);
     const float R = 0.9;
@@ -361,7 +370,7 @@ export const fragFooter = `
 void main() {
 	vec3 rayOrigin = worldPos.xyz;
 	vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
-	float t = intersect(rayOrigin, rayDirection, stepSize);
+	float t = intersect(rayOrigin-sculptureCenter, rayDirection, stepSize);
 	if(t < 1.) {
 		vec3 p = (rayOrigin + rayDirection*t);
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
