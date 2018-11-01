@@ -21,6 +21,7 @@ export default {
 	},
 	props: ['example', 'embed'],
 	mounted() {
+		this.$store.commit('sculpturesLoaded', false);
 		if(this.embed && this.embed === 'true') {
 			this.$store.commit('setEmbedded', true);
 			this.setSelectedSculpture();
@@ -44,6 +45,7 @@ export default {
 			this.finishedLoadingSculp = true;
 			this.setSelectedSculpture();
 		}
+		
 	
 	},
 	components: {
@@ -61,6 +63,7 @@ export default {
 				const sculp = this.$refs.sculpture;
 				if(sculp) {
 					this.$store.state.selectedObject = sculp.sculpture.mesh;
+					this.$store.commit('sculpturesLoaded', true);
 				}
 			});
 		}

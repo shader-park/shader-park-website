@@ -26,36 +26,77 @@ Vue.config.productionTip = false;
 window.db = firebase.database();
 
 const router = new VueRouter({routes: routes, mode: 'history'});
+let animationPaused = false;
 
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
-	store.state.selectedObject = null;
-	store.state.selectedSculpture = null;
-	sculptureHasBeenSelected = false;
-	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-	if (requiresAuth && !currentUser) {
-		next('/sign-in');
-	} else if (requiresAuth && currentUser) {
-		next();
+	
+	runOnce = false;
+	
+	const nextRoute = () => {
+		animationPaused = true;
+		allSculpturesOpacity.opacity = 0.0;
+		sculptureHasBeenDeselected = false;
+		sculptureHasBeenSelected = false;
+		selectedSculptureOpacity.opacity = 0.0;
+		store.state.selectedSculpture = null;
+		store.state.selectedObject = null;
+		cachedSelectedSculptureId = null;
+		const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+		if (requiresAuth && !currentUser) {
+			this.$store.commit('displayLogin', true);
+			// next('/sign-in');
+		} else if (requiresAuth && currentUser) {
+			next();
+		} else {
+			next();
+		}
+		animationPaused = false;
+	};
+
+	if (store.state.selectedObject) { //fad single sculpture if selected
+		console.log('fading individual sculp');
+		console.log(selectedSculptureOpacity.opacity);
+		transitionSculptureOpacity(store.state.selectedObject.name, 0.0, 1000).then(() => {
+			nextRoute();
+			
+		});
+	} else if (store.state.sculpturesLoaded) {
+		console.log('transition all sculps form next');
+		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
+			nextRoute();
+		});
 	} else {
-		next();
-	}
+		nextRoute();
+	}	
 });
 
 firebase.auth().onAuthStateChanged(function(user) {
-	new Vue({el: '#app', store: store, router: router, render: h => h(App)});
+	const vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
+	init();
+	// console.log(document.querySelector('.three-canvas'));
+    //     vueApp.$nextTick(() => {
+    //       console.log(document.querySelector('.three-canvas'));
+    //       console.log('vueApp');
+    //     })
+        //     vueApp.$data['isMounted'] = false;
+        // vueApp.$watch('isMounted', function (newValue, oldValue) {
+        // 	console.log(document.querySelector('three-canvas'));
+        // 	console.log('vueApp');
+        // })
+        // console.log(vueApp);
 });
 
 const scene = store.state.scene;
-scene.background = new THREE.Color(0.98, 0.98, 0.98);
+scene.background = new THREE.Color(1.0, 1.0, 1.0);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 camera.position.z = 2;
 
 // var camera = new THREE.OrthographicCamera(
 //   window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 window.camera = camera;
-const socket = io();
-store.state.socket = socket;
+// const socket = io();
+// store.state.socket = socket;
 
 let player;
 
@@ -64,24 +105,24 @@ let player;
 let localPlayers = {};
 let remotePlayers = {};
 
-function sendPlayerPosToServer() {
-	if (store.state.currentRoom) {
-		const pt = player.transform;
-		//TODO only call this if the pos Moved
-		socket.emit('clientTellServerUpdatePlayerPosition', {
-			id: player.id,
-			room: store.state.currentRoom,
-			quat: pt.quaternion,
-			position: pt.position,
-			color: player.color
-		});
-	}
-}
+// function sendPlayerPosToServer() {
+// 	if (store.state.currentRoom) {
+// 		const pt = player.transform;
+// 		//TODO only call this if the pos Moved
+// 		socket.emit('clientTellServerUpdatePlayerPosition', {
+// 			id: player.id,
+// 			room: store.state.currentRoom,
+// 			quat: pt.quaternion,
+// 			position: pt.position,
+// 			color: player.color
+// 		});
+// 	}
+// }
 
-socket.on('serverTellPlayersUpdate', playersInRoom => {
-	console.log(playersInRoom);
-	remotePlayers = playersInRoom;
-});
+// socket.on('serverTellPlayersUpdate', playersInRoom => {
+// 	console.log(playersInRoom);
+// 	remotePlayers = playersInRoom;
+// });
 
 // socket.on('userConnect', (id) => {
 // 	player = new Player(id);
@@ -94,102 +135,160 @@ socket.on('serverTellPlayersUpdate', playersInRoom => {
 // 	console.log(id + ' has connected');
 // });
 
-socket.on('userDisconnect', (id) => {
-	console.log(id + ' has disconnected');
-	if(id in localPlayers) {
-		const l = localPlayers[id];
-		if (l !== undefined) {
-			scene.remove(l.mesh);
-			delete localPlayers[id];
-		}
-	}
+// socket.on('userDisconnect', (id) => {
+// 	console.log(id + ' has disconnected');
+// 	if(id in localPlayers) {
+// 		const l = localPlayers[id];
+// 		if (l !== undefined) {
+// 			scene.remove(l.mesh);
+// 			delete localPlayers[id];
+// 		}
+// 	}
   
-});
+// });
 
-function updateRemotePlayers() {
-	for (let id in remotePlayers) {
-		// skip creating a mesh for our own player
-		if (player.id && id === player.id) continue;
+// function updateRemotePlayers() {
+// 	for (let id in remotePlayers) {
+// 		// skip creating a mesh for our own player
+// 		if (player.id && id === player.id) continue;
 
-		const pr = remotePlayers[id];
-		if (!(id in localPlayers)) {
-			localPlayers[id] = {
-				id: id,
-				color: pr.color,
-				mesh: Player.createPlayerMesh(pr.color)
-			};
-			localPlayers[id].mesh.position.set(pr.position.x, pr.position.y, pr.position.z);
-			scene.add(localPlayers[id].mesh);
-		}
-		const pm = localPlayers[id].mesh;
-		// use interpolation here rather than just updating
-		const t = 0.03;
-		pm.position.lerp(pr.position, t);
-		const q = new THREE.Quaternion(pr.quat._x, pr.quat._y, pr.quat._z, pr.quat._w);
-		pm.quaternion.slerp(q, t);
-		// pm.setRotationFromQuaternion(q);
-	}
-}
-
-const renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
-
-var controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
-controls.zoomSpeed = 0.5;
-controls.rotateSpeed = 0.5;
-controls.keys = {
-  LEFT: 65,
-  UP: 87,
-  RIGHT: 68,
-  BOTTOM: 83
-};
-window.controls = controls;
+// 		const pr = remotePlayers[id];
+// 		if (!(id in localPlayers)) {
+// 			localPlayers[id] = {
+// 				id: id,
+// 				color: pr.color,
+// 				mesh: Player.createPlayerMesh(pr.color)
+// 			};
+// 			localPlayers[id].mesh.position.set(pr.position.x, pr.position.y, pr.position.z);
+// 			scene.add(localPlayers[id].mesh);
+// 		}
+// 		const pm = localPlayers[id].mesh;
+// 		// use interpolation here rather than just updating
+// 		const t = 0.03;
+// 		pm.position.lerp(pr.position, t);
+// 		const q = new THREE.Quaternion(pr.quat._x, pr.quat._y, pr.quat._z, pr.quat._w);
+// 		pm.quaternion.slerp(q, t);
+// 		// pm.setRotationFromQuaternion(q);
+// 	}
+// }
+let renderer, controls, canvas, canvasContainer;
+let sculptureHasBeenSelected = false;
+let sculptureHasBeenDeselected = false;
+let cachedSelectedSculptureId;
+let allSculpturesOpacity = { opacity: 0.0 };
+let selectedSculptureOpacity = {opacity: 0.0};
+let runOnce = false;
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
-scene.add(hemisphereLight);
+let prevCanvasSize;
 
-window.addEventListener('resize', onWindowResize, false);
+function init() {
+	
+	
+	canvasContainer = document.querySelector('.canvas-container');
+	renderer = new THREE.WebGLRenderer({ antialias: true});
+	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
+    Object.assign(store.state.canvasSize, prevCanvasSize);
+    renderer.setPixelRatio(window.devicePixelRatio);
+	canvasContainer.appendChild(renderer.domElement);
+
+	canvas = document.querySelector('canvas');
+	canvas.setAttribute('tabindex', '0');
+	canvas.addEventListener('click', (event) => {
+		event.target.focus();
+	});
+	canvas.addEventListener('mousemove', onMouseMove, false);
+	controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.25;
+	controls.zoomSpeed = 0.5;
+	controls.rotateSpeed = 0.5;
+	controls.keys = {
+		LEFT: 65,
+		UP: 87,
+		RIGHT: 68,
+		BOTTOM: 83
+	};
+	window.controls = controls;
+
+	scene.add(hemisphereLight);
+    render();
+}
+
+window.addEventListener('resize', onCanvasResize, false);
 window.addEventListener('mousedown', onMouseDown, false);
 window.addEventListener('mouseup', onMouseUp, false);
-document.addEventListener('mousemove', onMouseMove, false);
 document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
-const canvas = document.querySelector('canvas');
-canvas.setAttribute('tabindex', '0');
-canvas.addEventListener('click', (event) => {
-	console.log(event.target);
-	event.target.focus();
-});
+
 	
 
-render();
-let sculptureHasBeenSelected = false;
-
+let firstRender = false;
 function render(time) {
-	requestAnimationFrame(render);
+	if (!animationPaused) {
+		requestAnimationFrame(render);
+	}
+	
 	const t = Date.now() - startTime;
 	store.state.objectsToUpdate.forEach(sculpture => {
 		sculpture.update(t);
 	})
-
-	if(store.state.selectedSculpture && !sculptureHasBeenSelected) {
-		tweenCameraToSelectedSculpture();	
-		console.log('tweening to Sculpture');
-		// console.log(store.state.selectedSculpture);
-		sculptureHasBeenSelected = true;
-	} else if(!store.state.selectedSculpture) {
+	if (store.state.canvasSize !== prevCanvasSize) {
+		  Object.assign(prevCanvasSize, store.state.canvasSize);
+		  onCanvasResize();
+	}
+	// if (store.state.objectsToRaycast.length > 0) {
+	// 	raycaster.setFromCamera(new THREE.Vector3(0, 0, -0), camera);
+	// 	const intersects = raycaster.intersectObjects(objectsToRaycast);
+	// 	if (intersects.length > 0) {
+	// 		console.log('intersected');
+	// 		firstRender=true;
+	// 	} else {
+	// 		console.log('didnot intersect');
+	// 	}
+	// }
+	
+	// if(!firstRender && app.__vue__) {
+	// 	app.__vue__.$children.forEach(child => {
+	// 		if (Object.keys(child.$refs) == 'room' && child.$refs.room.sculptures.length === store.state.objectsToUpdate.length) {
+	// 			firstRender = true;
+	// 		}       
+	// 	});
+	// }
+	// if (firstRender && allSculpturesOpacity.opacity == 0 && store.state.sculpturesLoaded && !runOnce) {
+	// 	console.log('starting fade');
+	// 	console.log('fading all scuptures from render');
+	// 	transitionAllSculpturesOpacity(1.0);
+	// 	runOnce = true;
+	// }
+	// firstRender = true;
+        // firstRender +=1;
+	if (store.state.selectedSculpture){
+		if(!sculptureHasBeenSelected) {
+			tweenCameraToSelectedSculpture();	
+			console.log('tweening to Sculpture');
+			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
+			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
+			sculptureHasBeenSelected = true;
+			cachedSelectedSculptureId = store.state.selectedObject.name;
+		}
+		sculptureHasBeenDeselected = false;
+	} else {
+          if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
+			sculptureHasBeenDeselected = true;
+			console.log('fading all scuptures from render');
+            transitionAllSculpturesOpacity(
+				1.0, 1000, cachedSelectedSculptureId);
+		}
 		sculptureHasBeenSelected = false;
 	}
 
 	const objectsToRaycast = store.state.objectsToRaycast;
-	if (objectsToRaycast) {
+	if (objectsToRaycast.length > 0) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObjects(objectsToRaycast);
 		if(intersects.length > 0) {
@@ -222,8 +321,11 @@ function keyPress(down, e) {
 
 // Raycast to sculptures
 function onMouseMove(event) {
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	if(canvasContainer) {
+		mouse.x = ((event.clientX - canvasContainer.offsetLeft)  / canvasContainer.clientWidth) * 2 - 1;
+		mouse.y = -((event.clientY - canvasContainer.offsetTop) / canvasContainer.clientHeight ) * 2 + 1;
+	}
+	
 }
 
 let tempIntersectedObject;
@@ -239,6 +341,8 @@ function onMouseUp(event) {
 	if(store.state.selectedObject) return;
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		store.state.selectedObject = store.state.intersectedObject;
+		selectedSculptureOpacity.opacity = 1.0;
+
 		canvas.style.cursor = 'auto';
 		// tweenCameraToSelectedSculpture();
 	} else {
@@ -272,24 +376,73 @@ function tweenCameraToSelectedSculpture() {
 	tweenControlsTarget.start();
 }
 
-function onMouseClick(event) {
-	if (store.state.intersectedObject) {
-		console.log('clicked on object');
-		canvas.style.cursor = 'auto';
-		store.state.selectedObject = store.state.intersectedObject;
+function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
+	console.log('transition individual sculp to ' + opacity);
+	return new Promise(function(resolve, reject) {
+		let sculp = store.state.objectsToUpdate.filter(obj => obj.mesh.name === sculptureId);
+		if(sculp.length == 0) {
+			reject();
+		} else {
+			sculp = sculp[0];
+		}
+		console.log(sculp);
+		let fadeSculpture = new TWEEN.Tween(selectedSculptureOpacity)
+			.to({opacity}, duration)
+			.easing(TWEEN.Easing.Quadratic.InOut)
+			.onUpdate(function() {
+				// store.state.objectsToUpdate.filter((obj) => obj.mesh.name === sculptureId).then(sculp => {
+				sculp.setOpacity(selectedSculptureOpacity.opacity);
+				// });
+			})
+			.onComplete(function() {
+				console.log('finished fading individual Sculp to' + selectedSculptureOpacity.opacity)
+				resolve();
+			});
+		fadeSculpture.start();
+	});
+}
+
+function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculptureId = null) {
+	console.log('transition all sculps-' + excludedSculptureId +  ' to ' + opacity);
+	return new Promise(function(resolve, reject) {
+		let fadeSculptures = new TWEEN.Tween(allSculpturesOpacity)
+			.to({ opacity }, duration)
+			.easing(TWEEN.Easing.Quadratic.InOut)
+			.onUpdate(function () {
+				store.state.objectsToUpdate.forEach(obj => {
+					if (!excludedSculptureId) {
+						obj.setOpacity(allSculpturesOpacity.opacity);
+					} else if (obj.mesh.name !== excludedSculptureId) {
+						obj.setOpacity(allSculpturesOpacity.opacity);
+					}
+				});
+			})
+			.onComplete(function () {
+				console.log('finished fading all sculps -' + excludedSculptureId + 'to: ' + allSculpturesOpacity.opacity);
+				resolve();
+			});
+		fadeSculptures.start();
+	});
+}
+
+// function onMouseClick(event) {
+// 	if (store.state.intersectedObject) {
+// 		console.log('clicked on object');
+// 		canvas.style.cursor = 'auto';
+// 		store.state.selectedObject = store.state.intersectedObject;
 		
-	} else {
-		store.state.selectedObject = null;
-	}
-}
+// 	} else {
+// 		store.state.selectedObject = null;
+// 	}
+// }
 
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
+function onCanvasResize() {
+	// camera.aspect = window.innerWidth / window.innerHeight;
+	camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
 	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+	// renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-
 /*
 var scene, sculps, player, grid, point_lights, room, highlight_box, camera,
 	renderer, startTime, editor, mouse, raycaster, selectedSculpture, socket,

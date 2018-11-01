@@ -16399,6 +16399,7 @@ var GlslCanvas = function () {
             }
 
             this.animated = false;
+            /*
             this.nDelta = (this.fragmentString.match(/u_delta/g) || []).length;
             this.nTime = (this.fragmentString.match(/u_time/g) || []).length;
             this.nDate = (this.fragmentString.match(/u_date/g) || []).length;
@@ -16416,14 +16417,17 @@ var GlslCanvas = function () {
                             this.setUniform(match[1], match[2]);
                         }
                     }
-                    var main = lines[i].match(/\s*void\s*main\s*/g);
+                    */
+                    // var main = lines[i].match(/\s*void\s*main\s*/g);
+                    /*
                     if (main) {
                         break;
                     }
                 }
             }
-
+            
             var vertexShader = createShader(this, this.vertexString, this.gl.VERTEX_SHADER);
+            */
             var fragmentShader = createShader(this, this.fragmentString, this.gl.FRAGMENT_SHADER);
 
             // If Fragment shader fails load a empty one to sign the error
@@ -16433,7 +16437,7 @@ var GlslCanvas = function () {
             } else {
                 this.isValid = true;
             }
-
+            /*
             // Create and use program
             var program = createProgram(this, [vertexShader, fragmentShader]); //, [0,1],['a_texcoord','a_position']);
             this.gl.useProgram(program);
@@ -16460,6 +16464,7 @@ var GlslCanvas = function () {
 
             this.forceRender = true;
             this.render();
+            */
         }
     }, {
         key: 'test',
@@ -21270,6 +21275,7 @@ var Picker = (function () {
     }, {
         key: 'onKeyPress',
         value: function onKeyPress(event) {
+          console.log('FOUND KEY Press');
             this.removeModal();
         }
     }, {
@@ -21290,6 +21296,7 @@ var Picker = (function () {
             // end this specific hacky part
 
             var target = event.target;
+
 
             while (target !== document.documentElement && !target.classList.contains(this.CSS_PREFIX + 'modal')) {
                 target = target.parentNode;

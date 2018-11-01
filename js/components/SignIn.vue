@@ -43,7 +43,8 @@ export default {
 			.signInWithEmailAndPassword(this.email, this.password)
 			.then(
 				user => {
-					this.$router.replace('profile');
+					// this.$router.replace('profile');
+					this.$store.commit('displayLogin', false);
 				},
 				error => {
 					alert(error.message);

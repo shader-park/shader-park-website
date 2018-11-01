@@ -1,33 +1,35 @@
 <template>
 
-<div :class="{embeded : isEmbeded}"  v-show="selectedSculpture != null" class="editor">
-    <v-dialog/>
-    <div class="controls">
-        <input @keyup="()=>{}" 
-               @keydown.stop="() => {}" 
-               @click.stop="()=>{}" 
-               v-bind:style="titleInput"
-               classs="editor-input" v-model="sculptureTitle" placeholder="title">
-        <span v-if="authorUsername !=='admin' && authorUsername">by 
-            <router-link :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
-        </span>
-        <br/>
-        <button @click.stop="save" class="save">{{saveText}}</button>
-        <button @click.stop="play" class="play">Play</button>
-        <button @click.stop="close" class="close">Close</button>
-        <input class="checkbox" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
-        <label for="AutoUpdate">Auto Update</label>
+<div :class="{embeded : isEmbeded}"  :style="{width: currWidth}" class="editor">
+    <div class="editor-container" :style="{minWidth: cachedWidth}">
+        <v-dialog/>
+        <div class="controls">
+            <input @keyup="()=>{}" 
+                @keydown.stop="() => {}" 
+                @click.stop="()=>{}" 
+                v-bind:style="titleInput"
+                classs="editor-input" v-model="sculptureTitle" placeholder="title">
+            <span v-if="authorUsername !=='admin' && authorUsername">by 
+                <router-link :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
+            </span>
+            <br/>
+            <button @click.stop="save" class="save">{{saveText}}</button>
+            <button @click.stop="play" v-if="!autoUpdate" class="play">Play</button>
+            <button @click.stop="close" class="close">Close</button>
+            <input class="checkbox" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
+            <label for="AutoUpdate">Auto Update</label>
 
-        <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
-        <label v-if="isAdmin" for="Example">Is Example</label>
-        
+            <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
+            <label v-if="isAdmin" for="Example">Is Example</label>
+            
 
-        <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete">Delete</button>
-        <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
-        <!-- <span>by</span> -->
-        <!-- <input type="text" id="editor-author-name" size="30"></input> -->
+            <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete">Delete</button>
+            <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
+            <!-- <span>by</span> -->
+            <!-- <input type="text" id="editor-author-name" size="30"></input> -->
+        </div>
+        <div @keyup="()=>{}" @keydown.stop="()=>{removeEditorModalUI()}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
     </div>
-    <div @keyup="()=>{}" @keydown.stop="()=>{}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
 </div>
 
 </template>
@@ -35,6 +37,9 @@
 <script>
 import {sculptureStarterCode, fragFooter} from '../default-shader.js'
 export default {
+    props: {
+        cachedWidth: { type: String, default: '49vw' }
+    },
     data () {
         return {
             cm: null,
@@ -45,7 +50,9 @@ export default {
                 width: '5ch',
                 border: 'none',
                 marginBottom: '5px'
-            }
+            },
+            currWidth: '0px',
+            editorHasDisplayedModal: false
         }
     },
     mounted() {
@@ -54,7 +61,7 @@ export default {
         document.addEventListener('keyup', this.keypress.bind(null, false));
     },
     computed : {
-        saveText() {
+    saveText() {
             if(this.selectedSculpture) {
                 if(!this.selectedSculpture.author.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid) {
                     return 'Save';
@@ -101,6 +108,11 @@ export default {
         }
     },
     watch : {
+        cachedWidth(value) {
+            if(this.currWidth != '0px') {
+                this.currWidth = this.cachedWidth;
+            }
+        },
         autoUpdate(value) {
             if(this.cm) {
                 this.cm.autoUpdate = value;
@@ -116,7 +128,7 @@ export default {
                 if(obj.title) {
                     this.titleInput.width = obj.title.length + 'ch';
                 }
-                
+                this.currWidth = this.cachedWidth;
                 if(!this.initialized) {
                     this.initialized = true;
                     this.initCodeMirror(obj.sculpture.fragmentShader);
@@ -130,6 +142,8 @@ export default {
                         this.cm.editor.refresh();    
                     }, 0);
                 }
+            } else {
+                this.currWidth = '0px';
             }
         }
     },
@@ -138,7 +152,8 @@ export default {
             if(this.currUser != null) {
                 this.$store.dispatch('saveSculpture', this.selectedSculpture);
             } else {
-                this.$router.push('sign-in');
+                // this.$router.push('sign-in');
+                this.$store.commit('displayLogin', true);
             }
             console.log('save');
         },
@@ -179,6 +194,20 @@ export default {
             	
             }
         },
+        removeEditorModalUI() {
+            if(this.cm && this.cm.helpers.activeModal && this.cm.helpers.activeModal.isVisible){
+                console.log('click Active modal ' + this.editorHasDisplayedModal);
+                if(this.editorHasDisplayedModal) {
+                    cm.helpers.activeModal.removeModal();
+                    console.log('removing Modal');
+                    this.editorHasDisplayedModal = false;
+                } else {
+                    this.editorHasDisplayedModal = true;
+                }
+            } else {
+                this.editorHasDisplayedModal = false;
+            }
+        },
         updateSculpture(){
         // _.debounce(function (e) {
             
@@ -195,7 +224,7 @@ export default {
         initCodeMirror(shader) {
             
             this.prefix = `
-            #extension GL_EXT_frag_depth : enable
+            
             precision highp float;
             precision highp int;
             uniform vec3 cameraPosition;
@@ -217,11 +246,15 @@ export default {
                         frag: shader,
                         frag_footer: fragFooter
                     });
+
+                    document.querySelector('.ge_editor').addEventListener('click', () => {
+                        console.log('click');
+                        this.removeEditorModalUI();
+                        
+                    })
                 }
                 window.cm = this.cm;
                 this.cm.shader.canvas.on('processedShader', (data) => {
-                    // if(!data.error) return;
-                    console.log(!data.containsError);
                     if(this.autoUpdate && !data.containsError) {
                         this.updateSculpture();
                     }
@@ -254,6 +287,7 @@ button {
 .editor-input {
     border: none !important;
     margin-bottom: 5px !important;
+    margin-left: 5px !important;
 }
 
 .delete, .close {
@@ -285,7 +319,7 @@ label {
     height: auto;
     overflow: scroll;
     max-height: 80vh;
-    max-width: 45vw;
+    max-width: 100%;
 }
 
 .CodeMirror {
@@ -299,9 +333,10 @@ label {
     &.embeded {
         top: 0px;
     }
-    position: absolute;
+    overflow: hidden;
+    // position: absolute;
     top: 85px;
-    right: 0px;
+    // right: 0px;
 }
 
 </style>

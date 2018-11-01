@@ -2,7 +2,7 @@ module.exports = {
   title: 'Shader Park',
   description: 'References & Examples',
   themeConfig: {
-    nav: [{text: 'Home', link: '/'}, {text: 'Guide', link: '/guide/'}],
+    nav: [{text: 'About', link: '/'}],
     sidebar: 'auto'
 
   }
