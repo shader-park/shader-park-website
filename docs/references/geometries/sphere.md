@@ -1,7 +1,4 @@
 ### sphere
-
-```float sphere( vec3 p, float size )```
-
 #### Example
 ```glsl
 float sphere(vec3 p, float size);

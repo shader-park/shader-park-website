@@ -284,6 +284,10 @@ button {
 
 }
 
+.save {
+    margin-left: 5px;
+}
+
 .editor-input {
     border: none !important;
     margin-bottom: 5px !important;

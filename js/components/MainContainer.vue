@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <editor :cachedWidth="editorWidth" :class="{dragging: dragingMouse}" ></editor>
-        <div ref="handel" class="handle" :class="{dragging: dragingMouse}">
+        <div v-show="showHandel" ref="handel" class="handle" :class="{dragging: dragingMouse}">
             <ul class="dot-container">
                 <li class="dot"></li>
                 <li class="dot"></li>
@@ -21,22 +21,29 @@ export default {
 		return {
             dragingMouse: false,
             editorWidth: '49vw',
-            handelWidth: 30
+            handelWidth: 30,
+            showHandel: false
 		}
     },
     computed : {
         canvasSize() {
             if(this.$refs.threeCanvas) {
-                this.$refs.threeCanvas.clientWidth;
+                return this.$refs.threeCanvas.clientWidth;
             } else {
                 return 0;
             }
+        },
+        selectedSculpture() {
+            return this.$store.state.selectedSculpture;
         }
     },
     watch : {
         canvasSize(value) {
             let canvas = this.$refs.threeCanvas;
             this.$store.commit('setCanvasSize', {width: canvas.clientWidth, height: canvas.clientHeight});
+        },
+        selectedSculpture(value) {
+            this.showHandel = value != null;
         }
     },
     mounted() {

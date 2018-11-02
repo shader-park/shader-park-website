@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import * as THREE from 'three';
 import * as OrbitControls from  './THREE_Helpers/OrbitControls.js'
 import TWEEN from '@tweenjs/tween.js';
@@ -55,14 +55,14 @@ router.beforeEach((to, from, next) => {
 	};
 
 	if (store.state.selectedObject) { //fad single sculpture if selected
-		console.log('fading individual sculp');
+		// console.log('fading individual sculp');
 		console.log(selectedSculptureOpacity.opacity);
 		transitionSculptureOpacity(store.state.selectedObject.name, 0.0, 1000).then(() => {
 			nextRoute();
 			
 		});
 	} else if (store.state.sculpturesLoaded) {
-		console.log('transition all sculps form next');
+		// console.log('transition all sculps form next');
 		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
 			nextRoute();
 		});
@@ -270,7 +270,7 @@ function render(time) {
 	if (store.state.selectedSculpture){
 		if(!sculptureHasBeenSelected) {
 			tweenCameraToSelectedSculpture();	
-			console.log('tweening to Sculpture');
+			// console.log('tweening to Sculpture');
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
 			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
 			sculptureHasBeenSelected = true;
@@ -280,7 +280,7 @@ function render(time) {
 	} else {
           if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
 			sculptureHasBeenDeselected = true;
-			console.log('fading all scuptures from render');
+			// console.log('fading all scuptures from render');
             transitionAllSculpturesOpacity(
 				1.0, 1000, cachedSelectedSculptureId);
 		}
