@@ -1,8 +1,6 @@
----
-sidebar: auto
----
 
 # References 
+<!-- 
 ## Geometries
 
 ### sphere
@@ -24,7 +22,7 @@ float box(vec3 p, vec3 size);
 
 <iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-LkFiHWJrolzNlpFF?example=true&embed=true" frameborder="0"></iframe>
 
-<!-- ### roundedBox
+### roundedBox
 ```flat roundedBox(vec3 p, vec3 dimensions, float roundness)```
 #### Example
 ```glsl
@@ -32,8 +30,7 @@ float map(vec3 p) {
 	return box(p, vec3(0.3, 0.3, 0.3), 0.2);
 }
 ```
-
-<iframe width="100%" height="350px" src="http://shaderpark.herokuapp.com" frameborder="0"></iframe> -->
+<iframe width="100%" height="350px" src="http://shaderpark.herokuapp.com" frameborder="0"></iframe>
 
 
 
@@ -163,3 +160,4 @@ vec3 mouse;
 vec3 mouseIntersection();
 ```
 <iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LOCklVRmdW9CJbSTMQT?&embed=true" frameborder="0"></iframe>
+ -->

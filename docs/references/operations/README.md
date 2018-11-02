@@ -1,7 +1,1 @@
----
-sidebar: auto
----
-
 #Operations
-
-##test
