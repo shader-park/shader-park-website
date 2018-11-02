@@ -1,4 +1,4 @@
----
+<!-- ---
 home: true
 sidebar: true
 features:
@@ -9,8 +9,10 @@ features:
 - title: Live Collaboration
   details: Save your sculptures and explore other people's creations.
 footer: MIT Licensed | Copyright © 2018-present Torin Blankensmith & Peter Whidden
----
+--- -->
+# References
 
+<iframe width="100%" height="350px" src="http://localhost:3000/examples?embed=true" frameborder="0"></iframe>
 
 <!-- 
 ## Geometries

@@ -32,11 +32,12 @@ export default {
 
 		// this.$route.params.id;
 		console.log('$route.params.id');
-	const username = this.$route.params.username;
+		const username = this.$route.params.username;
+
 		
 		if(username) {
 			this.roomName = username;
-			
+			this.$store.commit('setRouteTitle', username);
 			this.$store.dispatch('getUserIdFromUsername', username).then(uid => {
 				if(uid) {
 					this.$store.dispatch('fetchUserSculptures', uid).then(sculptures => {
@@ -71,6 +72,9 @@ export default {
 		showModal() {
 			this.$modal.show('no-profile-data-found');
 		}
+	},
+	destroyed: function() {
+		this.$store.commit('setRouteTitle', null);
 	}
 };
 
