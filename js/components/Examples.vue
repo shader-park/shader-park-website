@@ -7,6 +7,7 @@ import Sculpture from './Sculpture.vue';
 import Room from './Room.vue';
 
 export default {
+	props: ['embed'],
 	data: function() {
 		return {
 			sculptures: [],
@@ -18,6 +19,9 @@ export default {
 		room : Room	
 	},
 	mounted() {
+		if(this.embed && this.embed === 'true') {
+			this.$store.commit('setEmbedded', true);
+		}
 		this.$store.dispatch('fetchExampleSculptures').then(sculptures => {
             if(sculptures) {
 				let temp = [];

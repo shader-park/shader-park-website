@@ -24,6 +24,8 @@ export const routes = [
     path: '/examples',
     name: 'examples',
     component: Examples,
+    props: (route) =>
+      ({ embed: route.query.embed }),
     meta: {
       title: 'Examples',
     }

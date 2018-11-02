@@ -9,7 +9,7 @@
         <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
               
             <router-link to="/" class="link" active-class="active" exact>Gallery</router-link>
-            <router-link to="/examples" class="link" active-class="active">Examples</router-link>
+            <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
             <a class="link" href="/references" active-class="active">References</a>
             <router-link v-if="isMobile" to="/new" class="link" active-class="active">New</router-link>
             <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin }">Sign In</a>
@@ -22,7 +22,7 @@
                     v-bind:class="{ dynamicBadge: profileBadgeCount > 0 }" 
                     class="link" v-if="user" 
                     active-class="active">
-                    Profile
+                    My Sculptures
                     <span class="arrow"></span>
                 </router-link>
                                         
@@ -61,7 +61,11 @@ export default {
             return this.$store.getters.getUser;
         },
         title() {
-            return this.$route.meta.title;
+            if(this.$store.getters.routeTitle) {
+                return this.$store.getters.routeTitle;
+            } else {
+                return this.$route.meta.title;
+            }
         },
         isMobile() {
             return window.innerWidth > 500;

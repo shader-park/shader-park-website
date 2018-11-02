@@ -24,9 +24,13 @@ export const store = new Vuex.Store({
     profileBadgeCount: 0,
     embedded: false,
     canvasSize: {width: 0, height: 0},
-    displayLogin: false
+    displayLogin: false,
+    routeTitle: null
   },
   getters: {
+    routeTitle: state => {
+      return state.routeTitle;
+    },
     displayLogin: state => {
       return state.displayLogin;
     },
@@ -50,6 +54,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setRouteTitle(state,title) {
+      state.routeTitle = title;
+    },
     displayLogin(state, payload) {
       state.displayLogin = payload;
     },

@@ -1,5 +1,4 @@
 ### box
-```flat box(vec3 p, vec3 dimensions)```
 #### Example
 ```glsl
 float box(vec3 p, vec3 size);
