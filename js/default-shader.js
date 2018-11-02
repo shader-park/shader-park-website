@@ -318,6 +318,19 @@ float noise(vec3 p)
     return dot(vec4(31.316), n);
 }
 
+float fractalNoise(vec3 p, float falloff, int iterations) {
+    float v = 0.0;
+    float amp = 1.0;
+    float invFalloff = 1.0/falloff;
+    for (int i=0; i<10; i++) {
+        v += noise(p)*amp;
+	if (i>=iterations) break;
+        amp *= invFalloff;
+        p *= falloff;
+    }
+    return v;
+} 
+
 // Compute intersection of ray and SDF. You probably won't need to modify this.
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
