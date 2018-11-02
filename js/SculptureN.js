@@ -12,7 +12,8 @@ export class Sculpture {
             this.geometry,
             this.generateMaterial(defaultVertexSource, fragmentShader));
         const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
-        const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95) });
+        this.opacity = 0.0;
+        const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
         this.pedestal.position.set(0, -.75, 0);
         this.mesh.add(this.pedestal);
@@ -36,17 +37,25 @@ export class Sculpture {
         this.selected = selected;
     }
 
+    setOpacity(value) {
+        this.opacity = value;
+        this.mesh.visible = value !== 0.0;
+        this.pedestal.material.opacity = this.opacity;
+    }
+
     generateMaterial(vertexShader, fragmentShader) {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: {value: 0.0},
-	  mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
-          sculptureCenter: {value: new THREE.Vector3()},
+          mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
+          opacity: {value: 1.0},
+          sculptureCenter: {value: new THREE.Vector3()}
         },
         vertexShader,
-        fragmentShader: sculptureStarterCode + fragmentShader + fragFooter
+        fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
+        transparent: true
       });
-      material.extensions.fragDepth = true;
+      material.extensions.fragDepth = false;
       return material;
     }
 
@@ -75,6 +84,7 @@ export class Sculpture {
     update(time) {
         this.mesh.material.uniforms['time'].value = time * 0.001;
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
+        this.mesh.material.uniforms['opacity'].value = this.opacity;
     }
 
     generateMesh(time) {

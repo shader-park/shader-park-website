@@ -1,8 +1,6 @@
----
-sidebar: auto
----
 
 # References 
+<!-- 
 ## Geometries
 
 ### sphere
@@ -11,22 +9,18 @@ sidebar: auto
 
 #### Example
 ```glsl
-float map(vec3 p) {
-	return sphere(p, 0.3);
-}
+float sphere(vec3 p, float size);
 ```
-<iframe width="100%" height="350px" src="http://shaderpark.herokuapp.com" frameborder="0"></iframe>
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-Nx6cvMmlbdKKiB64?example=true&embed=true" frameborder="0"></iframe>
 
 ### box
 ```flat box(vec3 p, vec3 dimensions)```
 #### Example
 ```glsl
-float map(vec3 p) {
-	return box(p, vec3(0.3, 0.3, 0.3));
-}
+float box(vec3 p, vec3 size);
 ```
 
-<iframe width="100%" height="350px" src="http://shaderpark.herokuapp.com" frameborder="0"></iframe>
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-LkFiHWJrolzNlpFF?example=true&embed=true" frameborder="0"></iframe>
 
 ### roundedBox
 ```flat roundedBox(vec3 p, vec3 dimensions, float roundness)```
@@ -36,19 +30,31 @@ float map(vec3 p) {
 	return box(p, vec3(0.3, 0.3, 0.3), 0.2);
 }
 ```
-
 <iframe width="100%" height="350px" src="http://shaderpark.herokuapp.com" frameborder="0"></iframe>
 
 
 
-### line()
+### line
 #### Example
+```glsl
+float line(p, vec3 start, vec3 end, float width);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM0vjFEwV1Ha18Hl9AP?example=true&embed=true" frameborder="0"></iframe>
 
-### torus()
+### torus
 #### Example
+```glsl
+float torus(vec3 p, vec2 size);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-OGmDkb48R4uyugiA?example=true&embed=true" frameborder="0"></iframe>
 
-### cylinder
+### cappedCylinder
 #### Example
+```glsl
+float cappedCylinder(vec3 p, vec2 size);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM0t3ZICdtWkNLFkO1q?example=true&embed=true" frameborder="0"></iframe>
+
 
 ### cone
 #### Example
@@ -61,13 +67,42 @@ float map(vec3 p) {
 
 ## Operations
 
-### Add
-### Union
-### Subtraction
-### Intersection
-### Smooth Add
+### add
+#### Example
+```glsl 
+float add(float obj1, float obj2);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM3FtAfpWixlL9VAr4G?example=true&embed=true" frameborder="0"></iframe>
+
+### subtract
+#### Example
+```glsl 
+float subtract(float obj1, float obj2);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM3HB7wAVNSJW5ggB4d?example=true&embed=true" frameborder="0"></iframe>
+
+### intersect
+#### Example
+```glsl
+float intersect(float obj1, float obj2);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM3HsbO0jkByC9KAAgs?example=true&embed=true" frameborder="0"></iframe>
+
+### smoothAdd
+#### Example
+```glsl
+float smoothAdd(float obj1, float obj2, float amount);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LMjM7k1N6SLJKFu_7UR?example=true&embed=true" frameborder="0"></iframe>
+
 ### Smooth Subtraction
-### Mix
+
+### mix
+#### Example
+```glsl
+float mix(float obj1, float obj2, float amount);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LMjG0XPKeUoPRK1i1GW?example=true&embed=true" frameborder="0"></iframe>
 
 ### Repeat 3D
 ### Radial Repeat
@@ -78,7 +113,51 @@ float map(vec3 p) {
 ### Scale 3D
 ### Twist
 
+
 ## Lighting
 
-### Simple Lighting
-### Ambient Occlusion
+### simpleLighting
+#### Example
+```glsl
+float simpleLighting(vec3 p, vec3 normal, vec3 lightDirection);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-Nx6cvMmlbdKKiB64?example=true&embed=true" frameborder="0"></iframe>
+
+### occlusion
+#### Example
+```glsl
+float occlusion(vec3 p, vec3 normal);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LOLQrXYlRMTrAkVtTcA?&embed=true" frameborder="0"></iframe>
+
+## Noise
+### noise
+#### Example
+```glsl
+vec3 noise(vec3 pos);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LOCynJRpfhD4y_2gpxG?&embed=true" frameborder="0"></iframe>
+
+### fractalNoise
+#### Example
+```glsl
+vec3 fractalNoise(vec3 pos);
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LPiqQhbCJWu873hB-qW?&embed=true" frameborder="0"></iframe>
+ 
+## Mouse Interactions
+
+### mouse
+#### Example
+```glsl
+vec3 mouse;
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LOCLqPCs9XAEDaBI9Vd?&embed=true" frameborder="0"></iframe>
+
+### mouseIntersection
+#### Example
+```glsl
+vec3 mouseIntersection();
+```
+<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LOCklVRmdW9CJbSTMQT?&embed=true" frameborder="0"></iframe>
+ -->

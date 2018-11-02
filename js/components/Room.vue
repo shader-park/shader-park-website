@@ -35,6 +35,7 @@ export default {
 
         let index = 0;
         let col = 0;
+        this.$store.commit('sculpturesLoaded', false);
         while (index < this.sculptures.length) {
             let row = 0;
             while (row < this.grid.x && index < this.sculptures.length) {
@@ -50,6 +51,7 @@ export default {
             }
             col++;
         }
+        this.$store.commit('sculpturesLoaded', true);
         // this.sculptures.forEach(sculp => {
         //     sculp.sculpture.mesh.position
         // })

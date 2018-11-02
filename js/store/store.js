@@ -20,10 +20,16 @@ export const store = new Vuex.Store({
     intersectedObject: null,
     currentSculptures: [],
     loading: false,
+    sculpturesLoaded: false,
     profileBadgeCount: 0,
-    embedded: false
+    embedded: false,
+    canvasSize: {width: 0, height: 0},
+    displayLogin: false
   },
   getters: {
+    displayLogin: state => {
+      return state.displayLogin;
+    },
     getUser: state => {
       return state.user;
     },
@@ -44,6 +50,12 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    displayLogin(state, payload) {
+      state.displayLogin = payload;
+    },
+    setCanvasSize(state, size) {
+      state.canvasSize = size;
+    },
     setUser: state => {
       state.user = firebase.auth().currentUser;
     },
@@ -64,6 +76,9 @@ export const store = new Vuex.Store({
     },
     setProfileBadgeCount(state, payload) {
       state.profileBadgeCount = payload;
+    },
+    sculpturesLoaded(state, payload) {
+      state.sculpturesLoaded = payload;
     },
     updateSelectedSculpture(state, payload) {
       state.selectedSculpture = Object.assign(state.selectedSculpture, payload);
@@ -95,11 +110,11 @@ export const store = new Vuex.Store({
       state.scene.remove(state.scene.getObjectByName(name));
     },
     joinRoom(state, roomName) {
-      state.socket.emit('joinRoom', roomName);
+      // state.socket.emit('joinRoom', roomName);
       state.currentRoom = roomName;
     },
     leaveRoom(state, roomName) {
-      state.socket.emit('leaveRoom', roomName);
+      // state.socket.emit('leaveRoom', roomName);
       state.currentRoom = null;
     }
   },

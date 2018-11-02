@@ -60,7 +60,8 @@ export default {
                 const dbUser = Object.assign(userSchema, {'username': this.username, 'email' : this.email});
                 firebase.database().ref("users").child(uid).set(dbUser);
                 this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
-                this.$router.replace('profile');
+                // this.$router.replace('profile');
+                this.$store.commit('displayLogin', false);
             },
             error => {
                 alert(error.message);

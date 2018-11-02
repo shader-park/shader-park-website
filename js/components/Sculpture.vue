@@ -130,7 +130,7 @@ export default {
         this.$store.commit('removeObjectFromUpdate', this.sculpture);
         this.$store.commit('removeObjectFromRaycast', this.sculpture.mesh);
         this.$store.commit('removeObjectFromSceneByName', name);
-        console.log(`deleted ${name} from scene`);
+        // console.log(`deleted ${name} from scene`);
     }
 };
 </script>

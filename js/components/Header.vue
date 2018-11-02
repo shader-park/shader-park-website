@@ -2,25 +2,55 @@
 
     <div v-if="!embedded" class="nav-bar">
         <div class="nav-left">
-            <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search">
+            <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
+            <img v-if="isMobile" class="logo" src="/images/sp_logo.png" />
         </div>
         <h1 v-if="isMobile" class="nav-text">{{title}}</h1>
-        <div class="nav-right">        
+        <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
+              
             <router-link to="/" class="link" active-class="active" exact>Gallery</router-link>
             <router-link to="/examples" class="link" active-class="active">Examples</router-link>
+            <a class="link" href="/references" active-class="active">References</a>
             <router-link v-if="isMobile" to="/new" class="link" active-class="active">New</router-link>
-            <router-link to="sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link>
+            <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin }">Sign In</a>
             
-            <router-link v-bind:data-badge="profileBadgeCount" to="profile" v-bind:class="{ dynamicBadge: profileBadgeCount > 0 }" class="link" v-if="user" active-class="active">Profile</router-link>
-            <a class="link" v-on:click="signOut" v-if="user" active-class="active">Sign Out</a>
+            <!-- <router-link to="/sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link> -->
+            <div class="dropDownContainer" v-on:mouseover="setProfileDropDown(true)" v-on:mouseleave="setProfileDropDown(flase)"> 
+                <router-link 
+                    ref="profile" 
+                    v-bind:data-badge="profileBadgeCount" to="/profile" 
+                    v-bind:class="{ dynamicBadge: profileBadgeCount > 0 }" 
+                    class="link" v-if="user" 
+                    active-class="active">
+                    Profile
+                    <span class="arrow"></span>
+                </router-link>
+                                        
+                <div v-show="showProfileDropDown" class="dropDown">
+                    <a class="link" v-on:click="signOut" v-if="user" active-class="active">Sign Out </a>
+                </div>
+            </div>
+            
         </div>
     </div>
 </template>
 
 <script>
 import firebase from "firebase/app";
+import CardModal from './CardModal.vue';
 export default {
+    data: function() {
+		return {
+            showProfileDropDown: false
+		}
+    },
+    components: {
+        cardModal: CardModal
+    },
     computed: {
+		displayLogin() {
+			return this.$store.getters.displayLogin;
+		},
         embedded() {
             return this.$store.getters.getEmbedded;
         },
@@ -38,12 +68,19 @@ export default {
         }
     },
     methods: {
+        setProfileDropDown: function (val) {
+            this.showProfileDropDown = val;
+        },
         signOut: function() {
             firebase.auth()
             .signOut()
             .then(() => {
-                this.$router.replace('sign-in');
+                // this.$router.replace('sign-in');
             });
+        }, 
+        signIn: function() {
+            console.log('login');
+            this.$store.commit('displayLogin', true);
         }
     }
 };
@@ -86,12 +123,20 @@ export default {
   /* box-shadow:1px 2px 5px #888; */
 }
 
+
+.logo {
+    width: 50px;
+    opacity: 0.5;
+}
+
 .nav-bar {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    right: 0px;
-    height: 80px;
+    position: relative;
+    // position: fixed;
+    // left: 0px;
+    // top: 0px;
+    // right: 0px;
+    height: 10vh;
+    min-height: 45px;
     padding: 0px 60px 25px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
     background-color: white;
@@ -137,13 +182,45 @@ export default {
         font-size: 18px;
         font-weight: 300;
     }
+    .arrow {
+        display: inline-block;
+        vertical-align: middle;
+        margin-top: -1px;
+        margin-left: 6px;
+        margin-right: -14px;
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #ccc;        
+    }
+    .dropDownContainer {
+        display: inline-block;
+        position: relative;
+        .dropDown {
+            position: absolute;
+            width: 114px;
+            padding: 15px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
+            background-color: white;
+            z-index: 103;
+            top: 25px;
+            right: 25px;
+        }
+    }
+
 }
 .link {
+    &.mobile {
+        margin-right: 20px;
+        font-size: 15px;
+    }
     margin-right: 40px;
     border-bottom: 2px solid hsla(0, 0%, 100%, 0) !important;
     font-size: 18px;
     line-height: 0px;
     font-weight: 300;
+    cursor: pointer;
     text-decoration: none;
     transition: color 300ms ease-in-out;
     color: #777;

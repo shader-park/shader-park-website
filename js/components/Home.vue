@@ -1,5 +1,5 @@
 <template>
-	<room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
+	<room ref="room" v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
 </template>
 
 <script>

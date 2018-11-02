@@ -4,11 +4,29 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
+
+// const io = require('socket.io')(http);
 // const fs = require('fs');
 
 const port = process.env.PORT || 3000;
 
+app.use(express.static(__dirname + '/client'));
+app.use(express.static(__dirname + '/client/dist'));
+
+app.get('/references', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/client/dist/indexReferences.html'));
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve('./index.html'));
+});
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve('./index.html'));
+})
+
+http.listen(port, () => console.log('listening on port ' + port));
+/*
 class PlayerRoomPositions {
 
     constructor() {
@@ -46,17 +64,11 @@ class PlayerRoomPositions {
 }
 
 const playerRoomPositions = new PlayerRoomPositions();
+*/
 
-app.use(express.static(__dirname + '/client'));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.resolve('./index.html'));
-});
 
-app.get('/*', (req, res) => {
-    res.sendFile(path.resolve('./index.html'));
-})
-
+/*
 io.on('connection', onServerConnection);
 
 function onServerConnection(socket) {
@@ -97,5 +109,6 @@ function sendPlayerPositionsToClients(socket) {
 // 	// volitile means its not super important each message makes it
 // 	socket.volatile.emit('server_player_updates', players);
 // }
+*/
 
-http.listen(port, () => console.log('listening on port ' + port));
+
