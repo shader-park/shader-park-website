@@ -9,6 +9,15 @@ void main()
 }
 `;
 
+export const voxelVertexSource = `
+varying vec4 worldPos;
+void main()
+{
+    worldPos = vec4(position, 1.0);
+    gl_Position = vec4(position,1.0);
+}
+`;
+
 export const defaultFragSource = `// Define the signed distance function (SDF) of you object here
 float map(vec3 p) {
 	return sphere(p, 0.3);
@@ -39,7 +48,7 @@ const float PI = 3.14159265;
 const float TAU = PI*2.0;
 const float TWO_PI = TAU;
 
-const float max_dist = 4.0;
+const float max_dist = 2.5;
 const float intersection_threshold = 0.00007;
 
 // Simple oscillators 
@@ -97,9 +106,8 @@ float box( vec3 p, vec3 box ){
   return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
 }
 
-float roundedBox( vec3 p, vec3 box , float roundness){
-  vec3 d = abs(p) - box;
-  return min(max(d.x,max(d.y,d.z)),roundness) + length(max(d,0.0));
+float roundedBox( vec3 p, vec3 box , float r){
+  return length(max(abs(p)-box,0.0))-r;
 }
 
 float torus( vec3 p, vec2 t ){
@@ -313,9 +321,9 @@ float noise(vec3 p)
 // Compute intersection of ray and SDF. You probably won't need to modify this.
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
-	for(int i = 0; i < 192; ++i) {
+	for(int i = 0; i < 300; ++i) {
 		float h = map(ro+rd*t);
-		if(h < intersection_threshold || t>max_dist) break;
+		if(h < intersection_threshold || t > max_dist) break;
 		t += h*stepFraction;
 	}
 	return t;
@@ -329,7 +337,6 @@ vec3 mouseIntersection() {
 // Calculate the normal of a SDF
 vec3 calcNormal( in vec3 pos )
 {
-    pos -= sculptureCenter;
     vec2 e = vec2(1.0,-1.0)*0.0005;
     return normalize( e.xyy*map( pos + e.xyy ) + 
 		      e.yyx*map( pos + e.yyx ) + 
@@ -374,12 +381,21 @@ void main() {
 	if(t < 1.) {
 		vec3 p = (rayOrigin + rayDirection*t);
 		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
-		vec3 normal = calcNormal(p);
+		vec3 normal = calcNormal(p-sculptureCenter);
 		vec3 c = shade(p-sculptureCenter, normal);
 		gl_FragColor = vec4(c, opacity);
 		
 	} else {
 		discard;
 	}
+}
+`;
+
+export const voxelFooter = `
+void main() {
+	vec3 p = worldPos.xyz - sculptureCenter;
+	vec3 color = shade(p,calcNormal(p));
+	float dist = map(p);
+	gl_FragColor = vec4(/*color*/vec3(0.5,1.5,1000.0),dist);
 }
 `;

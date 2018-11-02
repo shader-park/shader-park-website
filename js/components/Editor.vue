@@ -14,6 +14,7 @@
         <br/>
         <button @click.stop="save" class="save">{{saveText}}</button>
         <button @click.stop="play" class="play">Play</button>
+	<button @click.stop="exportSculpture" class="exportSculpture">Export</button>
         <button @click.stop="close" class="close">Close</button>
         <input class="checkbox" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
         <label for="AutoUpdate">Auto Update</label>
@@ -146,6 +147,17 @@ export default {
             this.updateSculpture();
             console.log('play');
         },
+	exportSculpture() {
+	    console.log(this.selectedSculpture);
+	    const data = this.selectedSculpture.sculpture.generateMesh(0.0);
+	    console.log(data);
+	    let count = 0;
+            for (let i=0; i<data.length; i++) {
+	        count += data[i];
+	    }
+            console.log("sum: " + count);
+	    console.log('export that shith');
+	},
         close() {
             this.$store.state.selectedSculpture = null;
             this.$store.state.selectedObject = null;
