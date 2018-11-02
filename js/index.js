@@ -31,8 +31,6 @@ let animationPaused = false;
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 	
-	runOnce = false;
-	
 	const nextRoute = () => {
 		animationPaused = true;
 		allSculpturesOpacity.opacity = 0.0;
@@ -177,7 +175,6 @@ let sculptureHasBeenDeselected = false;
 let cachedSelectedSculptureId;
 let allSculpturesOpacity = { opacity: 0.0 };
 let selectedSculptureOpacity = {opacity: 0.0};
-let runOnce = false;
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();

@@ -36,6 +36,9 @@ export default {
 				if(data) {
 					this.tempSculp = data;
 					this.finishedLoadingSculp = true;
+					if(data.title != 'title') {
+						this.$store.commit('setRouteTitle', data.title);
+					}
 					this.setSelectedSculpture();
 				} else {
 					this.showModal();
@@ -67,6 +70,9 @@ export default {
 				}
 			});
 		}
+	},
+	destroyed: function() {
+		this.$store.commit('setRouteTitle', null);
 	}
 };
 </script>
