@@ -367,6 +367,13 @@ float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
 	return value * 0.3 + 0.7;
 }
 
+float specularLighting(vec3 p, vec3 normal, vec3 lightDirection, float shine) {
+    float lamb = clamp(dot(normal,normalize(lightDirection)),0.0,1.0);
+    float spec = pow(lamb, exp(10.0*shine));
+    lamb = 0.4*lamb + 0.4 + 0.2*spec;
+    return lamb;
+}
+
 float shadow(vec3 p, vec3 lightDirection, float amount) {
     float t = intersect(p+0.001*lightDirection, lightDirection, stepSize);
     return t < (max_dist - 0.1) ? 1.0-amount : 1.0;
