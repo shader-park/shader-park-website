@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import {createPedestalEdges} from './create-pedestal-edges.js'
-import {defaultFragSource, defaultVertexSource, fragFooter, sculptureStarterCode} from './default-shader.js'
+import {defaultFragSource, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
 
 export class Sculpture {
     constructor(fragmentShader = defaultFragSource) {
@@ -61,6 +61,20 @@ export class Sculpture {
       return material;
     }
 
+    generateVoxelsMesh(vertexShader, fragmentShader) {
+	const material = new THREE.ShaderMaterial({
+	    uniforms: {
+ 	        time: {value: 0.0},
+		mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
+		sculptureCenter: {value: new THREE.Vector3()}
+	    },
+	    vertexShader,
+	    fragmentShader: sculptureStarterCode + fragmentShader + voxelFooter
+	});
+	const geo = new THREE.BoxBufferGeometry(1.0,1.0,1.0);
+	return new THREE.Mesh(geo,material);
+    }
+
     setShaderSource(fragmentShader) {
         this.fragmentShader = fragmentShader;
     }
@@ -74,6 +88,62 @@ export class Sculpture {
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['stepSize'].value = this.stepSize;
+    }
+
+    generateMesh(time) {
+    	// create object
+	const voxMesh = this.generateVoxelsMesh(voxelVertexSource, this.fragmentShader);
+	// create scene
+	const voxelScene = new THREE.Scene();
+	voxelScene.add(voxMesh);
+	const vRes = 5; // Voxel resolution
+	const deltaZ = 1.0/vRes;
+	const vCam = new THREE.OrthographicCamera( -0.5,0.5,0.5,-0.5, /*-vRes/2, vRes/2, vRes/2, -vRes/2,*/ 0.3, 100 );
+	vCam.position.z += 2.0;
+	// create render target 
+	const vRender = new THREE.WebGLRenderer();
+	vRender.setSize(vRes,vRes);
+	const vTarget = new THREE.WebGLRenderTarget(vRes,vRes);
+	//vRender.setRenderTarget(vTarget);
+	const buffA = new Uint8Array(4*vRes*vRes);
+	const buffB = new Uint8Array(4*vRes*vRes);
+	
+	voxMesh.material.uniforms['sculptureCenter'].value = new THREE.Vector3(0.0,0.0,-0.5);
+	vRender.render(voxelScene, vCam, vTarget);
+	vRender.readRenderTargetPixels(vTarget, 0, 0, vRes, vRes, buffA);
+	
+	for (let slice = 1; slice<vRes; slice++) {
+		voxMesh.material.uniforms['sculptureCenter'].value = new THREE.Vector3(0.0,0.0,-0.5+slice*deltaZ);
+		vRender.render(voxelScene, vCam, vTarget);
+		// alternate buffers at each slice
+		let upperBuffer;
+		let lowerBuffer;
+		if (slice%2 === 0) {
+		    upperBuffer = buffA;
+		    lowerBuffer = buffB;
+		} else {
+		    upperBuffer = buffB;
+		    lowerBuffer = buffA;
+		}
+		vRender.readRenderTargetPixels(vTarget, 0, 0, vRes, vRes, upperBuffer);
+		this.convertVoxels(lowerBuffer, upperBuffer);
+
+	}
+
+	return "test";
+	// setup mesh to be created
+	// update unfiorms to select slice
+	// render to target
+	// read target 
+	// incorporate read pixels to mesh
+	// if not finished go back to update uniforms
+	// smooth mesh
+	// colors :)
+	// all done!
+    }
+
+    convertVoxels(lBuff, uBuff) {
+	console.log(lBuff);
     }
 
     // getShaderErrors(renderer) {

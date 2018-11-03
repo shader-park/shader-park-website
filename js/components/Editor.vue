@@ -161,6 +161,17 @@ export default {
             this.updateSculpture();
             console.log('play');
         },
+	exportSculpture() {
+	    console.log(this.selectedSculpture);
+	    const data = this.selectedSculpture.sculpture.generateMesh(0.0);
+	    console.log(data);
+	    let count = 0;
+            for (let i=0; i<data.length; i++) {
+	        count += data[i];
+	    }
+            console.log("sum: " + count);
+	    console.log('export that shith');
+	},
         close() {
             this.$store.state.selectedSculpture = null;
             this.$store.state.selectedObject = null;
