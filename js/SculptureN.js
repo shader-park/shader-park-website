@@ -13,6 +13,7 @@ export class Sculpture {
             this.generateMaterial(defaultVertexSource, fragmentShader));
         const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
         this.opacity = 0.0;
+        this.stepSize = 0.8;
         const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
         this.pedestal.position.set(0, -.75, 0);
@@ -49,7 +50,8 @@ export class Sculpture {
           time: {value: 0.0},
           mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
           opacity: {value: 1.0},
-          sculptureCenter: {value: new THREE.Vector3()}
+          sculptureCenter: {value: new THREE.Vector3()},
+          stepSize: { value: 0.8 }
         },
         vertexShader,
         fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
@@ -71,6 +73,7 @@ export class Sculpture {
         this.mesh.material.uniforms['time'].value = time * 0.001;
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
+        this.mesh.material.uniforms['stepSize'].value = this.stepSize;
     }
 
     // getShaderErrors(renderer) {

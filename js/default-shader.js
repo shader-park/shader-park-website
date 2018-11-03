@@ -29,10 +29,11 @@ uniform float time;
 uniform float opacity;
 uniform vec3 sculptureCenter;
 uniform vec3 mouse;
+uniform float stepSize;
 
 varying vec4 worldPos;
 
-float stepSize = 0.8;
+
 float map(vec3 p);
 
 const float PI = 3.14159265;
