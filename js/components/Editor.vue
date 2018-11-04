@@ -314,6 +314,7 @@ button {
 }
 
 .controls {
+    min-height: 50px;
     position: relative;
     height: 8vh;
     border-bottom: 2px solid #f5f5f5;
