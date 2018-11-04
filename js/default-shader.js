@@ -49,7 +49,7 @@ const float PI = 3.14159265;
 const float TAU = PI*2.0;
 const float TWO_PI = TAU;
 
-const float max_dist = 2.5;
+const float max_dist = 4.0;
 const float intersection_threshold = 0.00007;
 
 // Simple oscillators 
@@ -400,14 +400,15 @@ float occlusion(vec3 p,vec3 n) {
 export const fragFooter = `
 // For advanced users //
 void main() {
-	vec3 rayOrigin = worldPos.xyz;
+	vec3 rayOrigin = worldPos.xyz-sculptureCenter;
 	vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
-	float t = intersect(rayOrigin-sculptureCenter, rayDirection, stepSize);
-	if(t < 1.) {
+	rayOrigin -= rayDirection*2.0;
+	float t = intersect(rayOrigin, rayDirection, stepSize);
+	if(t < 2.5) {
 		vec3 p = (rayOrigin + rayDirection*t);
-		vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
-		vec3 normal = calcNormal(p-sculptureCenter);
-		vec3 c = shade(p-sculptureCenter, normal);
+		//vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
+		vec3 normal = calcNormal(p);
+		vec3 c = shade(p, normal);
 		gl_FragColor = vec4(c, opacity);
 		
 	} else {

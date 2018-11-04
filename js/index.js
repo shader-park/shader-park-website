@@ -223,14 +223,13 @@ document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
 
 	
-
 let firstRender = false;
 function render(time) {
 	if (!animationPaused) {
 		requestAnimationFrame(render);
 	}
 	
-	const t = Date.now() - startTime;
+	const t = (Date.now() - startTime) % 600000.0;
 	store.state.objectsToUpdate.forEach(sculpture => {
 		sculpture.update(t);
 	})
@@ -290,7 +289,14 @@ function render(time) {
 		const intersects = raycaster.intersectObjects(objectsToRaycast);
 		if(intersects.length > 0) {
 			const firstIntersect = intersects[0].object;
-			firstIntersect.material.uniforms.mouse.value = intersects[0].point.sub(firstIntersect.position);
+			firstIntersect.material.side = THREE.FrontSide;
+			const frontSideIntersection = raycaster.intersectObjects(objectsToRaycast);
+			if (frontSideIntersection.length > 0) {
+				firstIntersect.material.uniforms.mouse.value = frontSideIntersection[0].point.sub(firstIntersect.position);
+			} else { 
+				firstIntersect.material.uniforms.mouse.value = camera.position.clone().sub(firstIntersect.position);
+			}
+			firstIntersect.material.side = THREE.BackSide;
 			if (store.state.selectedSculpture === null) {
 				canvas.style.cursor = 'pointer';
 				store.state.intersectedObject = firstIntersect;
