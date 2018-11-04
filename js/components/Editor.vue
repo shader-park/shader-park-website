@@ -8,22 +8,23 @@
                 @keydown.stop="() => {}" 
                 @click.stop="()=>{}" 
                 v-bind:style="titleInput"
-                classs="editor-input" v-model="sculptureTitle" placeholder="title">
-            <span v-if="authorUsername !=='admin' && authorUsername">by 
-                <router-link :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
+                classs="editor-input centerY"  v-model="sculptureTitle" placeholder="title">
+            <span v-if="authorUsername !=='admin' && authorUsername" class="username centerY">by 
+                <router-link  :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
             </span>
-            <br/>
-            <button @click.stop="save" class="save">{{saveText}}</button>
-            <button @click.stop="play" v-if="!autoUpdate" class="play">Play</button>
-            <button @click.stop="close" class="close">Close</button>
-            <input class="checkbox" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
-            <label for="AutoUpdate">Auto Update</label>
+            <button @click.stop="close" class="close centerY">Close</button>
+            <button @click.stop="save" class="save centerY">{{saveText}}</button>
+            
+            
+            <label class="autoUpdate-label centerY" for="AutoUpdate">Auto Update</label>
+            <input  class="checkbox centerY" :style="{marginLeft: '10px'}" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
+            <button @click.stop="play" v-if="!autoUpdate" class="play centerY">Play</button>
 
-            <input class="checkbox" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
-            <label v-if="isAdmin" for="Example">Is Example</label>
+            <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
+            <label class="centerY" v-if="isAdmin" for="Example">Is Example</label>
             
 
-            <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete">Delete</button>
+            <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete centerY">Delete</button>
             <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
             <!-- <span>by</span> -->
             <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -49,7 +50,12 @@ export default {
             titleInput: {
                 width: '5ch',
                 border: 'none',
-                marginBottom: '5px'
+                marginBottom: '5px',
+                fontSize: '19px',
+                marginLeft: '5px;',
+                position: 'relative',
+                top: '50%',
+                transform: 'translateY(-50%)'
             },
             currWidth: '0px',
             editorHasDisplayedModal: false
@@ -282,6 +288,7 @@ export default {
 
 button {
     padding: 5px 15px 5px 15px;
+    border-radius: 50px;
     /* border: 1px solid lightgrey; */
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
@@ -295,19 +302,48 @@ button {
 
 }
 
+.centerY{
+    position: relative;
+    top:50%;
+    transform: translateY(-50%);
+}
+
+.username {
+    position: absolute !important;
+    font-size: 17px;
+}
+
+.controls {
+    min-height: 50px;
+    position: relative;
+    height: 8vh;
+    border-bottom: 2px solid #f5f5f5;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 .save {
     margin-left: 5px;
 }
 
-.editor-input {
-    border: none !important;
-    margin-bottom: 5px !important;
-    margin-left: 5px !important;
+
+.close {
+    background-color: #777;
+    color:white;
+    transition: bacground-color 300ms ease-in-out, color 300ms ease-in-out;
+    -webkit-transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+    &:hover {
+        background-color: white;
+    }
+    
+}
+.delete, .close, .save, .autoUpdate-label, .checkbox, .play {
+    float: right;
+    margin-left: 10px;
 }
 
-.delete, .close {
-    float: right;
-    margin-right: 10px;
+.autoUpdate-label {
+    margin-left: 5px !important;
 }
 .dialog-c-text {
     padding: 0px 20px 10px 20px;

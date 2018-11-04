@@ -1,6 +1,7 @@
+<!-- 
 <template>
     <iframe></iframe>
-</template>
+</template> 
 
 <script>
 export default {
@@ -8,3 +9,4 @@ export default {
 }
 </script>
 
+-->
