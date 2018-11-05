@@ -52,6 +52,15 @@ const float TWO_PI = TAU;
 const float max_dist = 4.0;
 const float intersection_threshold = 0.00007;
 
+// Trig functions normalized to the range 0.0-1.0
+float nsin(float x) {
+    return sin(x)*0.5+0.5;
+}
+
+float ncos(float x) {
+    return cos(x)*0.5+0.5;
+}
+
 // Simple oscillators 
 
 float osc(float freq, float amp, float base, float phase) {
