@@ -16,13 +16,14 @@ export class Sculpture {
         this.stepSize = 0.8;
         const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
-	this.sepBuffer = 0.05; // Small gap between sculpture and pedestal prevents z-fighting
+        this.sepBuffer = 0.05; // Small gap between sculpture and pedestal prevents z-fighting
         this.pedestal.position.set(0, -.75-this.sepBuffer, 0);
         this.mesh.add(this.pedestal);
         this.pedestalEdges = createPedestalEdges(1.0, 0.5);
         this.pedestalEdges.position.set(0, -.75-this.sepBuffer, 0);
         this.mesh.add(this.pedestalEdges);
         this.selected = false;
+        this.setOpacity(0.0);
     }
 
     selectedSculpture(selected) {

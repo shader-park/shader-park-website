@@ -332,9 +332,11 @@ function onMouseMove(event) {
 }
 
 let tempIntersectedObject;
+let mouseDownTime = 0;
 function onMouseDown(event) {
 	if(store.state.intersectedObject) {
-        tempIntersectedObject = store.state.intersectedObject;
+		tempIntersectedObject = store.state.intersectedObject;
+		mouseDownTime = Date.now();
 	} else {
 		store.state.selectedObject = null;
 	}
@@ -343,10 +345,13 @@ function onMouseDown(event) {
 function onMouseUp(event) {
 	if(store.state.selectedObject) return;
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
-		store.state.selectedObject = store.state.intersectedObject;
-		selectedSculptureOpacity.opacity = 1.0;
-
-		canvas.style.cursor = 'auto';
+		mouseDownTime = Date.now() - mouseDownTime;
+		if(mouseDownTime < 400) {
+			store.state.selectedObject = store.state.intersectedObject;
+			selectedSculptureOpacity.opacity = 1.0;
+			canvas.style.cursor = 'auto';
+		}
+		
 		// tweenCameraToSelectedSculpture();
 	} else {
 		store.state.selectedObject = null;
