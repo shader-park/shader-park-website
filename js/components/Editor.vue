@@ -12,19 +12,19 @@
             <span v-if="authorUsername !=='admin' && authorUsername" class="username centerY">by 
                 <router-link  :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
             </span>
-            <button @click.stop="close" class="close centerY">Close</button>
-            <button @click.stop="save" class="save centerY">{{saveText}}</button>
+            <button @click.stop="close" class="close centerY editor-button">Close</button>
+            <button @click.stop="save" class="save centerY editor-button">{{saveText}}</button>
             
             
             <label class="autoUpdate-label centerY" for="AutoUpdate">Auto Update</label>
             <input  class="checkbox centerY" :style="{marginLeft: '10px'}" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
-            <button @click.stop="play" v-if="!autoUpdate" class="play centerY">Play</button>
+            <button @click.stop="play" v-if="!autoUpdate" class="play centerY editor-button">Play</button>
 
             <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
             <label class="centerY" v-if="isAdmin" for="Example">Is Example</label>
             
 
-            <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete centerY">Delete</button>
+            <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete centerY editor-button">Delete</button>
             <!-- <input type="text" id="editor-shader-title" size="60"></input> -->
             <!-- <span>by</span> -->
             <!-- <input type="text" id="editor-author-name" size="30"></input> -->
@@ -283,11 +283,11 @@ export default {
 }
 
 </script>
-<style lang="less" scoped>
+<style lang="less">
 
 @import '../codemirror/glslEditor.css';
 
-button {
+.editor-button {
     padding: 5px 15px 5px 15px;
     border-radius: 50px;
     /* border: 1px solid lightgrey; */
@@ -369,14 +369,15 @@ label {
 
 .ge_editor {
     height: auto;
-    overflow: scroll;
-    max-height: 80vh;
+    overflow: scroll !important;
+    max-height: 82vh;
     max-width: 100%;
 }
 
 .CodeMirror {
     margin-top: 0px !important;
 }
+
 .ge_canvas {
     display: none;
 }
