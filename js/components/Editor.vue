@@ -156,6 +156,7 @@ export default {
     methods: {
         save() {
             if(this.currUser != null) {
+                
                 this.$store.dispatch('saveSculpture', this.selectedSculpture);
             } else {
                 // this.$router.push('sign-in');
@@ -204,12 +205,12 @@ export default {
             if (e.key === 'Escape') {
             	this.close();
             }
-            if (e.key === 'Enter') {
-                if(this.selectedSculpture) {
-                    this.play();
-                }
+            // if (e.key === 'Enter') {
+            //     if(this.selectedSculpture) {
+            //         this.play();
+            //     }
             	
-            }
+            // }
         },
         removeEditorModalUI() {
             if(this.cm && this.cm.helpers.activeModal && this.cm.helpers.activeModal.isVisible){
@@ -282,7 +283,7 @@ export default {
 }
 
 </script>
-<style lang="less">
+<style lang="less" scoped>
 
 @import '../codemirror/glslEditor.css';
 
