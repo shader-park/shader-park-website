@@ -66,7 +66,7 @@ export default {
         console.log('mounted editor');
         document.addEventListener('keydown', this.keypress.bind(null, true));
         document.addEventListener('keyup', this.keypress.bind(null, false));
-        this.currWidth = this.isEmbeded? '79vw': '49vw';
+
         
     },
     computed : {
