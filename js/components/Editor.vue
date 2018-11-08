@@ -47,6 +47,7 @@ export default {
             initialized: false,
             isExample: false,
             autoUpdate: true,
+            editorContainsErrors: false,
             titleInput: {
                 width: '5ch',
                 border: 'none',
@@ -65,6 +66,8 @@ export default {
         console.log('mounted editor');
         document.addEventListener('keydown', this.keypress.bind(null, true));
         document.addEventListener('keyup', this.keypress.bind(null, false));
+        this.currWidth = this.isEmbeded? '79vw': '49vw';
+        
     },
     computed : {
     saveText() {
@@ -105,7 +108,7 @@ export default {
             set : function(value) {
                 if(this.$store.state.selectedSculpture) {
                     this.$store.state.selectedSculpture.title = value;
-                    this.titleInput.width = value.length + 'ch';
+                    this.titleInput.width = value.length + 1 + 'ch';
                 }   
             }
         },
@@ -273,6 +276,7 @@ export default {
                 }
                 window.cm = this.cm;
                 this.cm.shader.canvas.on('processedShader', (data) => {
+                    this.editorContainsErrors = data.containsError;
                     if(this.autoUpdate && !data.containsError) {
                         this.updateSculpture();
                     }

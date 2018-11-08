@@ -1,39 +1,6 @@
-runtime: python27
-api_version: 1
-threadsafe: true
+runtime: nodejs8
+
 
 handlers:
-
-- url: /
-  static_files: index.html
-  upload: index.html
-
-- url: /panel.html
-  static_files: panel.html
-  upload: panel.html
-
-- url: /assets
-  static_dir: assets
-
-- url: /third_party
-  static_dir: third_party
-
-- url: /js
-  static_dir: js
-
-- url: /third_party/brfv4.wasm
-  static_files: third_party/brfv4.wasm
-  upload: third_party/brfv4.wasm
-  mime_type: application/wasm
-
-- url: /input-mode-select.js
-  static_files: input-mode-select.js
-  upload: input-mode-select.js
-
-skip_files:
-- ^.git/.*
-- ^node_modules/(.*/)?
-# this one is to make dev_appserver.py ignore file-watching
-- .*node_modules
-- ^js/(.*/)?
-- ^less/(.*/)?
+- url: /.*
+  script: auto

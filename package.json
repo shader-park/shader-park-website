@@ -1,10 +1,16 @@
 {
-  "name": "SculpturePark",
+  "name": "ShaderPark",
   "version": "0.0.0",
   "description": "",
   "main": "js/index.js",
   "browser": {
     "vue": "vue/dist/vue.common.js"
+  },
+  "gcloud": {
+    "id": "shader-park",
+    "version": "1",
+    "devPort": 3000,
+    "devAdminPort": 8000
   },
   "browserify": {
     "transform": [
@@ -29,6 +35,7 @@
     ]
   },
   "scripts": {
+    "deploy": "npm run build && npm run docs:build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
     "browse": "gcloud app browse --project $npm_package_gcloud_id",
     "build": "npm run less && browserify -t vueify -e js/index.js -o client/bundle.js",
     "less": "lessc less/style.less client/style.css",
@@ -38,7 +45,7 @@
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },
-  "author": "Andrew Palmer, Peter Whidden, Torin Blankensmith",
+  "author": "Peter Whidden, Torin Blankensmith, Andrew Palmer",
   "license": "Apache-2.0",
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",

@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/Torin/Library/Arduino15/packages/arduino/tools/**",
+                "/Users/Torin/Library/Arduino15/packages/arduino/hardware/avr/1.6.15/**"
+            ],
+            "forcedInclude": [
+                "/Users/Torin/Library/Arduino15/packages/arduino/hardware/avr/1.6.15/cores/arduino/Arduino.h"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}

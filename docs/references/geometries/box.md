@@ -4,4 +4,4 @@
 float box(vec3 p, vec3 size);
 ```
 
-<iframe width="100%" height="350px" src="http://localhost:3000/sculpture/-LM-LkFiHWJrolzNlpFF?example=true&embed=true" frameborder="0"></iframe>
+<iframe width="100%" height="450px" src="/sculpture/-LM-LkFiHWJrolzNlpFF?example=true&embed=true" frameborder="0"></iframe>
