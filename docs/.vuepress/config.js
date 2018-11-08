@@ -4,7 +4,7 @@ module.exports = {
   themeConfig: {
     nav: [
       {text: 'About', link: '/'},
-      {text: 'Home', link: 'http://localhost:3000/'}
+      { text: 'Home', link: 'http://shader-park.appspot.com'}
     ],
     // sidebar: 'auto'
     sidebar: [
@@ -69,6 +69,7 @@ module.exports = {
     // defaults to false, set to true to enable
     editLinks: true,
     // custom text for edit link. Defaults to "Edit this page"
-    editLinkText: 'Help us improve this page!'
+    editLinkText: 'Help us improve this page!',
+    dest: '/client'
   }
 }

@@ -9,7 +9,6 @@ const http = require('http').Server(app);
 // const fs = require('fs');
 
 const port = process.env.PORT || 3000;
-
 app.use(express.static(__dirname + '/client'));
 app.use(express.static(__dirname + '/client/dist'));
 
