@@ -17676,7 +17676,10 @@ var GlslEditor = (function () {
     }, {
         key: 'download',
         value: function download() {
-            var content = this.getContent();
+          this.editor.getValue()
+            var content = this.options.frag_header;
+            content += this.getContent();
+            content += this.options.frag_footer;
             var name = this.getTitle();
             if (name !== '') {
                 name += '-';
