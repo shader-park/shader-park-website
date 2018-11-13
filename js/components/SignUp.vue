@@ -1,5 +1,6 @@
 <template>
     <div class="auth-container">
+        <button class="close-auth" v-on:click="close" ></button>
         <form v-on:submit.prevent>
             <span v-show="$v.email.$error">please enter a valid email</span>
             <input class="input w-input" @blur="$v.email.$touch()" type="email" placeholder="email:" v-model="email">
@@ -61,7 +62,7 @@ export default {
                 firebase.database().ref("users").child(uid).set(dbUser);
                 this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
                 // this.$router.replace('profile');
-                this.$store.commit('displayLogin', false);
+                this.$store.commit('displaySignUp', false);
             },
             error => {
                 alert(error.message);
@@ -70,7 +71,10 @@ export default {
         checkUsername(username) {
             console.log('TODO: check username');
             // return this.$db.object(`usernames/${username.toLowercase()}`);
-        }
+        },
+        close: function() {
+			this.$store.commit('displaySignUp', false);
+		},
     }
 };
 </script>
@@ -98,5 +102,20 @@ export default {
     border-radius: 4px;
     font-size: 18px;
     font-weight: 300;
+}
+
+.close-auth {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 34px;
+  height: 34px;
+  border-style: none;
+  background-image: url('/images/close.svg');
+  background-position: 50% 50%;
+  background-size: 40px;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  opacity: 0.8;
 }
 </style>

@@ -4,6 +4,7 @@
 			<nav-main></nav-main>
 			<router-view></router-view>
 			<signIn v-if="displayLogin"></signIn>
+			<signUp v-if="displaySignUp"></signUp>
 			<main-container></main-container>
 		</div>
 	</main>
@@ -13,12 +14,14 @@
 import Header from './components/Header.vue';
 import MainContainer from './components/MainContainer.vue';
 import SignIn from './components/SignIn.vue';
+import SignUp from './components/SignUp.vue';
 
 export default {
 	components: {
 		navMain: Header,
 		mainContainer: MainContainer,
-		signIn: SignIn
+		signIn: SignIn,
+		signUp: SignUp
 	},
 	data: function() {
 		return {
@@ -28,6 +31,9 @@ export default {
 	computed: {
 		displayLogin() {
 			return this.$store.getters.displayLogin;
+		},
+		displaySignUp() {
+			return this.$store.getters.displaySignUp;
 		}
 	},
 	methods: {

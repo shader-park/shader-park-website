@@ -28,6 +28,13 @@ window.db = firebase.database();
 const router = new VueRouter({routes: routes, mode: 'history'});
 let animationPaused = false;
 
+
+let sculptureHasBeenSelected = false;
+let sculptureHasBeenDeselected = false;
+let cachedSelectedSculptureId;
+let allSculpturesOpacity = {opacity: 0.0};
+let selectedSculptureOpacity = {opacity: 0.0};
+
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 	
@@ -69,20 +76,30 @@ router.beforeEach((to, from, next) => {
 	}	
 });
 
+
+// new Vue({
+//   el: '#app', router, store, render: h => h(App),
+//   created() {
+	
+//     // firebase.initializeApp(dbConfig);
+//     firebase.auth()
+//         .onAuthStateChanged((user) => {
+// 			if (user) {
+// 				console.log('has user');
+// 				// this.$store.dispatch('autoSignIn', user)
+// 			}
+// 			console.log('about to INIT');
+// 			init();
+// 		});
+    
+//     //  this.$store.dispatch('loadMeetups')
+//   }
+// })
+
+
 firebase.auth().onAuthStateChanged(function(user) {
 	const vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
 	init();
-	// console.log(document.querySelector('.three-canvas'));
-    //     vueApp.$nextTick(() => {
-    //       console.log(document.querySelector('.three-canvas'));
-    //       console.log('vueApp');
-    //     })
-        //     vueApp.$data['isMounted'] = false;
-        // vueApp.$watch('isMounted', function (newValue, oldValue) {
-        // 	console.log(document.querySelector('three-canvas'));
-        // 	console.log('vueApp');
-        // })
-        // console.log(vueApp);
 });
 
 const scene = store.state.scene;
@@ -170,11 +187,6 @@ let remotePlayers = {};
 // 	}
 // }
 let renderer, controls, canvas, canvasContainer;
-let sculptureHasBeenSelected = false;
-let sculptureHasBeenDeselected = false;
-let cachedSelectedSculptureId;
-let allSculpturesOpacity = { opacity: 0.0 };
-let selectedSculptureOpacity = {opacity: 0.0};
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();

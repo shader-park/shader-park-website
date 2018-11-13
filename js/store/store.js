@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
     embedded: false,
     canvasSize: {width: 0, height: 0},
     displayLogin: false,
+    displaySignUp: false,
     routeTitle: null
   },
   getters: {
@@ -33,6 +34,9 @@ export const store = new Vuex.Store({
     },
     displayLogin: state => {
       return state.displayLogin;
+    },
+    displaySignUp: state => {
+      return state.displaySignUp;
     },
     getUser: state => {
       return state.user;
@@ -54,11 +58,20 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    setRouteTitle(state,title) {
+    setRouteTitle(state, title) {
       state.routeTitle = title;
     },
     displayLogin(state, payload) {
       state.displayLogin = payload;
+      if (payload) {
+        state.displaySignUp = false;
+      }
+    },
+    displaySignUp(state, payload) {
+      state.displaySignUp = payload;
+      if (payload) {
+        state.displayLogin = false;
+      }
     },
     setCanvasSize(state, size) {
       state.canvasSize = size;
