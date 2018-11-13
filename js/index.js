@@ -76,30 +76,15 @@ router.beforeEach((to, from, next) => {
 	}	
 });
 
-
-// new Vue({
-//   el: '#app', router, store, render: h => h(App),
-//   created() {
-	
-//     // firebase.initializeApp(dbConfig);
-//     firebase.auth()
-//         .onAuthStateChanged((user) => {
-// 			if (user) {
-// 				console.log('has user');
-// 				// this.$store.dispatch('autoSignIn', user)
-// 			}
-// 			console.log('about to INIT');
-// 			init();
-// 		});
-    
-//     //  this.$store.dispatch('loadMeetups')
-//   }
-// })
-
-
+let firstInit = true;
 firebase.auth().onAuthStateChanged(function(user) {
-	const vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
-	init();
+	if(firstInit) {
+		const vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
+		init();
+		firstInit = false;
+	} else {
+		store.dispatch('setUser');
+	}
 });
 
 const scene = store.state.scene;
