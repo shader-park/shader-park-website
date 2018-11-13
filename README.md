@@ -5,11 +5,14 @@ We recommend using [yarn](https://yarnpkg.com/); however these same commands wil
 
 ```
 # install dependencies
-yarn
+yarn install
 
 # run a development server including watching your javascript and less files
-yarn start
+yarn watch
+```
 
-# deploy to gcloud
-yarn run deploy
+## Docs Usage
+
+```
+yarn docs:dev
 ```
