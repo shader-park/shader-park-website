@@ -65,7 +65,7 @@ export const routes = [
     name: 'sculpture',
     component: New,
     props: (route) =>
-        ({example: route.query.example, embed: route.query.embed}),
+        ({example: route.query.example, embed: route.query.embed, hideEditor: route.query.hideeditor}),
     meta: {
       title: 'sculpture',
     }
