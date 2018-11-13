@@ -1,5 +1,5 @@
 <template>
-    <div class="main">
+    <div class="main" :class="{embeded: isEmbeded}">
         <editor :cachedWidth="editorWidth" :class="{dragging: dragingMouse}" ></editor>
         <div v-show="showHandel" ref="handel" class="handle" :class="{dragging: dragingMouse}">
             <ul class="dot-container">
@@ -35,6 +35,9 @@ export default {
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
+        },
+        isEmbeded() {
+            return this.$store.state.embedded;
         }
     },
     watch : {
@@ -96,6 +99,9 @@ export default {
     -ms-flex-line-pack: stretch;
     align-content: stretch;
     transition: width 300ms ease-in-out;
+    &.embeded {
+        height: 100vh;
+    }
 }
 
 .dragging {

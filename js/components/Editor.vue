@@ -268,11 +268,15 @@ export default {
                         frag_footer: fragFooter
                     });
 
-                    document.querySelector('.ge_editor').addEventListener('click', () => {
+                    let editor = document.querySelector('.ge_editor');
+                    if(this.isEmbeded) {
+                        editor.classList.add('embed');
+                    }
+                    editor.addEventListener('click', () => {
                         console.log('click');
                         this.removeEditorModalUI();
-                        
-                    })
+                    });
+
                 }
                 window.cm = this.cm;
                 this.cm.shader.canvas.on('processedShader', (data) => {
@@ -376,6 +380,9 @@ label {
     overflow: scroll !important;
     max-height: 82vh;
     max-width: 100%;
+    &.embed {
+        max-height: 92vh;
+    }
 }
 
 .CodeMirror {
