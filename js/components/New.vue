@@ -19,7 +19,7 @@ export default {
 			finishedLoadingSculp: false
 		}
 	},
-	props: ['example', 'embed', 'hideEditor'],
+	props: ['example', 'embed', 'hideEditor', 'hidePedestal'],
 	mounted() {
 		this.$store.commit('sculpturesLoaded', false);
 		if(this.embed && this.embed === 'true') {
@@ -63,11 +63,14 @@ export default {
 		},
 		setSelectedSculpture() {
 			this.$nextTick(function() {
-				if(!this.hideEditor) {
-					const sculp = this.$refs.sculpture;
-					if(sculp) {
+				const sculp = this.$refs.sculpture;
+				if(sculp) {
+					if(!this.hideEditor) {
 						this.$store.state.selectedObject = sculp.sculpture.mesh;
-						
+					}
+					if(this.hidePedestal) {
+						sculp.sculpture.pedestal.visible = false;
+						sculp.sculpture.pedestalEdges.visible = false;
 					}
 				}
 				this.$store.commit('sculpturesLoaded', true);

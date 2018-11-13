@@ -24,8 +24,7 @@ export const routes = [
     path: '/examples',
     name: 'examples',
     component: Examples,
-    props: (route) =>
-      ({ embed: route.query.embed }),
+    props: (route) => ({embed: route.query.embed}),
     meta: {
       title: 'Examples',
     }
@@ -64,8 +63,12 @@ export const routes = [
     path: '/sculpture/:id',
     name: 'sculpture',
     component: New,
-    props: (route) =>
-        ({example: route.query.example, embed: route.query.embed, hideEditor: route.query.hideeditor}),
+    props: (route) => ({
+      example: route.query.example,
+      embed: route.query.embed,
+      hideEditor: route.query.hideeditor,
+      hidePedestal: route.query.hidepedestal
+    }),
     meta: {
       title: 'sculpture',
     }

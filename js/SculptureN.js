@@ -27,6 +27,9 @@ export class Sculpture {
     }
 
     selectedSculpture(selected) {
+        if(!this.pedestal.visible) {
+            return;
+        }
         this.mesh.remove(this.pedestalEdges);
         if (selected) {
             this.pedestalEdges = createPedestalEdges(1.0, 0.5, 0.015);
