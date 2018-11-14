@@ -90,20 +90,24 @@ firebase.auth().onAuthStateChanged(function(user) {
 const scene = store.state.scene;
 scene.background = new THREE.Color(1.0, 1.0, 1.0);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
-camera.position.z = 2;
+// camera.position.z = 2;
+// camera.position.set(6, 3, 2.5);
+// controls.target.set(6, 0, 0);
+// camera.rotation.set(6, 0, 0);
+window.camera = camera;
 
 // var camera = new THREE.OrthographicCamera(
 //   window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-window.camera = camera;
+
 // const socket = io();
 // store.state.socket = socket;
 
-let player;
+// let player;
 
 // setInterval(sendPlayerPosToServer, 250);
 // used to update positions of players in the same room
-let localPlayers = {};
-let remotePlayers = {};
+// let localPlayers = {};
+// let remotePlayers = {};
 
 // function sendPlayerPosToServer() {
 // 	if (store.state.currentRoom) {
@@ -178,10 +182,11 @@ const raycaster = new THREE.Raycaster();
 const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
 let prevCanvasSize;
+let tweeningSculpturesOpacity = false;
+let fogDistance = 8.0;
+window.fogDistance = fogDistance;
 
 function init() {
-	
-	
 	canvasContainer = document.querySelector('.canvas-container');
 	renderer = new THREE.WebGLRenderer({ antialias: true});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
@@ -208,6 +213,8 @@ function init() {
 		BOTTOM: 83
 	};
 	window.controls = controls;
+	camera.position.set(6, 2.5, 4);
+	controls.target.set(6, 0, 0);
 
 	scene.add(hemisphereLight);
     render();
@@ -219,51 +226,21 @@ window.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
 
-	
-let firstRender = false;
 function render(time) {
 	if (!animationPaused) {
 		requestAnimationFrame(render);
 	}
 	
 	const t = (Date.now() - startTime) % 600000.0;
-	store.state.objectsToUpdate.forEach(sculpture => {
-		sculpture.update(t);
-	})
+
 	if (store.state.canvasSize !== prevCanvasSize) {
-		  Object.assign(prevCanvasSize, store.state.canvasSize);
-		  onCanvasResize();
+		Object.assign(prevCanvasSize, store.state.canvasSize);
+		onCanvasResize();
 	}
-	// if (store.state.objectsToRaycast.length > 0) {
-	// 	raycaster.setFromCamera(new THREE.Vector3(0, 0, -0), camera);
-	// 	const intersects = raycaster.intersectObjects(objectsToRaycast);
-	// 	if (intersects.length > 0) {
-	// 		console.log('intersected');
-	// 		firstRender=true;
-	// 	} else {
-	// 		console.log('didnot intersect');
-	// 	}
-	// }
-	
-	// if(!firstRender && app.__vue__) {
-	// 	app.__vue__.$children.forEach(child => {
-	// 		if (Object.keys(child.$refs) == 'room' && child.$refs.room.sculptures.length === store.state.objectsToUpdate.length) {
-	// 			firstRender = true;
-	// 		}       
-	// 	});
-	// }
-	// if (firstRender && allSculpturesOpacity.opacity == 0 && store.state.sculpturesLoaded && !runOnce) {
-	// 	console.log('starting fade');
-	// 	console.log('fading all scuptures from render');
-	// 	transitionAllSculpturesOpacity(1.0);
-	// 	runOnce = true;
-	// }
-	// firstRender = true;
-        // firstRender +=1;
-	if (store.state.selectedSculpture){
-		if(!sculptureHasBeenSelected) {
-			tweenCameraToSelectedSculpture();	
-			// console.log('tweening to Sculpture');
+
+    if (store.state.selectedSculpture) {
+		if (!sculptureHasBeenSelected) {
+			tweenCameraToSelectedSculpture();
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
 			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
 			sculptureHasBeenSelected = true;
@@ -271,14 +248,20 @@ function render(time) {
 		}
 		sculptureHasBeenDeselected = false;
 	} else {
-          if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
+		if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
 			sculptureHasBeenDeselected = true;
-			// console.log('fading all scuptures from render');
-            transitionAllSculpturesOpacity(
-				1.0, 1000, cachedSelectedSculptureId);
+			transitionAllSculpturesOpacity(1.0, 1000, cachedSelectedSculptureId);
 		}
 		sculptureHasBeenSelected = false;
 	}
+
+	store.state.objectsToUpdate.forEach(sculpture => {
+		if (!store.state.selectedSculpture && !tweeningSculpturesOpacity){
+			let fadeOpacity = calcSculptureOpacityForCameraDistance(sculpture);
+			sculpture.setOpacity(fadeOpacity);
+		}
+		sculpture.update(t);
+	});	
 
 	const objectsToRaycast = store.state.objectsToRaycast;
 	if (objectsToRaycast.length > 0) {
@@ -306,7 +289,7 @@ function render(time) {
 		}
 	}
 	TWEEN.update(time);
-	if(player) player.update();
+	// if(player) player.update();
 	// updateRemotePlayers();
 	controls.update();
 	renderer.render(scene, camera);	
@@ -348,8 +331,6 @@ function onMouseUp(event) {
 			selectedSculptureOpacity.opacity = 1.0;
 			canvas.style.cursor = 'auto';
 		}
-		
-		// tweenCameraToSelectedSculpture();
 	} else {
 		store.state.selectedObject = null;
 	}
@@ -359,7 +340,6 @@ function onMouseUp(event) {
 function tweenCameraToSelectedSculpture() {
 	let endTargetPos = new THREE.Vector3();
 	endTargetPos.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
-	// endTargetPos.x += 1;
 
 	let camTarget = new THREE.Vector3().copy(controls.target);
 	let tweenControlsTarget = new TWEEN.Tween(camTarget)
@@ -383,6 +363,7 @@ function tweenCameraToSelectedSculpture() {
 
 function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
 	console.log('transition individual sculp to ' + opacity);
+	tweeningSculpturesOpacity = true;
 	return new Promise(function(resolve, reject) {
 		let sculp = store.state.objectsToUpdate.filter(obj => obj.mesh.name === sculptureId);
 		if(sculp.length == 0) {
@@ -395,12 +376,11 @@ function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
 			.to({opacity}, duration)
 			.easing(TWEEN.Easing.Quadratic.InOut)
 			.onUpdate(function() {
-				// store.state.objectsToUpdate.filter((obj) => obj.mesh.name === sculptureId).then(sculp => {
 				sculp.setOpacity(selectedSculptureOpacity.opacity);
-				// });
 			})
 			.onComplete(function() {
 				console.log('finished fading individual Sculp to' + selectedSculptureOpacity.opacity)
+				tweeningSculpturesOpacity = false;
 				resolve();
 			});
 		fadeSculpture.start();
@@ -409,44 +389,44 @@ function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
 
 function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculptureId = null) {
 	console.log('transition all sculps-' + excludedSculptureId +  ' to ' + opacity);
+	tweeningSculpturesOpacity = true;
 	return new Promise(function(resolve, reject) {
 		let fadeSculptures = new TWEEN.Tween(allSculpturesOpacity)
 			.to({ opacity }, duration)
 			.easing(TWEEN.Easing.Quadratic.InOut)
 			.onUpdate(function () {
 				store.state.objectsToUpdate.forEach(obj => {
-					if (!excludedSculptureId) {
-						obj.setOpacity(allSculpturesOpacity.opacity);
-					} else if (obj.mesh.name !== excludedSculptureId) {
-						obj.setOpacity(allSculpturesOpacity.opacity);
+					let fadeOpacity = calcSculptureOpacityForCameraDistance(obj);
+					if(fadeOpacity !=0) {
+						if (!excludedSculptureId && fadeOpacity) {
+							obj.setOpacity(allSculpturesOpacity.opacity);
+						} else if (obj.mesh.name !== excludedSculptureId) {
+							obj.setOpacity(allSculpturesOpacity.opacity);
+						}
 					}
+
 				});
 			})
 			.onComplete(function () {
 				console.log('finished fading all sculps -' + excludedSculptureId + 'to: ' + allSculpturesOpacity.opacity);
+				tweeningSculpturesOpacity = false;
 				resolve();
+				
 			});
 		fadeSculptures.start();
 	});
 }
 
-// function onMouseClick(event) {
-// 	if (store.state.intersectedObject) {
-// 		console.log('clicked on object');
-// 		canvas.style.cursor = 'auto';
-// 		store.state.selectedObject = store.state.intersectedObject;
-		
-// 	} else {
-// 		store.state.selectedObject = null;
-// 	}
-// }
+function calcSculptureOpacityForCameraDistance(sculp) {
+  let dist = sculp.mesh.position.distanceTo(camera.position);
+  return Math.min(Math.max(0.0, window.fogDistance - dist * 0.5), 1.0);
+}
+
 
 function onCanvasResize() {
-	// camera.aspect = window.innerWidth / window.innerHeight;
 	camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-	// renderer.setSize(window.innerWidth, window.innerHeight);
 }
 /*
 var scene, sculps, player, grid, point_lights, room, highlight_box, camera,
