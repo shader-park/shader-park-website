@@ -64,10 +64,8 @@ router.beforeEach((to, from, next) => {
 		console.log(selectedSculptureOpacity.opacity);
 		transitionSculptureOpacity(store.state.selectedObject.name, 0.0, 1000).then(() => {
 			nextRoute();
-			
 		});
 	} else if (store.state.sculpturesLoaded) {
-		// console.log('transition all sculps form next');
 		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
 			nextRoute();
 		});
@@ -91,9 +89,6 @@ const scene = store.state.scene;
 scene.background = new THREE.Color(1.0, 1.0, 1.0);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 // camera.position.z = 2;
-// camera.position.set(6, 3, 2.5);
-// controls.target.set(6, 0, 0);
-// camera.rotation.set(6, 0, 0);
 window.camera = camera;
 
 // var camera = new THREE.OrthographicCamera(
@@ -240,9 +235,10 @@ function render(time) {
 
     if (store.state.selectedSculpture) {
 		if (!sculptureHasBeenSelected) {
-			tweenCameraToSelectedSculpture();
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
 			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
+			tweenCameraToSelectedSculpture();
+			
 			sculptureHasBeenSelected = true;
 			cachedSelectedSculptureId = store.state.selectedObject.name;
 		}
@@ -397,13 +393,14 @@ function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculpt
 			.onUpdate(function () {
 				store.state.objectsToUpdate.forEach(obj => {
 					let fadeOpacity = calcSculptureOpacityForCameraDistance(obj);
-					if(fadeOpacity !=0) {
+					// if(fadeOpacity !=0) {
+						// console.log(obj);
 						if (!excludedSculptureId && fadeOpacity) {
-							obj.setOpacity(allSculpturesOpacity.opacity);
+							obj.setOpacity(Math.min(allSculpturesOpacity.opacity, fadeOpacity));
 						} else if (obj.mesh.name !== excludedSculptureId) {
-							obj.setOpacity(allSculpturesOpacity.opacity);
+							obj.setOpacity(Math.min(allSculpturesOpacity.opacity, fadeOpacity));
 						}
-					}
+					// }
 
 				});
 			})
