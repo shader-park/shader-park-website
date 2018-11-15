@@ -20,8 +20,9 @@
             <input  class="checkbox centerY" :style="{marginLeft: '10px'}" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
             <button @click.stop="play" v-if="!autoUpdate" class="play centerY editor-button">Play</button>
 
+            <label class="autoUpdate-label centerY" v-if="isAdmin" for="Example">Is Example</label>
             <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
-            <label class="centerY" v-if="isAdmin" for="Example">Is Example</label>
+            
             
 
             <button v-if="displayDelete" @click.stop="deleteSculpture" class="delete centerY editor-button">Delete</button>
