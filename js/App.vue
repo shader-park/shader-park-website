@@ -1,5 +1,6 @@
 <template>
 	<main id="app" class="section">
+		<h1 class="loading-logo" :class='{fade: sculpturesLoaded}'>Shader Park</h1>
 		<div class="container">
 			<nav-main></nav-main>
 			<router-view></router-view>
@@ -29,6 +30,9 @@ export default {
 		}
 	},
 	computed: {
+		sculpturesLoaded() {
+			return this.$store.state.sculpturesLoaded;
+		},
 		displayLogin() {
 			return this.$store.getters.displayLogin;
 		},
@@ -61,3 +65,38 @@ export default {
 };
 </script>
 
+<style lang="less" scoped>
+.loading-logo {
+	position: absolute;
+	left: 0px;
+	top: 50%;
+	right: 0px;
+	bottom: 0px;
+	z-index: 10;
+	height: 47px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	letter-spacing: 2px;
+	-webkit-transform: translate(0px, -50%);
+	-ms-transform: translate(0px, -50%);
+	transform: translate(0px, -50%);
+	-webkit-transition: opacity 300ms ease;
+	transition: opacity 300ms ease;
+	/* font-family: Poppins, sans-serif; */
+	font-size: 88px;
+	font-weight: 400;
+	text-align: center;
+	letter-spacing: 10.06px;
+	text-transform: uppercase;
+	-moz-animation-duration: 300ms;
+	-webkit-animation-duration: 300ms;
+	-ms-animation-duration: 300ms;
+	animation-duration: 300ms;
+	&.fade {
+		opacity: 0.0;
+		visibility:hidden;
+		transition:visibility 0s ease-in-out 300ms,opacity 300ms ease-in-out;
+	}
+
+}
+</style>
