@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
     scene: new THREE.Scene(),
     socket: null,
     currentRoom: null,
+    initialCameraPose: null,
     selectedSculpture: null,  // vue sculpture data
     selectedObject: null,     // three.js mesh
     objectsToUpdate: [],
@@ -58,6 +59,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setInitialCameraPose(state, payload) {
+      state.initialCameraPose = payload;
+    },
     setRouteTitle(state, title) {
       state.routeTitle = title;
     },

@@ -18,6 +18,7 @@ export default {
 		room : Room	
 	},
 	mounted() {
+		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		this.$store.dispatch('fetchAllSculptures').then(sculptures => {
 			if(sculptures) {
 				let temp = [];

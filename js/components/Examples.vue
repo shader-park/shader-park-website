@@ -19,6 +19,7 @@ export default {
 		room : Room	
 	},
 	mounted() {
+		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		if(this.embed && this.embed === 'true') {
 			this.$store.commit('setEmbedded', true);
 		}

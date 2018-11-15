@@ -28,6 +28,7 @@ export default {
 		}
 	},
 	mounted() {
+		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		console.log(this.$route.params.username);
 
 		// this.$route.params.id;

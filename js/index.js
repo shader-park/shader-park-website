@@ -34,36 +34,45 @@ let sculptureHasBeenDeselected = false;
 let cachedSelectedSculptureId;
 let allSculpturesOpacity = {opacity: 0.0};
 let selectedSculptureOpacity = {opacity: 0.0};
+let firstTimeAtRoute = true;
 
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
-	
-	const nextRoute = () => {
-		animationPaused = true;
-		allSculpturesOpacity.opacity = 0.0;
-		sculptureHasBeenDeselected = false;
-		sculptureHasBeenSelected = false;
-		selectedSculptureOpacity.opacity = 0.0;
-		store.state.selectedSculpture = null;
-		store.state.selectedObject = null;
-		cachedSelectedSculptureId = null;
-		const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-		if (requiresAuth && !currentUser) {
-			this.$store.commit('displayLogin', true);
-			// next('/sign-in');
-		} else if (requiresAuth && currentUser) {
-			next();
-		} else {
-			next();
-		}
-		animationPaused = false;
-	};
 
-	if (store.state.selectedObject) { //fad single sculpture if selected
-		// console.log('fading individual sculp');
-		console.log(selectedSculptureOpacity.opacity);
-		transitionSculptureOpacity(store.state.selectedObject.name, 0.0, 1000).then(() => {
-			nextRoute();
+        const nextRoute = () => {
+          store.state.selectedObject = null;
+          animationPaused = true;
+          allSculpturesOpacity.opacity = 0.0;
+          sculptureHasBeenDeselected = false;
+          sculptureHasBeenSelected = false;
+          selectedSculptureOpacity.opacity = 0.0;
+          store.state.selectedSculpture = null;
+          cachedSelectedSculptureId = null;
+          firstTimeAtRoute = true;
+          const requiresAuth =
+              to.matched.some(record => record.meta.requiresAuth);
+          if (requiresAuth && !currentUser) {
+            this.$store.commit('displayLogin', true);
+            // next('/sign-in');
+          } else if (requiresAuth && currentUser) {
+            next();
+          } else {
+            next();
+          }
+          animationPaused = false;
+		};
+	console.log('store.state.selectedObject');		
+	console.log(store.state.selectedObject);	
+	if (store.state.selectedSculpture) { //fade single sculpture if selected
+		let id = store.state.selectedSculpture.id;
+		transitionSculptureOpacity(id, 0.0, 1000).then(() => {
+			const nextRouteHasSculptureSelected = to.matched.some(record => record.meta.selectedSculpture);
+			if (!nextRouteHasSculptureSelected) {
+				store.state.selectedSculpture = null;
+			}
+			setTimeout(() => { //wait for the editor to close
+				nextRoute();	
+			}, 300);
 		});
 	} else if (store.state.sculpturesLoaded) {
 		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
@@ -208,8 +217,8 @@ function init() {
 		BOTTOM: 83
 	};
 	window.controls = controls;
-	camera.position.set(6, 2.5, 4);
-	controls.target.set(6, 0, 0);
+	// camera.position.set(6, 2.5, 4);
+	// controls.target.set(6, 0, 0);
 
 	scene.add(hemisphereLight);
     render();
@@ -220,6 +229,15 @@ window.addEventListener('mousedown', onMouseDown, false);
 window.addEventListener('mouseup', onMouseUp, false);
 document.addEventListener('keydown', keyPress.bind(null, true));
 document.addEventListener('keyup', keyPress.bind(null, false));
+
+function setInitialCameraPose() {
+	if (store.state.initialCameraPose && firstTimeAtRoute) {
+		firstTimeAtRoute = false;
+		let pose = store.state.initialCameraPose;
+		camera.position.set(pose[0], pose[1], pose[2]);
+		controls.target.set(pose[0], 0, 0);
+	}
+}
 
 function render(time) {
 	if (!animationPaused) {
@@ -235,6 +253,7 @@ function render(time) {
 
     if (store.state.selectedSculpture) {
 		if (!sculptureHasBeenSelected) {
+			setInitialCameraPose()
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
 			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
 			tweenCameraToSelectedSculpture();
@@ -246,6 +265,13 @@ function render(time) {
 	} else {
 		if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
 			sculptureHasBeenDeselected = true;
+			setInitialCameraPose();
+			// if(store.state.initialCameraPose && firstTimeAtRoute) {
+			// 	firstTimeAtRoute = false;
+			// 	let pose = store.state.initialCameraPose;
+			// 	camera.position.set(pose[0], pose[1],pose[2]);
+			// 	controls.target.set(pose[0], 0, 0);
+			// }
 			transitionAllSculpturesOpacity(1.0, 1000, cachedSelectedSculptureId);
 		}
 		sculptureHasBeenSelected = false;

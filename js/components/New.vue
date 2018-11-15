@@ -21,6 +21,7 @@ export default {
 	},
 	props: ['example', 'embed', 'hideEditor', 'hidePedestal'],
 	mounted() {
+		this.$store.commit('setInitialCameraPose', [0, 0, 2]);
 		this.$store.commit('sculpturesLoaded', false);
 		if(this.embed && this.embed === 'true') {
 			this.$store.commit('setEmbedded', true);

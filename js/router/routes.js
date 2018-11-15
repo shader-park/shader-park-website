@@ -35,6 +35,7 @@ export const routes = [
     component: New,
     meta: {
       title: 'New Sculpture',
+      selectedSculpture: true
     }
   },
   {
@@ -71,6 +72,7 @@ export const routes = [
     }),
     meta: {
       title: 'sculpture',
+      selectedSculpture: true
     }
   },
   {
