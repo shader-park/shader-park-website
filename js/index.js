@@ -225,7 +225,7 @@ function render(time) {
 	if (!animationPaused) {
 		requestAnimationFrame(render);
 	}
-	
+
 	const t = (Date.now() - startTime) % 600000.0;
 
 	if (store.state.canvasSize !== prevCanvasSize) {
@@ -250,9 +250,9 @@ function render(time) {
 		}
 		sculptureHasBeenSelected = false;
 	}
-
+	
 	store.state.objectsToUpdate.forEach(sculpture => {
-		if (!store.state.selectedSculpture && !tweeningSculpturesOpacity){
+		if (!store.state.selectedSculpture && !tweeningSculpturesOpacity && store.state.sculpturesLoaded){
 			let fadeOpacity = calcSculptureOpacityForCameraDistance(sculpture);
 			sculpture.setOpacity(fadeOpacity);
 		}
@@ -386,6 +386,7 @@ function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
 function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculptureId = null) {
 	console.log('transition all sculps-' + excludedSculptureId +  ' to ' + opacity);
 	tweeningSculpturesOpacity = true;
+
 	return new Promise(function(resolve, reject) {
 		let fadeSculptures = new TWEEN.Tween(allSculpturesOpacity)
 			.to({ opacity }, duration)
@@ -393,15 +394,13 @@ function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculpt
 			.onUpdate(function () {
 				store.state.objectsToUpdate.forEach(obj => {
 					let fadeOpacity = calcSculptureOpacityForCameraDistance(obj);
-					// if(fadeOpacity !=0) {
-						// console.log(obj);
+					if(!(obj.opacity == 0 && opacity == 0)) {	
 						if (!excludedSculptureId && fadeOpacity) {
 							obj.setOpacity(Math.min(allSculpturesOpacity.opacity, fadeOpacity));
 						} else if (obj.mesh.name !== excludedSculptureId) {
 							obj.setOpacity(Math.min(allSculpturesOpacity.opacity, fadeOpacity));
 						}
-					// }
-
+					}
 				});
 			})
 			.onComplete(function () {

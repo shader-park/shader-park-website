@@ -1,6 +1,6 @@
 <template>
 	<main id="app" class="section">
-		<h1 class="loading-logo" :class='{fade: sculpturesLoaded}'>Shader Park</h1>
+		<h1 class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
 		<div class="container">
 			<nav-main></nav-main>
 			<router-view></router-view>
@@ -26,7 +26,8 @@ export default {
 	},
 	data: function() {
 		return {
-			isMounted: false
+			isMounted: false,
+			hasBeenLoaded: false
 		}
 	},
 	computed: {
@@ -38,6 +39,13 @@ export default {
 		},
 		displaySignUp() {
 			return this.$store.getters.displaySignUp;
+		}
+	},
+	watch : {
+        sculpturesLoaded(value) {
+			if(value && !this.hasBeenLoaded) {
+				this.hasBeenLoaded = true;
+			}
 		}
 	},
 	methods: {

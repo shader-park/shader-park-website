@@ -51,7 +51,11 @@ export default {
             }
             col++;
         }
-        this.$store.commit('sculpturesLoaded', true);
+        
+        setTimeout(() => { //wait for main thread to lag compiling shaders
+            this.$store.commit('sculpturesLoaded', true);    
+        }, 1);
+        
         // this.sculptures.forEach(sculp => {
         //     sculp.sculpture.mesh.position
         // })
@@ -84,9 +88,6 @@ export default {
         //     col++;
         // }
 
-
-        console.log('sculptures from room:')
-        console.log(this.sculptures);
         // this.sculptures.
     },
     components : {
