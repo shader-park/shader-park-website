@@ -352,7 +352,9 @@ export default {
 }
 
 .autoUpdate-label {
+    font-weight: normal;
     margin-left: 5px !important;
+    color: #777;
 }
 .dialog-c-text {
     padding: 0px 20px 10px 20px;

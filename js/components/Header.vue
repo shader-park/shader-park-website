@@ -2,8 +2,9 @@
 
     <div v-if="!embedded" class="nav-bar">
         <div class="nav-left">
+            <h2 v-if="!isMobile" class="logo-text">SP</h2>
             <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
-            <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" />
+            <!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
         </div>
         <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
         <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
@@ -131,6 +132,14 @@ export default {
 .logo {
     width: 50px;
     opacity: 0.5;
+}
+
+.logo-text {
+    opacity: 0.5;
+    margin: 0px;
+    font-size: 27px;
+    margin-bottom: 3px;
+
 }
 
 .nav-bar {

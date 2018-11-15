@@ -1,7 +1,70 @@
-@font-family: 'Poppins', sans-serif;
+
 
 @font-size: 40px;
 
+
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter ui';
+  src: url('/fonts/Inter-UI-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Regolapro';
+  src: url('/fonts/RegolaPro-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Regolapro';
+  src: url('/fonts/RegolaPro-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Regolapro';
+  src: url('/fonts/RegolaPro-Book.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Regolapro';
+  src: url('/fonts/RegolaPro-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-family: 'Regolapro', 'Poppins', sans-serif;
 
 [v-cloak] {
     display: none;
@@ -38,8 +101,20 @@ body {
     background: white;
     font-family: @font-family;
     overflow: hidden;
-    letter-spacing: 1.05px;
+    letter-spacing: 0.1px;
     margin: 0;
+}
+
+.ge_editor {
+	letter-spacing: 0px;
+}
+
+button {
+	letter-spacing: 0.5px;
+}
+
+h1 {
+	letter-spacing: 0.5px;
 }
 
 // textarea {
