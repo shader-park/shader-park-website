@@ -61,8 +61,6 @@ router.beforeEach((to, from, next) => {
           }
           animationPaused = false;
 		};
-	console.log('store.state.selectedObject');		
-	console.log(store.state.selectedObject);	
 	if (store.state.selectedSculpture) { //fade single sculpture if selected
 		let id = store.state.selectedSculpture.id;
 		transitionSculptureOpacity(id, 0.0, 1000).then(() => {
@@ -254,12 +252,12 @@ function render(time) {
     if (store.state.selectedSculpture) {
 		if (!sculptureHasBeenSelected) {
 			setInitialCameraPose()
-			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedObject.name);
-			transitionSculptureOpacity(store.state.selectedObject.name, 1.0, 1000);
+			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedSculpture.id);
+			transitionSculptureOpacity(store.state.selectedSculpture.id, 1.0, 1000);
 			tweenCameraToSelectedSculpture();
 			
 			sculptureHasBeenSelected = true;
-			cachedSelectedSculptureId = store.state.selectedObject.name;
+			cachedSelectedSculptureId = store.state.selectedSculpture.id;
 		}
 		sculptureHasBeenDeselected = false;
 	} else {
