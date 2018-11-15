@@ -220,7 +220,7 @@ export default {
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
             background-color: white;
             z-index: 103;
-            top: 25px;
+            top: 20;
             right: 25px;
         }
     }
