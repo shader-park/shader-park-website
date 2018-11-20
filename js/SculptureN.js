@@ -24,6 +24,7 @@ export class Sculpture {
         this.mesh.add(this.pedestalEdges);
         this.selected = false;
         this.setOpacity(0.0);
+        // this.mesh.visible = true;
     }
 
     selectedSculpture(selected) {

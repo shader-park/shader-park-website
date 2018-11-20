@@ -13,6 +13,7 @@
                 <router-link  :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
             </span>
             <button @click.stop="close" class="close centerY editor-button">Close</button>
+            <button @click.stop="share" v-if="displayShare" class="save centerY editor-button">Share</button>
             <button @click.stop="save" class="save centerY editor-button">{{saveText}}</button>
             
             
@@ -71,15 +72,18 @@ export default {
         
     },
     computed : {
-    saveText() {
+        saveText() {
             if(this.selectedSculpture) {
-                if(!this.selectedSculpture.author.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.author.uid) {
+                if(!this.selectedSculpture.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.uid) {
                     return 'Save';
                 } else {
                     return 'Save as Fork';
                 }
             }
             return 'Save';
+        },
+        displayShare() {
+            return this.selectedSculpture && this.selectedSculpture.id.length > 3;
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
@@ -91,16 +95,16 @@ export default {
             return this.$store.getters.isAdmin;
         },
         displayDelete() {
-            return this.selectedSculpture && this.currUser && this.currUser.uid && this.selectedSculpture.author.uid === this.currUser.uid;
+            return this.selectedSculpture && this.currUser && this.currUser.uid && this.selectedSculpture.uid === this.currUser.uid;
         },
         authorUsername() {
-            return this.selectedSculpture? this.selectedSculpture.author.username: null;
+            return this.selectedSculpture? this.selectedSculpture.username: null;
         },
         authorId() {
-            return this.selectedSculpture? this.selectedSculpture.author.uid: null;
+            return this.selectedSculpture? this.selectedSculpture.uid: null;
         },
         userProfileRoute() {
-            return this.selectedSculpture? `/user/${this.selectedSculpture.author.username}`: $router.currentRoute.path;
+            return this.selectedSculpture? `/user/${this.selectedSculpture.username}`: $router.currentRoute.path;
         },
         sculptureTitle: {
             get : function() {
@@ -160,7 +164,6 @@ export default {
     methods: {
         save() {
             if(this.currUser != null) {
-                
                 this.$store.dispatch('saveSculpture', this.selectedSculpture);
             } else {
                 // this.$router.push('sign-in');
@@ -172,17 +175,26 @@ export default {
             this.updateSculpture();
             console.log('play');
         },
-	exportSculpture() {
-	    console.log(this.selectedSculpture);
-	    const data = this.selectedSculpture.sculpture.generateMesh(0.0);
-	    console.log(data);
-	    let count = 0;
-            for (let i=0; i<data.length; i++) {
-	        count += data[i];
-	    }
-            console.log("sum: " + count);
-	    console.log('export that shith');
-	},
+        share() {
+            const el = document.createElement('textarea');
+            let example = this.selectedSculpture.isExample? '?example=true' :'';
+            el.value = `https://shader-park.appspot.com/sculpture/${this.selectedSculpture.id}${example}`;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        },
+        exportSculpture() {
+            console.log(this.selectedSculpture);
+            const data = this.selectedSculpture.sculpture.generateMesh(0.0);
+            console.log(data);
+            let count = 0;
+                for (let i=0; i<data.length; i++) {
+                count += data[i];
+            }
+                console.log("sum: " + count);
+            console.log('export that shith');
+        },
         close() {
             this.$store.state.selectedSculpture = null;
             this.$store.state.selectedObject = null;
@@ -199,7 +211,10 @@ export default {
                     title: 'Delete',       // Button title
                     default: true,    // Will be triggered by default if 'Enter' pressed.
                     handler: () => {
-                        alert('delete');
+                        this.$store.dispatch('deleteSculpture', this.selectedSculpture).then(() => {
+                            this.$store.dispatch('removeSelectedSculptureFromScene');
+                            this.$store.state.selectedSculpture = null;
+                        })
                         this.$modal.hide('dialog');
                     }
                 }]

@@ -30,12 +30,10 @@ export default {
     data: function() {
         return {
             //This all gets saved to the Database!!!!
-            id : this.sculpData.id || null,
+            id : this.sculpData.id || this._uid,
             vueId: this._uid,
-            author : {  
-                uid : this.sculpData.author? this.sculpData.author.uid: null,
-                username : this.sculpData.author? this.sculpData.author.username: null,
-            },
+            uid : this.sculpData.uid || null,
+            username : this.sculpData.username || null,
             title : this.sculpData.title || null,
             isExample: this.sculpData.isExample || false,
             description : this.sculpData.description || null,
@@ -114,20 +112,23 @@ export default {
             if(obj && obj.name == this.sculpture.mesh.name) {
                 console.log('selected!!');
                 this.$store.state.selectedSculpture = this.$data;
+                // this.$store.state.selectedSculpture.delete = () => this.removeSculpture();
                 this.sculpture.selectedSculpture(true);
             } else {
                 if(this.sculpture.selected) {
                     this.sculpture.selectedSculpture(false);
                 }
             }
+        },
+        removeSculpture() {
+            const name = this.id || this._uid;
+            this.$store.commit('removeObjectFromUpdate', this.sculpture);
+            this.$store.commit('removeObjectFromRaycast', this.sculpture.mesh);
+            this.$store.commit('removeObjectFromSceneByName', name);
         }
-
     },
     destroyed: function() {
-        const name = this.id || this._uid;
-        this.$store.commit('removeObjectFromUpdate', this.sculpture);
-        this.$store.commit('removeObjectFromRaycast', this.sculpture.mesh);
-        this.$store.commit('removeObjectFromSceneByName', name);
+        this.removeSculpture();
         // console.log(`deleted ${name} from scene`);
     }
 };

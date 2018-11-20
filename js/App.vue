@@ -1,6 +1,6 @@
 <template>
 	<main id="app" class="section">
-		<h1 class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
+		<h1 v-if="isEmbeded" class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
 		<div class="container">
 			<nav-main></nav-main>
 			<router-view></router-view>
@@ -33,6 +33,9 @@ export default {
 	computed: {
 		sculpturesLoaded() {
 			return this.$store.state.sculpturesLoaded;
+		},
+		isEmbeded() {
+			return this.$store.state.embedded;
 		},
 		displayLogin() {
 			return this.$store.getters.displayLogin;

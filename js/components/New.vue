@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<sculpture v-if="finishedLoadingSculp" ref="sculpture" :sculpData="tempSculp"></sculpture>			
-		<modal name="no-sculpture-data-found" class="modal-popup" height="60px" width="500px">
+		<sculpture v-if="finishedLoadingSculp" ref="sculpture" :sculpData="emptySculpture"></sculpture>			
+		<modal name="no-sculpture-data-found" class="modal-popup" height="auto" width="500px">
 			¯\_(ツ)_/¯ couldn't find the sculpture you were looking for.
 		</modal>
 	</div>
@@ -13,9 +13,7 @@ import Sculpture from './Sculpture.vue';
 export default {
 	data: function() {
 		return {
-			tempSculp: {
-				id : this._uid
-			},
+			emptySculpture: {},
 			finishedLoadingSculp: false
 		}
 	},
@@ -35,7 +33,7 @@ export default {
 			}
 			this.$store.dispatch('fetchSculpture', payload).then(data => {
 				if(data) {
-					this.tempSculp = data;
+					this.emptySculpture = data;
 					this.finishedLoadingSculp = true;
 					if(data.title != 'title') {
 						this.$store.commit('setRouteTitle', data.title);
@@ -88,5 +86,6 @@ export default {
 .v--modal {
 	text-align: center !important;
 	padding-top: 20px !important;
+	padding-bottom: 20px !important;
 }
 </style>
