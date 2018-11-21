@@ -227,6 +227,7 @@ export const store = new Vuex.Store({
             uid: user.uid,
             username: user.displayName,
             fork: sculpture.id,
+            forkedSculptureTitle: sculpture.title,
             featured: false,
             isExample: false,
             views: 0,
