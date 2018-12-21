@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 // import io from 'socket.io-client';
 import * as THREE from 'three';
 import * as OrbitControls from  './THREE_Helpers/OrbitControls.js'
+import * as MapControls from './THREE_Helpers/MapControls'
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
 import VModal from 'vue-js-modal'
