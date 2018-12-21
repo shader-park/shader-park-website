@@ -345,6 +345,7 @@ export default {
     border-bottom: 2px solid #f5f5f5;
     padding-left: 20px;
     padding-right: 20px;
+    overflow: hidden;
 }
 
 .save {
