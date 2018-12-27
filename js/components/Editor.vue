@@ -1,6 +1,6 @@
 <template>
 
-<div :class="{embeded : isEmbeded}"  :style="{width: currWidth}" class="editor">
+<div :class="{embeded : isEmbeded}" :style="{width: currWidth}" class="editor">
     <div class="editor-container" :style="{minWidth: cachedWidth}">
         <v-dialog/>
         <div class="controls">
@@ -138,6 +138,7 @@ export default {
         },
         selectedSculpture(obj) {
             console.log('found Sculp form editor');
+            
             if(obj) {
                 if(obj.title) {
                     this.titleInput.width = obj.title.length + 'ch';
@@ -151,10 +152,8 @@ export default {
                     console.log(this.selectedSculpture.id);
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = this.selectedSculpture.isExample;
-                    setTimeout(() => {
-                        //calling refresh on without setTimeout breaks the editor
-                        this.cm.editor.refresh();    
-                    }, 0);
+                    let interval = setInterval(() => this.cm.editor.refresh(), 10);
+                    setTimeout(() => clearInterval(interval), 1000);
                 }
             } else {
                 this.currWidth = '0px';
