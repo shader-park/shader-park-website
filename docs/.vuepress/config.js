@@ -3,8 +3,8 @@ module.exports = {
   description: 'References & Examples',
   themeConfig: {
     nav: [
-      {text: 'About', link: '/'},
-      { text: 'Home', link: 'http://shader-park.appspot.com'}
+      {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
+      {text: 'Home', link: 'http://shader-park.appspot.com'}
     ],
     // sidebar: 'auto'
     sidebar: [
@@ -14,7 +14,8 @@ module.exports = {
         children: [
           '/references/geometries/sphere', '/references/geometries/box',
           '/references/geometries/torus', '/references/geometries/line',
-          '/references/geometries/cappedCylinder'
+          '/references/geometries/cappedCylinder',
+          '/references/geometries/ellipsoid'
         ]
       },
       {
