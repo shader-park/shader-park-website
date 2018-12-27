@@ -463,12 +463,13 @@ function transitionAllSculpturesOpacity(opacity, duration = 2000, excludedSculpt
 	console.log('transition all sculps-' + excludedSculptureId +  ' to ' + opacity);
 	tweeningSculpturesOpacity = true;
 
+	let objectsToFade = store.state.objectsToUpdate.filter(obj => calcSculptureOpacityForCameraDistance(obj) > 0);
 	return new Promise(function(resolve, reject) {
 		let fadeSculptures = new TWEEN.Tween(allSculpturesOpacity)
 			.to({ opacity }, duration)
 			.easing(TWEEN.Easing.Quadratic.InOut)
 			.onUpdate(function () {
-				store.state.objectsToUpdate.forEach(obj => {
+				objectsToFade.forEach(obj => {
 					let fadeOpacity = calcSculptureOpacityForCameraDistance(obj);
 					if(!(obj.opacity == 0 && opacity == 0)) {	
 						if (!excludedSculptureId && fadeOpacity) {
