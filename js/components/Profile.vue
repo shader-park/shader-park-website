@@ -32,15 +32,13 @@ export default {
 			return this.$store.getters.getUser;
 		}
 	},
-	mounted() {
+	created() {
 		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		console.log(this.$route.params.username);
 
 		// this.$route.params.id;
 		console.log('$route.params.id');
 		const username = this.$route.params.username;
-
-		
 		if(username) {
 			this.roomName = username;
 			this.$store.commit('setRouteTitle', username);
@@ -49,6 +47,10 @@ export default {
 				if(uid) {
 					this.$store.dispatch('fetchUserSculptures', username).then(sculptures => {
 						this.setSculpturesAndJoinRoom(sculptures);
+						if(sculptures.length <= 5) {
+							let count = sculptures.length -1;
+							this.$store.commit('setInitialCameraPose', [count / 2 + count, 2.5, 4] );
+						}
 						if(sculptures.length == 0) {
 							this.modalText = "This user doesn't have any sculptures yet"
 							this.$modal.show('profile-modal');
