@@ -391,7 +391,14 @@ function onMouseUp(event) {
 
 
 function tweenCameraToSculpturePosition(endTargetPos) {
-	let camTarget = new THREE.Vector3().copy(controls.target);
+	let camTarget;
+	if (controls.enabled) {
+		camTarget = new THREE.Vector3().copy(controls.target);
+		mapControls.target = new THREE.Vector3().copy(controls.target);
+	} else {
+		camTarget = new THREE.Vector3().copy(mapControls.target);
+		controls.target = new THREE.Vector3().copy(mapControls.target);
+	}
 	let tweenControlsTarget = new TWEEN.Tween(camTarget)
 		.to(endTargetPos, 1000)
 		.easing(TWEEN.Easing.Quadratic.InOut)
