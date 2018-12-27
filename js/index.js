@@ -260,6 +260,11 @@ function render(time) {
 		onCanvasResize();
 	}
 
+	if(store.state.objectsToUpdate.length == 1) {
+		controls.enabled = true;
+		mapControls.enabled = false;
+	}
+
     if (store.state.selectedSculpture) {
 		if (!sculptureHasBeenSelected) {
 			setInitialCameraPose()
@@ -292,7 +297,7 @@ function render(time) {
 			transitionAllSculpturesOpacity(1.0, 1000, cachedSelectedSculptureId);
 		} else if (sculptureHasBeenDeselected && cachedCameraPose) {
 			// camera.position.y = 2;
-			tweenObjectToValue(camera.position.y, 2, (val) => camera.position.y = val);
+			tweenObjectToValue(camera.position.y, store.state.initialCameraPose[1], (val) => camera.position.y = val);
 			cachedCameraPose = null;
 			// if(cachedSelectedSculpturePose){
 				// tweenCameraToSculpturePosition(cachedSelectedSculpturePose);
