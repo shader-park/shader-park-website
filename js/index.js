@@ -32,7 +32,7 @@ let animationPaused = false;
 
 let sculptureHasBeenSelected = false;
 let sculptureHasBeenDeselected = false;
-let cachedSelectedSculptureId;
+let cachedSelectedSculptureId, cachedCameraPose;
 let allSculpturesOpacity = {opacity: 0.0};
 let selectedSculptureOpacity = {opacity: 0.0};
 let firstTimeAtRoute = true;
@@ -48,7 +48,8 @@ router.beforeEach((to, from, next) => {
           sculptureHasBeenSelected = false;
           selectedSculptureOpacity.opacity = 0.0;
           store.state.selectedSculpture = null;
-          cachedSelectedSculptureId = null;
+		  cachedSelectedSculptureId = null;
+		  cachedCameraPose = null;
           firstTimeAtRoute = true;
           const requiresAuth =
               to.matched.some(record => record.meta.requiresAuth);
@@ -178,7 +179,7 @@ window.camera = camera;
 // 		// pm.setRotationFromQuaternion(q);
 // 	}
 // }
-let renderer, controls, canvas, canvasContainer;
+let renderer, controls, mapControls, canvas, canvasContainer;
 
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
@@ -215,6 +216,14 @@ function init() {
 		RIGHT: 68,
 		BOTTOM: 83
 	};
+
+	mapControls = new THREE.MapControls(camera, renderer.domElement);
+	mapControls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+	mapControls.dampingFactor = 0.25;
+	mapControls.screenSpacePanning = false;
+	mapControls.maxPolarAngle = Math.PI / 2;
+
+	window.mapControls = mapControls;
 	window.controls = controls;
 	// camera.position.set(6, 2.5, 4);
 	// controls.target.set(6, 0, 0);
@@ -235,6 +244,7 @@ function setInitialCameraPose() {
 		let pose = store.state.initialCameraPose;
 		camera.position.set(pose[0], pose[1], pose[2]);
 		controls.target.set(pose[0], 0, 0);
+		mapControls.target.set(pose[0], 0, 0);
 	}
 }
 
@@ -255,15 +265,23 @@ function render(time) {
 			setInitialCameraPose()
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedSculpture.id);
 			transitionSculptureOpacity(store.state.selectedSculpture.id, 1.0, 1000);
-			tweenCameraToSelectedSculpture();
+			let selectedSculpturePose = new THREE.Vector3();
+
+			selectedSculpturePose.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
+			cachedCameraPose = camera.position;
+			tweenCameraToSculpturePosition(selectedSculpturePose);
 			
 			sculptureHasBeenSelected = true;
+			mapControls.enabled = false;
+			controls.enabled = true;
 			cachedSelectedSculptureId = store.state.selectedSculpture.id;
 		}
 		sculptureHasBeenDeselected = false;
 	} else {
 		if (!sculptureHasBeenDeselected && store.state.sculpturesLoaded) {
 			sculptureHasBeenDeselected = true;
+			mapControls.enabled = true;
+			controls.enabled = false;
 			setInitialCameraPose();
 			// if(store.state.initialCameraPose && firstTimeAtRoute) {
 			// 	firstTimeAtRoute = false;
@@ -272,6 +290,13 @@ function render(time) {
 			// 	controls.target.set(pose[0], 0, 0);
 			// }
 			transitionAllSculpturesOpacity(1.0, 1000, cachedSelectedSculptureId);
+		} else if (sculptureHasBeenDeselected && cachedCameraPose) {
+			// camera.position.y = 2;
+			tweenObjectToValue(camera.position.y, 2, (val) => camera.position.y = val);
+			cachedCameraPose = null;
+			// if(cachedSelectedSculpturePose){
+				// tweenCameraToSculpturePosition(cachedSelectedSculpturePose);
+			// }
 		}
 		sculptureHasBeenSelected = false;
 	}
@@ -312,7 +337,13 @@ function render(time) {
 	TWEEN.update(time);
 	// if(player) player.update();
 	// updateRemotePlayers();
-	controls.update();
+	if(controls.enabled) {
+		controls.update();
+	}
+	if(mapControls.enabled) {
+		mapControls.update();
+	}
+	
 	renderer.render(scene, camera);	
 
 }
@@ -358,16 +389,15 @@ function onMouseUp(event) {
 	tempIntersectedObject = null;
 }
 
-function tweenCameraToSelectedSculpture() {
-	let endTargetPos = new THREE.Vector3();
-	endTargetPos.getPositionFromMatrix(store.state.selectedObject.matrixWorld);
 
+function tweenCameraToSculpturePosition(endTargetPos) {
 	let camTarget = new THREE.Vector3().copy(controls.target);
 	let tweenControlsTarget = new TWEEN.Tween(camTarget)
 		.to(endTargetPos, 1000)
 		.easing(TWEEN.Easing.Quadratic.InOut)
 		.onUpdate(function () {
 			controls.target.set(camTarget.x, camTarget.y, camTarget.z);
+			mapControls.target.set(camTarget.x, camTarget.y, camTarget.z);
 		});
 	let camPos = new THREE.Vector3().copy(camera.position);
 	let endCamPos = new THREE.Vector3().copy(endTargetPos);
@@ -405,6 +435,20 @@ function transitionSculptureOpacity(sculptureId, opacity, duration = 2000) {
 				resolve();
 			});
 		fadeSculpture.start();
+	});
+}
+
+function tweenObjectToValue(obj, endValue, updateCallback, time = 1000) {
+	return new Promise(function (resolve, reject) {
+		let currState = { state: obj };
+		let tween = new TWEEN.Tween(currState)
+			.to({ 'state': endValue }, time)
+			.easing(TWEEN.Easing.Quadratic.InOut)
+			.onUpdate(() => {
+				updateCallback(currState.state);
+			})
+			.onComplete(() => resolve());
+		tween.start();
 	});
 }
 
