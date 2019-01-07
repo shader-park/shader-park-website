@@ -50,6 +50,7 @@ export default {
             isExample: false,
             autoUpdate: true,
             editorContainsErrors: false,
+            saved: false,
             titleInput: {
                 width: '5ch',
                 border: 'none',
@@ -76,7 +77,11 @@ export default {
         saveText() {
             if(this.selectedSculpture) {
                 if(!this.selectedSculpture.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.uid) {
-                    return 'Save';
+                    if(this.saved) {
+                        return 'Saved';
+                    } else {
+                        return 'Save';
+                    }
                 } else {
                     return 'Save as Fork';
                 }
@@ -164,7 +169,9 @@ export default {
     methods: {
         save() {
             if(this.currUser != null) {
-                this.$store.dispatch('saveSculpture', this.selectedSculpture);
+                this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
+                    this.saved = true;
+                });
             } else {
                 // this.$router.push('sign-in');
                 this.$store.commit('displayLogin', true);
@@ -176,8 +183,16 @@ export default {
             console.log('play');
         },
         share() {
-            this.$refs.share.classList.add('selected');
-            this.shareText = "Coppied URL";
+            let shareEl = this.$refs.share;
+            if(shareEl.classList.contains('selected')) {
+                shareEl.classList.remove('selected');
+                this.shareText = '';
+            } else {
+                shareEl.classList.add('selected');
+                this.shareText = 'Coppied URL';
+            }
+            
+            
             const el = document.createElement('textarea');
             let example = this.selectedSculpture.isExample? '?example=true' :'';
             el.value = `https://shader-park.appspot.com/sculpture/${this.selectedSculpture.id}${example}`;
@@ -292,6 +307,7 @@ export default {
                     }
                     editor.addEventListener('click', () => {
                         console.log('click');
+                        this.saved = false;
                         if(this.shareText.length > 0) {
                             this.shareText = '';
                             this.$refs.share.classList.remove('selected');
