@@ -12,8 +12,8 @@
             <span v-if="authorUsername !=='admin' && authorUsername" class="username centerY">by 
                 <router-link  :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
             </span>
-            <button @click.stop="close" class="close centerY editor-button">Close</button>
-            <button @click.stop="share" v-if="displayShare" class="save centerY editor-button">Share</button>
+            <button @click.stop="close" class="close centerY editor-button"></button>
+            <button @click.stop="share" v-if="displayShare" class="save centerY editor-button share" ref="share">{{shareText}}</button>
             <button @click.stop="save" class="save centerY editor-button">{{saveText}}</button>
             
             
@@ -60,6 +60,7 @@ export default {
                 top: '50%',
                 transform: 'translateY(-50%)'
             },
+            shareText : '',
             currWidth: '0px',
             editorHasDisplayedModal: false
         }
@@ -175,6 +176,8 @@ export default {
             console.log('play');
         },
         share() {
+            this.$refs.share.classList.add('selected');
+            this.shareText = "Coppied URL";
             const el = document.createElement('textarea');
             let example = this.selectedSculpture.isExample? '?example=true' :'';
             el.value = `https://shader-park.appspot.com/sculpture/${this.selectedSculpture.id}${example}`;
@@ -289,6 +292,10 @@ export default {
                     }
                     editor.addEventListener('click', () => {
                         console.log('click');
+                        if(this.shareText.length > 0) {
+                            this.shareText = '';
+                            this.$refs.share.classList.remove('selected');
+                        }
                         this.removeEditorModalUI();
                     });
 
@@ -351,17 +358,53 @@ export default {
     margin-left: 5px;
 }
 
+.control-button {
+    
+}
 
 .close {
     background-color: #777;
     color:white;
-    transition: bacground-color 300ms ease-in-out, color 300ms ease-in-out;
-    -webkit-transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+    transition: bacground-color 300ms ease-in-out, filter 300ms ease-in-out;
+    -webkit-transition: background-color 300ms ease-in-out, filter 300ms ease-in-out;
+    width: 28px;
+    height: 28px;
+    border-style: none;
+    background-image: url('/images/close-white.svg');
+    background-position: 50% 50%;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    filter: invert(0);
     &:hover {
-        background-color: white;
-    }
-    
+        filter: invert(1);
+        // fill: black;
+        background-color: black;
+    } 
 }
+
+.share {
+    width: 38px;
+    height: 30px;
+    border-style: none;
+    background-image: url('/images/share.svg');
+    background-position: 60% 50%;
+    background-size: 22px;
+    opacity: 0.6;
+    background-repeat: no-repeat;
+    // box-shadow: none;
+    transition: opacity 300ms ease-in-out;
+    -webkit-transition: opacity 300ms ease-in-out;
+    &:hover {
+        // box-shadow: none;
+        opacity: 1.0;
+    }
+    &.selected{
+        background-size: 0 0;
+        width: auto;
+    }
+}
+
 .delete, .close, .save, .autoUpdate-label, .checkbox, .play {
     float: right;
     margin-left: 10px;
@@ -420,5 +463,6 @@ label {
     top: 85px;
     // right: 0px;
 }
+
 
 </style>
