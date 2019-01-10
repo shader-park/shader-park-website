@@ -153,7 +153,7 @@ export default {
                 if(!this.initialized) {
                     this.initialized = true;
                     this.initCodeMirror(obj.sculpture.fragmentShader);
-                    console.log('intitalizing code mirror');
+                    console.log('initializing code mirror');
                 } else {
                     console.log(this.selectedSculpture.id);
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
@@ -189,7 +189,7 @@ export default {
                 this.shareText = '';
             } else {
                 shareEl.classList.add('selected');
-                this.shareText = 'Coppied URL';
+                this.shareText = 'Copied URL';
             }
             
             
@@ -213,6 +213,7 @@ export default {
             console.log('export that shith');
         },
         close() {
+            this.shareText = '';
             this.$store.state.selectedSculpture = null;
             this.$store.state.selectedObject = null;
         },
