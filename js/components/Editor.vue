@@ -19,7 +19,7 @@
             
             <label class="autoUpdate-label centerY" for="AutoUpdate">Auto Update</label>
             <input  class="checkbox centerY" :style="{marginLeft: '10px'}" type="checkbox" value="AutoUpdate" v-model="autoUpdate">
-            <button @click.stop="play" v-if="!autoUpdate" class="play centerY editor-button">Play</button>
+            <button @click.stop="play" v-if="!autoUpdate" class="play centerY editor-button"></button>
 
             <label class="autoUpdate-label centerY" v-if="isAdmin" for="Example">Is Example</label>
             <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
@@ -376,7 +376,15 @@ export default {
 }
 
 .control-button {
-    
+    opacity: 0.6;
+    background-repeat: no-repeat;
+    // box-shadow: none;
+    transition: opacity 300ms ease-in-out;
+    -webkit-transition: opacity 300ms ease-in-out;
+    &:hover {
+        // box-shadow: none;
+        opacity: 1.0;
+    }
 }
 
 .close {
@@ -400,6 +408,15 @@ export default {
     } 
 }
 
+.play {
+    .control-button();
+    height: 30px;
+    width: 30px;
+    background-position: 65% 50%;
+    background-size: 16px;
+    background-image: url('/images/play3.svg');
+}
+
 .share {
     width: 38px;
     height: 30px;
@@ -407,15 +424,7 @@ export default {
     background-image: url('/images/share.svg');
     background-position: 60% 50%;
     background-size: 22px;
-    opacity: 0.6;
-    background-repeat: no-repeat;
-    // box-shadow: none;
-    transition: opacity 300ms ease-in-out;
-    -webkit-transition: opacity 300ms ease-in-out;
-    &:hover {
-        // box-shadow: none;
-        opacity: 1.0;
-    }
+    .control-button();
     &.selected{
         background-size: 0 0;
         width: auto;
