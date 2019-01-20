@@ -4,3 +4,4 @@ dblogin.json
 dbConfig.js
 yarn-error.log
 client/bundle.js
+client/dist
