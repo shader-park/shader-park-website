@@ -17,36 +17,43 @@ export default {
 			finishedLoadingSculp: false
 		}
 	},
-	props: ['example', 'embed', 'hideEditor', 'hidePedestal'],
+	props: ['example', 'embed', 'hideEditor', 'hidePedestal', 'clickEnabled'],
 	mounted() {
-		this.$store.commit('setInitialCameraPose', [0, 0, 2]);
-		this.$store.commit('sculpturesLoaded', false);
-		if(this.embed && this.embed === 'true') {
-			this.$store.commit('setEmbedded', true);
-			this.setSelectedSculpture();
-		}
-		const sculpId = this.$route.params.id;
-		if(sculpId) {
-			let payload = {id : sculpId};
-			if(this.example && this.example === 'true') {
-				payload['example'] = true;
+		this.$nextTick(function () {
+			this.$store.commit('setInitialCameraPose', [0, 0, 2]);
+			this.$store.commit('sculpturesLoaded', false);
+			if(this.clickEnabled != null) {
+				console.log(this.clickEnabled);
+				this.$store.commit('setClickEnabled', this.clickEnabled);
 			}
-			this.$store.dispatch('fetchSculpture', payload).then(data => {
-				if(data) {
-					this.emptySculpture = data;
-					this.finishedLoadingSculp = true;
-					if(data.title != 'title') {
-						this.$store.commit('setRouteTitle', data.title);
-					}
-					this.setSelectedSculpture();
-				} else {
-					this.showModal();
+			
+			if(this.embed && this.embed === 'true') {
+				this.$store.commit('setEmbedded', true);
+				this.setSelectedSculpture();
+			}
+			const sculpId = this.$route.params.id;
+			if(sculpId) {
+				let payload = {id : sculpId};
+				if(this.example && this.example === 'true') {
+					payload['example'] = true;
 				}
-			});
-		} else {
-			this.finishedLoadingSculp = true;
-			this.setSelectedSculpture();
-		}
+				this.$store.dispatch('fetchSculpture', payload).then(data => {
+					if(data) {
+						this.emptySculpture = data;
+						this.finishedLoadingSculp = true;
+						if(data.title != 'title') {
+							this.$store.commit('setRouteTitle', data.title);
+						}
+						this.setSelectedSculpture();
+					} else {
+						this.showModal();
+					}
+				});
+			} else {
+				this.finishedLoadingSculp = true;
+				this.setSelectedSculpture();
+			}
+		});
 		
 	
 	},

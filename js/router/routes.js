@@ -68,7 +68,8 @@ export const routes = [
       example: route.query.example,
       embed: route.query.embed,
       hideEditor: route.query.hideeditor,
-      hidePedestal: route.query.hidepedestal
+      hidePedestal: route.query.hidepedestal,
+      clickEnabled: route.query.clickenabled
     }),
     meta: {
       title: 'sculpture',

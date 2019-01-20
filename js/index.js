@@ -328,7 +328,7 @@ function render(time) {
 				firstIntersect.material.uniforms.mouse.value = camera.position.clone().sub(firstIntersect.position);
 			}
 			firstIntersect.material.side = THREE.BackSide;
-			if (store.state.selectedSculpture === null) {
+			if (store.state.selectedSculpture === null && store.state.clickEnabled != "false") {
 				canvas.style.cursor = 'pointer';
 				store.state.intersectedObject = firstIntersect;
 			}
@@ -371,6 +371,7 @@ function onMouseMove(event) {
 let tempIntersectedObject;
 let mouseDownTime = 0;
 function onMouseDown(event) {
+
 	if(store.state.intersectedObject) {
 		tempIntersectedObject = store.state.intersectedObject;
 		mouseDownTime = Date.now();
@@ -380,7 +381,7 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-	if(store.state.selectedObject) return;
+	if (store.state.selectedObject || store.state.clickEnabled) return;
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		mouseDownTime = Date.now() - mouseDownTime;
 		if(mouseDownTime < 400) {

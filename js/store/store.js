@@ -5,13 +5,13 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-
 export const store = new Vuex.Store({
 
   state: {
     user: null,
     scene: new THREE.Scene(),
     socket: null,
+    clickEnabled: true,
     currentRoom: null,
     initialCameraPose: null,
     selectedSculpture: null,  // vue sculpture data
@@ -59,6 +59,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setClickEnabled(state, payload) {
+      state.clickEnabled = payload;
+    },
     setInitialCameraPose(state, payload) {
       state.initialCameraPose = payload;
     },
