@@ -4,4 +4,5 @@ dblogin.json
 dbConfig.js
 yarn-error.log
 client/bundle.js
-client/dist
+client/dist/
+docs/.vuepress/dist/
