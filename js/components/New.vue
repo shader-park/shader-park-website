@@ -24,7 +24,7 @@ export default {
 			this.$store.commit('sculpturesLoaded', false);
 			if(this.clickEnabled != null) {
 				console.log(this.clickEnabled);
-				this.$store.commit('setClickEnabled', this.clickEnabled);
+				this.$store.commit('setClickEnabled', this.clickEnabled === 'true');
 			}
 			
 			if(this.embed && this.embed === 'true') {
