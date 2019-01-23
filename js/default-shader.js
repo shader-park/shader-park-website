@@ -83,6 +83,24 @@ float osc() {
     return osc(1.0);
 }
 
+// Color Conversion
+// https://www.shadertoy.com/view/lsS3Wc
+vec3 hsv2rgb( in vec3 c )
+{
+    vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+    return c.z * mix( vec3(1.0), rgb, c.y);
+}
+
+vec3 rgb2hsv( in vec3 c)
+{
+    vec4 k = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
+    vec4 p = mix(vec4(c.zy, k.wz), vec4(c.yz, k.xy), (c.z<c.y) ? 1.0 : 0.0);
+    vec4 q = mix(vec4(p.xyw, c.x), vec4(c.x, p.yzx), (p.x<c.x) ? 1.0 : 0.0);
+    float d = q.x - min(q.w, q.y);
+    return vec3(abs(q.z + (q.w - q.y) / (6.0*d+eps)), d / (q.x+eps), q.x);
+}
+
+
 // Primitives
 
 float line(vec3 p, vec3 a, vec3 b) {
