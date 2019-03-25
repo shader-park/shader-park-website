@@ -4,6 +4,7 @@ module.exports = {
   themeConfig: {
     nav: [
       {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
+      { text: 'References', link: '/references/' },
       {text: 'Home', link: 'http://shader-park.appspot.com'}
     ],
     // sidebar: 'auto'
