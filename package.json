@@ -1,6 +1,6 @@
 {
   "name": "ShaderPark",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "js/index.js",
   "browser": {
@@ -38,7 +38,7 @@
     "qDeploy": "gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
     "deploy": "npm run build && npm run docs:build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
     "browse": "gcloud app browse --project $npm_package_gcloud_id",
-    "build": "npm run less && NODE_ENV=production browserify -t vueify -e js/index.js -o client/bundle.js" ,
+    "build": "npm run less && NODE_ENV=production browserify -t vueify -e js/index.js -o client/bundle.js",
     "less": "lessc less/style.less client/style.css",
     "start": "node server.js",
     "watch": "npm run less && concurrently \"npm run watchify\" \"autoless less/ client/\" \"nodemon server.js\"",
@@ -66,6 +66,7 @@
     "vue-js-modal": "^1.3.26",
     "vue-router": "^3.0.1",
     "vuelidate": "^0.7.4",
+    "vuepress-plugin-mathjax": "^1.2.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -80,7 +81,10 @@
     "less": "^2.7.3",
     "nodemon": "^1.17.3",
     "vueify": "^9.4.1",
-    "vuepress": "^0.14.4",
+    "vuepress": "^1.0.0-alpha.44",
     "watchify": "^3.9.0"
+  },
+  "resolutions": {
+    "webpack-dev-middleware": "3.6.0"
   }
 }

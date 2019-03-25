@@ -1,6 +1,14 @@
 module.exports = {
   title: 'Shader Park',
   description: 'References & Examples',
+  plugins: {
+    mathjax: {
+      target: 'chtml',
+      presets: [
+        '\\def\\lr#1#2#3{\\left#1#2\\right#3}',
+      ]
+    },
+  },
   themeConfig: {
     nav: [
       {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
