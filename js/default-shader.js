@@ -93,6 +93,7 @@ vec3 hsv2rgb( in vec3 c )
 
 vec3 rgb2hsv( in vec3 c)
 {
+    const float eps = 0.0000001;
     vec4 k = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
     vec4 p = mix(vec4(c.zy, k.wz), vec4(c.yz, k.xy), (c.z<c.y) ? 1.0 : 0.0);
     vec4 q = mix(vec4(p.xyw, c.x), vec4(c.x, p.yzx), (p.x<c.x) ? 1.0 : 0.0);
