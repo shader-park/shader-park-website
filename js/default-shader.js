@@ -263,6 +263,10 @@ float intersect( float d1, float d2 )
     return max(d1,d2);
 }
 
+float shell(float d, float thickness) {
+    return abs(d)-thickness;
+}
+
 vec3 repeat3D(vec3 p, vec3 c )
 {
     return mod(p,c)-0.5*c;
