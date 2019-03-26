@@ -35,6 +35,7 @@ module.exports = {
           '/references/operations/subtract',
           '/references/operations/intersect',
           '/references/operations/smoothAdd',
+          '/references/operations/shell',
           '/references/operations/mix',
         ]
       },
