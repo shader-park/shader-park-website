@@ -2,15 +2,15 @@
 sidebar: auto
 ---
 
-# Introduction
+## Modeling with Distance Functions
 
-## Motivation
+Distance functions or signed distance functions (DFs, SDFs) are a functional representation useful for defining shapes and solid volumes. Deriving the DF of an arbitrary surface in general is a complex problem. However by considering some simple examples and studying their properties we can develop an intuition for modeling with DFs. Constructive solid geometry (CSG), coordinate systems, symmetry and non-linear transformations can be applied to create sophisticated models.
+  
+**Definition:** A distance function is a scalar field ($\large f: \Bbb{R^n} \to \Bbb{R}$) which maps a point to its minimum distance from the surface of a solid.  
+To understand what this means, consider the DF of a solid 2D circle. The distance $\large d$ from a point $\large \mathbf{p}=(x,y)$ to a circle of radius $\large r$ centered at the origin is the distance from the point to the origin minus the radius of the circle.  
+<center>$\large d=\sqrt{x^2+y^2}-r$</center>
 
-Functional representations provide a highly expressive medium for modeling and animation. The goal of this project is to provide a simple, batteries-included platform that makes it as 
-
-## Distance Fields
-
-Distance fields (DFs) are a type of functional representation for defining a 3D model. Deriving the DF of an arbitrary surface in general is a complex problem. However by considering some basic examples we can an intuition for modeling with DFs.
+<iframe src="https://www.desmos.com/calculator/mvrntrecdh?embed" width="500px" height="500px" style="border: 1px solid #ccc" frameborder=0></iframe>
 
 ### Coordinate Systems
 
@@ -25,9 +25,17 @@ Reflection
 
 ### Non-Preserving operations
 
-Any abritrary distortion
+Any arbitrary distortion  
+  
+
 
 ## The Sphere-tracing algorithm
+
+## Color Vector Fields
+
+## Roll your own intersection function
+
+The shade function can be hacked to render 2D shaders, or implement your own intersection algorithm or volumetric renderer. 
 
 ## Sources
 Much of the math and code in this page is based on
@@ -62,3 +70,4 @@ A full list of built-in functions can be found at: [url]
 
 IQs articles
 shadertoy
+Curv
