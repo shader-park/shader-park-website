@@ -42,7 +42,6 @@ uniform float stepSize;
 
 varying vec4 worldPos;
 
-
 float map(vec3 p);
 
 const float PI = 3.14159265;
@@ -206,6 +205,13 @@ float cappedCone( in vec3 p, in vec3 c )
 float ellipsoid( in vec3 p, in vec3 r )
 {
     return (length( p/r ) - 1.0) * min(min(r.x,r.y),r.z);
+}
+
+vec3 toSpherical(vec3 p) {
+    float phi = atan(p.x,p.z);
+    float r = length(p);
+    float theta = acos(-p.y/r);
+    return vec3(r,theta,phi);
 }
 
 float dot2( in vec3 v ) { return dot(v,v); }
