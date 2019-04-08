@@ -4,13 +4,32 @@ sidebar: auto
 
 ## Modeling with Distance Functions
 
-Distance functions or signed distance functions (DFs, SDFs) are a functional representation useful for defining shapes and solid volumes. Deriving the DF of an arbitrary surface in general is a complex problem. However by considering some simple examples and studying their properties we can develop an intuition for modeling with DFs. Constructive solid geometry (CSG), coordinate systems, symmetry and non-linear transformations can be applied to create sophisticated models.
+Distance functions (DFs) are a functional representation useful for defining shapes and solid volumes. Deriving the DF of an arbitrary surface in general is a complex problem. However by understanding some simple primitives and studying their properties we can develop an intuition for modeling with DFs. Constructive solid geometry (CSG), symmetry and non-linear transformations can be applied to create sophisticated models.
   
-**Definition:** A distance function is a scalar field ($\large f: \Bbb{R^n} \to \Bbb{R}$) which maps a point to its minimum distance from the surface of a solid.  
-To understand what this means, consider the DF of a solid 2D circle. The distance $\large d$ from a point $\large \mathbf{p}=(x,y)$ to a circle of radius $\large r$ centered at the origin is the distance from the point to the origin minus the radius of the circle.  
-<center>$\large d=\sqrt{x^2+y^2}-r$</center>
+**Definition:** For a solid $\large S$ and a point $\large \,p \notin S$, the distance function maps $\large p$ to its minimum distance to $\large S$.  
+<br>
+To understand what this means, consider a solid 2D circle. The distance $\large d$ from a point $\large {p}=(x,y)$ to a circle of radius $\large r$ centered at the origin is:
+<br>
+<center>$\Large d=\sqrt{x^2+y^2}-r$</center>
+<br>
+<iframe src="https://www.desmos.com/calculator/o2mcl7poux?embed" width="100%" height="400px" style="border: 1px solid #ccc" frameborder=0></iframe>
+<center>*The purple line shows that the distance from $\large p$ to the circle is the distance to the origin minus the radius $\large r$*</center>
+<br>
+Try dragging around the point in the interactive example above to convince yourself that no matter where $\large p$ is the equation holds true.  
+You may also notice that when $\large p$ is inside the circle the DF is the negative of the distance to the surface. This is a special case of a DF, called a signed distance function (SDF). SDFs have additional features, such as the ability to invert the solid by multiplying the SDF by -1.  
+  
+In 3D, the DF of a sphere is basically the same: $\large d=\sqrt{x^2+y^2+z^2}-r$.  
+This sphere can be rendered by expressing it in GLSL (See sections on GLSL and sphere tracing to learn more).  
+Because GLSL has built vector types and functions, the DF of the sphere can be written simply as:
+```glsl
+float sphere(vec3 p, float r) {
+	return length(p)-r;
+}
+```  
+This produces:  
+<iframe width="100%" height="450px" src="http://shader-park.appspot.com/sculpture/-LM-Nx6cvMmlbdKKiB64?example=true&embed=true&hideeditor=true" frameborder="0" scrolling="no"></iframe>
+  
 
-<iframe src="https://www.desmos.com/calculator/mvrntrecdh?embed" width="500px" height="500px" style="border: 1px solid #ccc" frameborder=0></iframe>
 
 ### Coordinate Systems
 
@@ -21,17 +40,20 @@ Spherical
 Translation
 Rotation
 Reflection
-
+Revolve from 2D
 
 ### Non-Preserving operations
 
 Any arbitrary distortion  
   
-
+magnitude of the grad of DF is 1. If it is different step step size must be scaled.
 
 ## The Sphere-tracing algorithm
 
 ## Color Vector Fields
+
+### Lighting
+Gradient of DF is normal.
 
 ## Roll your own intersection function
 
