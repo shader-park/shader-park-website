@@ -18,9 +18,10 @@ void main()
 }
 `;
 
-export const defaultFragSource = `// Define the signed distance function (SDF) of you object here
+export const defaultFragSource = `// Define the signed distance function (SDF) of your object here
 float surfaceDistance(vec3 p) {
-	return sphere(p, 0.3);
+    float d = sphere(p, 0.3);
+	return d;
 }
 
 // Here you can define how your object at point p will be colored.
