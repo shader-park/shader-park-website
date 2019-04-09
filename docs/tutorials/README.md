@@ -2,94 +2,94 @@
 sidebar: auto
 ---
 
-# Getting Started
+## Modeling with Distance Functions
 
-## What is shader park?
-It's a creative coding community that aims to take a niche area of graphics programming and make it accessible to new developers, while simplifying the creation process for experience graphics programmers.
-
-The graphics technique used in Shader Park is called Signed Distance Fields. If you're new to them, that's great! 
-This community is here to teach you how they work and get you creating your own artwork quickly.
-
-
-
-<iframe width="50%" height="450px" src="https://shader-park.appspot.com/sculpture/-LSgHohvTH80MAgJbbPy?hideeditor=true&hidepedestal=true&embed=true&clickenabled=false" frameborder="0" style="float: left"></iframe>
-
-<iframe width="50%" height="450px" src="https://shader-park.appspot.com/sculpture/-LPOucSRaaSOIEF9W5Qs?hideeditor=true&hidepedestal=true&embed=true&clickenabled=false" frameborder="0" style="float: left"></iframe>
-
-<iframe width="50%" height="450px" src="https://shader-park.appspot.com/sculpture/-LRNqUDSccinZfco4bOy?hideeditor=true&hidepedestal=true&embed=true&clickenabled=false" frameborder="0" style="float: left"></iframe>
-
-<iframe width="50%" height="450px" src="https://shader-park.appspot.com/sculpture/-LQLGa1s1XZx3cjMKJuD?hideeditor=true&hidepedestal=true&embed=true&clickenabled=false" frameborder="0" style="float: left"></iframe>
-
-## What language is this?
-The code is written in GLSL which runs directly the graphics card. Unlike more commonly taught languages, the graphics card runs operations in parallel, so code specific to graphics programming can run very efficiently. 
-Shader park provides a number of helper functions that are available under [references](https://shader-park.appspot.com/references).
-
-If you're new to GLSL check out our guide [here](#glsl)
-
-## Creating your first sculpture
-
-<iframe width="100%" height="450px" src="http://shader-park.appspot.com/sculpture/-LM-Nx6cvMmlbdKKiB64?example=true&embed=true" frameborder="0"></iframe>
-
-In **scene** we define the shape of the object that we want to create.
-One thing to note is that the code written in scene is run on every pixel.
-
-Notice that we return a float out of **scene**. In order to create a shape we need to return the shortest distance to the shape where positive values are outside the shape, negative values are inside, and 0 is at the surface of the shape. The positive, or negative part is the "Signed" in Signed Distance Field.
-
-## Creating our own Signed Distance Function
-In this example we'll write the sphere function from scratch.
-
-If you're new to creating graphics on a GPU you can imagine the scene function is run with **p** (the current pixel position) passed in with every value from (-1.0, -1.0, -1.0) to (1.0, 1.0, 1.0)
-```glsl{5}
-//Note this is just a mental model
-for(float x = -1.0; x <1.0; x+=0.001) {
-    for(float y = -1.0; y <1.0; y+=0.001) {
-        for(float z = -1.0; z <1.0; z+=0.001) {
-            float distanceToObject = scene(vec3(x, y, z)); 
-        }
-    }
-}
-```
-It's not actually set up like this because the GPU will run this process in parallel, which makes it incredibly fast.
-
-Now imagine we've paused part way through the loop and **p** happens to be (0.4, 0.1, 1.).
-We need to write a function that determines if **p** is inside or outside our sphere.
-The easiest way to do this is to calculate the distance from our origin to the sphere, and subtract the size of the sphere we want to make.
-
-```glsl{3}
-scene(vec3 p) {
-    float size = 0.2;
-    return distance((vec3(0.0, 0.0, 0.0), p) - size);
-}
-```
-Because the origin is 0.0 for short we can just calculate the length of p and subtract our size;
-
+Distance functions (DFs) are a functional representation useful for defining shapes and solid volumes. Deriving the DF of an arbitrary surface in general is a complex problem. However by understanding some simple primitives and studying their properties we can develop an intuition for modeling with DFs. Constructive solid geometry (CSG), symmetry and non-linear transformations can be applied to create sophisticated models.
+  
+**Definition:** For a solid $\large S$ and a point $\large \,p \notin S$, the distance function maps $\large p$ to its minimum distance to $\large S$.  
+<br>
+To understand what this means, consider a solid 2D circle. The distance $\large d$ from a point $\large {p}=(x,y)$ to a circle of radius $\large r$ centered at the origin is:
+<br>
+<center>$\Large d=\sqrt{x^2+y^2}-r$</center>
+<br>
+<iframe src="https://www.desmos.com/calculator/o2mcl7poux?embed" width="100%" height="400px" style="border: 1px solid #ccc" frameborder=0></iframe>
+<center>*The purple line shows that the distance from $\large p$ to the circle is the distance to the origin minus the radius $\large r$*</center>
+<br>
+Try dragging around the point in the interactive example above to convince yourself that no matter where $\large p$ is the equation holds true.  
+You may also notice that when $\large p$ is inside the circle the DF is the negative of the distance to the surface. This is a special case of a DF, called a signed distance function (SDF). SDFs have additional features, such as the ability to invert the solid by multiplying the SDF by -1.  
+  
+In 3D, the DF of a sphere is basically the same: $\large d=\sqrt{x^2+y^2+z^2}-r$.  
+This sphere can be rendered by expressing it in GLSL (See sections on GLSL and sphere tracing to learn more).  
+Because GLSL has built vector types and functions, the DF of the sphere can be written simply as:
 ```glsl
-scene(vec3 p) {
-    return length(p - 0.2);
+float sphere(vec3 p, float r) {
+	return length(p)-r;
 }
-```
+```  
+This produces:  
+<iframe width="100%" height="450px" src="http://shader-park.appspot.com/sculpture/-LM-Nx6cvMmlbdKKiB64?example=true&embed=true&hideeditor=true" frameborder="0" scrolling="no"></iframe>
+  
 
 
+### Coordinate Systems
 
-Breaking down: sphere(p, 0.2). 
-Here we're providing the currently pixel coordinate p and the size that we want to define our sphere.
+Spherical
 
-Try change 0.2 to a smaller and larger value.
-Notice if you set the value to 1.0 it fills the entire space.
+### Preserving operations
 
+Translation
+Rotation
+Reflection
+Revolve from 2D
 
-## Coordinate space
+### Non-Preserving operations
 
+Any arbitrary distortion  
+  
+magnitude of the grad of DF is 1. If it is different step step size must be scaled.
 
+## The Sphere-tracing algorithm
 
-## Coloring your sculpture
-In **shade** we define how we want to shade in the color at each pixel.
+## Color Vector Fields
 
-## Coloring two different objects
+### Lighting
+Gradient of DF is normal.
 
+## Roll your own intersection function
 
+The shade function can be hacked to render 2D shaders, or implement your own intersection algorithm or volumetric renderer. 
 
+## Sources
+Much of the math and code in this page is based on
+IQ articles
+Jamie wong
 
-## <a name="glsl"></a>Learning GLSL
-## Learning raymarching
+## GLSL (OpenGL Shading Language)
 
+GLSL a small language (essentially C without pointers) with built-in functions and data types for working with vectors and common maths. It is designed to run very efficiently on a graphics processor, even from within a web page. Graphics processors are capable of performing calculations at an amazing speed. In just a few minutes of interactive modeling on this site, your program in distanceToSurface can easily be executed over 100 billion times.
+
+Some built in types:
+vec2
+vec3
+vec4
+mat2
+mat3
+mat4
+
+Some built in functions:
+float length(vec v)
+float distance(vec v1,vec v2)
+vec normalize(vec v)
+pow
+exp
+sqrt
+abs
+Trig - sin, cos, tan, atan, acos, asin...
+
+A full list of built-in functions can be found at: [url]
+
+## Further reading and resources
+
+IQs articles
+shadertoy
+Curv

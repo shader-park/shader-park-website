@@ -19,7 +19,7 @@ void main()
 `;
 
 export const defaultFragSource = `// Define the signed distance function (SDF) of you object here
-float map(vec3 p) {
+float surfaceDistance(vec3 p) {
 	return sphere(p, 0.3);
 }
 
@@ -42,8 +42,7 @@ uniform float stepSize;
 
 varying vec4 worldPos;
 
-
-float map(vec3 p);
+float surfaceDistance(vec3 p);
 
 const float PI = 3.14159265;
 const float TAU = PI*2.0;
@@ -93,6 +92,7 @@ vec3 hsv2rgb( in vec3 c )
 
 vec3 rgb2hsv( in vec3 c)
 {
+    const float eps = 0.0000001;
     vec4 k = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
     vec4 p = mix(vec4(c.zy, k.wz), vec4(c.yz, k.xy), (c.z<c.y) ? 1.0 : 0.0);
     vec4 q = mix(vec4(p.xyw, c.x), vec4(c.x, p.yzx), (p.x<c.x) ? 1.0 : 0.0);
@@ -207,6 +207,13 @@ float ellipsoid( in vec3 p, in vec3 r )
     return (length( p/r ) - 1.0) * min(min(r.x,r.y),r.z);
 }
 
+vec3 toSpherical(vec3 p) {
+    float phi = atan(p.x,p.z);
+    float r = length(p);
+    float theta = acos(-p.y/r);
+    return vec3(r,theta,phi);
+}
+
 float dot2( in vec3 v ) { return dot(v,v); }
 
 float uTriangle( vec3 p, vec3 a, vec3 b, vec3 c )
@@ -261,6 +268,10 @@ float subtract( float d1, float d2 )
 float intersect( float d1, float d2 )
 {
     return max(d1,d2);
+}
+
+float shell(float d, float thickness) {
+    return abs(d)-thickness;
 }
 
 vec3 repeat3D(vec3 p, vec3 c )
@@ -367,7 +378,7 @@ float fractalNoise(vec3 p) {
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
 	for(int i = 0; i < 300; ++i) {
-		float h = map(ro+rd*t);
+		float h = surfaceDistance(ro+rd*t);
 		if(h < intersection_threshold || t > max_dist) break;
 		t += h*stepFraction;
 	}
@@ -383,10 +394,10 @@ vec3 mouseIntersection() {
 vec3 calcNormal( in vec3 pos )
 {
     vec2 e = vec2(1.0,-1.0)*0.0005;
-    return normalize( e.xyy*map( pos + e.xyy ) + 
-		      e.yyx*map( pos + e.yyx ) + 
-		      e.yxy*map( pos + e.yxy ) + 
-		      e.xxx*map( pos + e.xxx ) );
+    return normalize( e.xyy*surfaceDistance( pos + e.xyy ) + 
+		      e.yyx*surfaceDistance( pos + e.yyx ) + 
+		      e.yxy*surfaceDistance( pos + e.yxy ) + 
+		      e.xxx*surfaceDistance( pos + e.xxx ) );
 }
 
 float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
@@ -417,7 +428,7 @@ float occlusion(vec3 p,vec3 n) {
     for(int i = 0; i < AO_SAMPLES; i++) {
         float f = float(i)*INV_AO_SAMPLES;
         float h = 0.05+f*R;
-        float d = map(p + n * h) - 0.003;
+        float d = surfaceDistance(p + n * h) - 0.003;
         r += clamp(h*D-d,0.0,1.0) * (1.0-f);
     }    
     return clamp(1.0-r,0.0,1.0);
@@ -448,7 +459,7 @@ export const voxelFooter = `
 void main() {
 	vec3 p = worldPos.xyz - sculptureCenter;
 	vec3 color = shade(p,calcNormal(p));
-	float dist = map(p);
+	float dist = surfaceDistance(p);
 	gl_FragColor = vec4(/*color*/vec3(0.5,1.5,1000.0),dist);
 }
 `;
