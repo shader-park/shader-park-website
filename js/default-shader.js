@@ -19,7 +19,7 @@ void main()
 `;
 
 export const defaultFragSource = `// Define the signed distance function (SDF) of you object here
-float map(vec3 p) {
+float surfaceDistance(vec3 p) {
 	return sphere(p, 0.3);
 }
 
@@ -42,7 +42,7 @@ uniform float stepSize;
 
 varying vec4 worldPos;
 
-float map(vec3 p);
+float surfaceDistance(vec3 p);
 
 const float PI = 3.14159265;
 const float TAU = PI*2.0;
@@ -378,7 +378,7 @@ float fractalNoise(vec3 p) {
 float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	float t = 0.;
 	for(int i = 0; i < 300; ++i) {
-		float h = map(ro+rd*t);
+		float h = surfaceDistance(ro+rd*t);
 		if(h < intersection_threshold || t > max_dist) break;
 		t += h*stepFraction;
 	}
@@ -394,10 +394,10 @@ vec3 mouseIntersection() {
 vec3 calcNormal( in vec3 pos )
 {
     vec2 e = vec2(1.0,-1.0)*0.0005;
-    return normalize( e.xyy*map( pos + e.xyy ) + 
-		      e.yyx*map( pos + e.yyx ) + 
-		      e.yxy*map( pos + e.yxy ) + 
-		      e.xxx*map( pos + e.xxx ) );
+    return normalize( e.xyy*surfaceDistance( pos + e.xyy ) + 
+		      e.yyx*surfaceDistance( pos + e.yyx ) + 
+		      e.yxy*surfaceDistance( pos + e.yxy ) + 
+		      e.xxx*surfaceDistance( pos + e.xxx ) );
 }
 
 float simpleLighting(vec3 p, vec3 normal, vec3 lightdir) {
@@ -428,7 +428,7 @@ float occlusion(vec3 p,vec3 n) {
     for(int i = 0; i < AO_SAMPLES; i++) {
         float f = float(i)*INV_AO_SAMPLES;
         float h = 0.05+f*R;
-        float d = map(p + n * h) - 0.003;
+        float d = surfaceDistance(p + n * h) - 0.003;
         r += clamp(h*D-d,0.0,1.0) * (1.0-f);
     }    
     return clamp(1.0-r,0.0,1.0);
@@ -459,7 +459,7 @@ export const voxelFooter = `
 void main() {
 	vec3 p = worldPos.xyz - sculptureCenter;
 	vec3 color = shade(p,calcNormal(p));
-	float dist = map(p);
+	float dist = surfaceDistance(p);
 	gl_FragColor = vec4(/*color*/vec3(0.5,1.5,1000.0),dist);
 }
 `;
