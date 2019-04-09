@@ -49,8 +49,9 @@ export default {
             initialized: false,
             isExample: false,
             autoUpdate: true,
+            closed: false,
             editorContainsErrors: false,
-            saved: false,
+            saved: true,
             titleInput: {
                 width: '5ch',
                 border: 'none',
@@ -151,15 +152,27 @@ export default {
                 }
                 this.currWidth = this.cachedWidth;
                 if(!this.initialized) {
-                    this.initialized = true;
+                    
                     this.initCodeMirror(obj.sculpture.fragmentShader);
+                    this.initialized = true;
                     console.log('initializing code mirror');
                 } else {
-                    console.log(this.selectedSculpture.id);
+                    this.closed = false;
+                    console.log('selected sculp', this.selectedSculpture);
+                    
+                    let tempSaved = this.selectedSculpture.saved;
+                    console.log("SCULPU Save", tempSaved)
                     this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = this.selectedSculpture.isExample;
+                    // console.log('selected sculp', this.selectedSculpture, this.selectedSculpture.saved);
+                    
                     let interval = setInterval(() => this.cm.editor.refresh(), 10);
-                    setTimeout(() => clearInterval(interval), 1000);
+                    console.log("SCULPU Save", tempSaved)
+                        this.saved = tempSaved;
+                    setTimeout(() => {
+                        clearInterval(interval)
+                        this.saved = tempSaved;
+                    }, 1000);
                 }
             } else {
                 this.currWidth = '0px';
@@ -168,15 +181,20 @@ export default {
     },
     methods: {
         save() {
-            if(this.currUser != null) {
-                this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
-                    this.saved = true;
-                });
-            } else {
-                // this.$router.push('sign-in');
-                this.$store.commit('displayLogin', true);
-            }
-            console.log('save');
+            return new Promise((resolve, reject) => {
+                if(this.currUser != null) {
+                    this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
+                        this.saved = true;
+                        this.selectedSculpture.saved = true;
+                        resolve();
+                    });
+                } else {
+                    // this.$router.push('sign-in');
+                    this.$store.commit('displayLogin', true);
+                    reject();
+                }
+                console.log('save');
+            });
         },
         play() {
             this.updateSculpture();
@@ -213,9 +231,41 @@ export default {
             console.log('export that shith');
         },
         close() {
-            this.shareText = '';
-            this.$store.state.selectedSculpture = null;
-            this.$store.state.selectedObject = null;
+            let close = () => {
+                this.closed = true;
+                this.shareText = '';
+                this.$store.state.selectedSculpture = null;
+                this.$store.state.selectedObject = null;
+            };
+            if(this.saved) {
+                close();
+            } else {
+                this.$modal.show('dialog', {
+                    title: 'Unsaved Changes',
+                    text: 'Do you want to save before closing the editor?',
+                    buttons: [{
+                        title: 'Cancel',
+                        handler: () => this.$modal.hide('dialog')
+                    },
+                    {
+                        title: 'Close',       // Button title
+                        handler: () => {
+                            close();
+                            this.$modal.hide('dialog')
+                        }
+                    },
+                    {
+                        title: 'Save & Close',       // Button title
+                        default: true,    // Will be triggered by default if 'Enter' pressed.
+                        handler: () => {
+                            this.save().then(() => {
+                                this.$modal.hide('dialog');
+                                close();
+                            });
+                        }
+                    }]
+                })
+            }
         },
         deleteSculpture() {
             this.$modal.show('dialog', {
@@ -308,7 +358,7 @@ export default {
                     }
                     editor.addEventListener('click', () => {
                         console.log('click');
-                        this.saved = false;
+
                         if(this.shareText.length > 0) {
                             this.shareText = '';
                             this.$refs.share.classList.remove('selected');
@@ -320,7 +370,11 @@ export default {
                 window.cm = this.cm;
                 this.cm.shader.canvas.on('processedShader', (data) => {
                     this.editorContainsErrors = data.containsError;
-                    if(this.autoUpdate && !data.containsError) {
+                    if(this.autoUpdate && !data.containsError && !this.closed) {
+                        console.log('updating sculpture!!');
+                        
+                        this.saved = false;
+                        this.selectedSculpture.saved = false;
                         this.updateSculpture();
                     }
                 });
@@ -414,7 +468,7 @@ export default {
     width: 30px;
     background-position: 65% 50%;
     background-size: 16px;
-    background-image: url('/images/play3.svg');
+    background-image: url('/images/play.svg');
 }
 
 .share {

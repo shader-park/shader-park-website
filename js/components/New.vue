@@ -93,6 +93,6 @@ export default {
 .v--modal {
 	text-align: center !important;
 	padding-top: 20px !important;
-	padding-bottom: 20px !important;
+	/* padding-bottom: 20px !important; */
 }
 </style>

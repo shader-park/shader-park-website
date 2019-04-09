@@ -48,6 +48,7 @@ export default {
             visibility : this.sculpData.visibility || 'public', //draft, public, private
             license : this.sculpData.license || null, 
             shaderSource: this.sculpData.shaderSource || defaultFragSource,
+            saved : this.sculpData.shaderSource? true: false,
             //sculpture is not saved to the db
             sculpture: this.sculpGeom || null
         };
@@ -108,11 +109,13 @@ export default {
         setPose(pose){
             // this.sculpture.mesh.
         },
+        setSaved(saved) {
+            this.saved = saved;
+        },
         setSelectedSculpture(obj) {
             if(obj && obj.name == this.sculpture.mesh.name) {
                 console.log('selected!!');
                 this.$store.state.selectedSculpture = this.$data;
-                // this.$store.state.selectedSculpture.delete = () => this.removeSculpture();
                 this.sculpture.selectedSculpture(true);
             } else {
                 if(this.sculpture.selected) {
