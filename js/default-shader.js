@@ -148,6 +148,11 @@ float cylinder( vec3 p, vec3 c )
   return length(p.xz-c.xy)-c.z;
 }
 
+float cappedCylinder( vec3 p, vec3 c )
+{
+  return length(p.xz-c.xy)-c.z;
+}
+
 float cone( vec3 p, vec2 c )
 {
     // c must be normalized

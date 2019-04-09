@@ -21,9 +21,12 @@ module.exports = {
         title: 'Geometries',
         collapsable: false,
         children: [
-          '/references/geometries/sphere', '/references/geometries/box',
-          '/references/geometries/torus', '/references/geometries/line',
-          '/references/geometries/cappedCylinder',
+          '/references/geometries/sphere', 
+          '/references/geometries/box', 
+          '/references/geometries/roundedBox',
+          '/references/geometries/torus', 
+          '/references/geometries/line',
+          '/references/geometries/cylinder',
           '/references/geometries/ellipsoid'
         ]
       },
