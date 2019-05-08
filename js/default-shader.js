@@ -458,8 +458,12 @@ float intersect(vec3 ro, vec3 rd, float stepFraction) {
 	return t;
 }
 
+vec3 getRayDir() {
+	return normalize(worldPos.xyz-cameraPosition);
+}
+
 vec3 mouseIntersection() {
-    vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
+    vec3 rayDirection = getRayDir();
     return mouse+rayDirection*intersect(mouse, rayDirection, 0.8);
 }
 
@@ -512,7 +516,7 @@ export const fragFooter = `
 // For advanced users //
 void main() {
 	vec3 rayOrigin = worldPos.xyz-sculptureCenter;
-	vec3 rayDirection = normalize(worldPos.xyz-cameraPosition);
+	vec3 rayDirection = getRayDir();
 	rayOrigin -= rayDirection*2.0;
 	float t = intersect(rayOrigin, rayDirection, stepSize);
 	if(t < 2.5) {
