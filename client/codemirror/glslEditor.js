@@ -12258,9 +12258,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       if (obj) for (var prop in obj) if (obj.hasOwnProperty(prop))
         words.push(prop);
     }
+    add(mode.builtin);
     add(mode.keywords);
     add(mode.types);
-    add(mode.builtin);
     add(mode.atoms);
     if (words.length) {
       mode.helperType = mimes[0];
@@ -12473,32 +12473,40 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
 
   def(["x-shader/x-vertex", "x-shader/x-fragment"], {
     name: "clike",
-    keywords: words("sampler1D sampler2D sampler3D samplerCube " +
+    builtin: words("radians degrees sin cos tan asin acos atan " +
+      "pow exp log exp2 sqrt inversesqrt " +
+      "abs sign floor ceil fract mod min max clamp mix step smoothstep " +
+      "length distance dot cross normalize " + // ftransform faceforward " +
+      "reflect refract matrixCompMult " +
+      "lessThan lessThanEqual greaterThan greaterThanEqual " +
+      "equal notEqual any all not " +
+      //Shader Park Library functions
+      "nsin ncos round softSquare osc hsv2rgb rgb2hsv line sphere box roundedBox torus cylinder cone plane ellipsoid toSpherical fromSpherical dot2 add subtract intersect shell rot2 smoothAdd smoothSubtract _hash noise _hash33 fractalNoise sphericalDistribution getRayDirection mouseIntersection simpleLighting specularLighting shadow occlusion calcNormal "
+    ),
+    // "texture1D texture1DProj texture1DLod texture1DProjLod " +
+    // "texture2D texture2DProj texture2DLod texture2DProjLod " +
+    // "texture3D texture3DProj texture3DLod texture3DProjLod " +
+    // "textureCube textureCubeLod " +
+    // "shadow1D shadow2D shadow1DProj shadow2DProj " +
+    // "shadow1DLod shadow2DLod shadow1DProjLod shadow2DProjLod " +
+    // "dFdx dFdy fwidth " +
+    // "noise1 noise2 noise3 noise4"),
+    keywords: words(/*"sampler1D sampler2D sampler3D samplerCube " +
                     "sampler1DShadow sampler2DShadow " +
-                    "const attribute uniform varying " +
+                    "attribute uniform varying " +*/
                     "break continue discard return " +
                     "for while do if else struct " +
-                    "in out inout"),
+                    "in out inout const"),
     types: words("float int bool void " +
                  "vec2 vec3 vec4 ivec2 ivec3 ivec4 bvec2 bvec3 bvec4 " +
                  "mat2 mat3 mat4"),
-    blockKeywords: words("for while do if else struct"),
-    builtin: words("radians degrees sin cos tan asin acos atan " +
-                    "pow exp log exp2 sqrt inversesqrt " +
-                    "abs sign floor ceil fract mod min max clamp mix step smoothstep " +
-                    "length distance dot cross normalize ftransform faceforward " +
-                    "reflect refract matrixCompMult " +
-                    "lessThan lessThanEqual greaterThan greaterThanEqual " +
-                    "equal notEqual any all not " +
-                    "texture1D texture1DProj texture1DLod texture1DProjLod " +
-                    "texture2D texture2DProj texture2DLod texture2DProjLod " +
-                    "texture3D texture3DProj texture3DLod texture3DProjLod " +
-                    "textureCube textureCubeLod " +
-                    "shadow1D shadow2D shadow1DProj shadow2DProj " +
-                    "shadow1DLod shadow2DLod shadow1DProjLod shadow2DProjLod " +
-                    "dFdx dFdy fwidth " +
-                    "noise1 noise2 noise3 noise4"),
-    atoms: words("true false " +
+    blockKeywords: words("for while do if else struct " +
+                  "sampler1D sampler2D sampler3D samplerCube " +
+                  "sampler1DShadow sampler2DShadow " +
+                  "attribute uniform varying"),
+
+    atoms: words("true false PHI PI TAU TWO_PI time " /* +
+                
                 "gl_FragColor gl_SecondaryColor gl_Normal gl_Vertex " +
                 "gl_MultiTexCoord0 gl_MultiTexCoord1 gl_MultiTexCoord2 gl_MultiTexCoord3 " +
                 "gl_MultiTexCoord4 gl_MultiTexCoord5 gl_MultiTexCoord6 gl_MultiTexCoord7 " +
@@ -12524,7 +12532,8 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
                 "gl_MaxVertexAttribs gl_MaxVertexUniformComponents gl_MaxVaryingFloats " +
                 "gl_MaxVertexTextureImageUnits gl_MaxTextureImageUnits " +
                 "gl_MaxFragmentUniformComponents gl_MaxCombineTextureImageUnits " +
-                "gl_MaxDrawBuffers"),
+                "gl_MaxDrawBuffers"
+                */),
     indentSwitch: false,
     hooks: {"#": cppHook},
     modeProps: {fold: ["brace", "include"]}
