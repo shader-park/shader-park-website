@@ -398,7 +398,7 @@ float fractalNoise(vec3 p) {
 // Spherical Fibonnacci points, Benjamin Keinert, Matthias Innmann,
 // Michael Sanger and Marc Stamminger
 
-const float _PHI = 1.61803398875;
+const float PHI = 1.61803398875;
 
 vec4 sphericalDistrib( vec3 p, float n )
 {
@@ -407,12 +407,12 @@ vec4 sphericalDistrib( vec3 p, float n )
 
     float phi = min(atan(p.y, p.x), PI), cosTheta = p.z;
 
-    float k = max(2.0, floor( log(n * PI * sqrt(5.0) * (1.0 - cosTheta*cosTheta))/ log(_PHI+1.0)));
-    float Fk = pow(_PHI, k)/sqrt(5.0);
-    vec2 F = vec2( round(Fk), round(Fk * _PHI) ); // k, k+1
+    float k = max(2.0, floor( log(n * PI * sqrt(5.0) * (1.0 - cosTheta*cosTheta))/ log(PHI+1.0)));
+    float Fk = pow(PHI, k)/sqrt(5.0);
+    vec2 F = vec2( round(Fk), round(Fk * PHI) ); // k, k+1
 
     vec2 ka = 2.0*F/n;
-    vec2 kb = 2.0*PI*( fract((F+1.0)*_PHI) - (_PHI-1.0) );
+    vec2 kb = 2.0*PI*( fract((F+1.0)*PHI) - (PHI-1.0) );
 
     mat2 iB = mat2( ka.y, -ka.x,
     kb.y, -kb.x ) / (ka.y*kb.x - ka.x*kb.y);
@@ -427,7 +427,7 @@ vec4 sphericalDistrib( vec3 p, float n )
 
         float i = dot(F, uv + c); // all quantities are ingeters (can take a round() for extra safety)
 
-        float phi = 2.0*PI*fract(i*_PHI);
+        float phi = 2.0*PI*fract(i*PHI);
         float cosTheta = m - 2.0*i/n;
         float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
 
