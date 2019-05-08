@@ -1,6 +1,6 @@
 ### occlusion
 
-Objects will cast shadows on other objects
+Approximates the soft shadows
 
 #### Example
 ```glsl
