@@ -65,6 +65,10 @@ float round(float x) {
     return floor(x+0.5);
 }
 
+float softSquare(float x, float pw) {
+    return 1.0/(pow(tan(x),pw)+1.0);
+}
+
 // Simple oscillators 
 
 float osc(float freq, float amp, float base, float phase) {
