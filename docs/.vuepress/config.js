@@ -31,7 +31,7 @@ module.exports = {
         ]
       },
       {
-        title: 'Operations',
+        title: 'Modifiers',
         collapsable: false,
         children: [
           '/references/operations/add',
@@ -47,7 +47,27 @@ module.exports = {
         collapsable: false,
         children: [
           '/references/lighting/simpleLighting',
+          '/references/lighting/specularLighting',
           '/references/lighting/occlusion',
+        ]
+      },
+      {
+        title: 'Color',
+        collapsable: false,
+        children: [
+          '/references/color/hsv2rgb',
+          '/references/color/rgb2hsv',
+        ]
+      },
+      {
+        title: 'Math',
+        collapsable: false,
+        children: [
+          '/references/math/fromSpherical',
+          '/references/math/toSpherical',
+          '/references/math/getRayDir',
+          '/references/math/rot2',
+          '/references/math/sphericalDistrib',
         ]
       },
       {
@@ -59,7 +79,7 @@ module.exports = {
         ]
       },
       {
-        title: 'Mouse Interactions',
+        title: 'Interactive',
         collapsable: false,
         children: [
           '/references/mouse-interactions/mouse',
