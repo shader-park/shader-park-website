@@ -36,6 +36,8 @@ let cachedSelectedSculptureId, cachedCameraPose;
 let allSculpturesOpacity = {opacity: 0.0};
 let selectedSculptureOpacity = {opacity: 0.0};
 let firstTimeAtRoute = true;
+let mediaCap = null;
+let isCapturing = false;
 
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
@@ -353,10 +355,74 @@ function render(time) {
 
 }
 
+function piCreateMediaRecorder(isRecordingCallback, canvas) 
+{
+	/*
+    if (piCanMediaRecorded(canvas) == false)
+    {
+        return null;
+    }
+    */
+
+    let options = {
+    	videoBitsPerSecond: 10000000, 
+    	type: "video/webm"
+    };
+    
+    var mediaRecorder = new MediaRecorder(canvas.captureStream(), options);
+    console.log("videoBitsPerSecond: ", mediaRecorder.videoBitsPerSecond);
+    var chunks = [];
+    
+    mediaRecorder.ondataavailable = function(e) 
+    {
+        if (e.data.size > 0) 
+        {
+            chunks.push(e.data);
+        }
+    };
+ 
+    mediaRecorder.onstart = function(){ 
+        isRecordingCallback( true );
+    };
+    
+    mediaRecorder.onstop = function()
+    {
+         isRecordingCallback( false );
+         let blob     = new Blob(chunks, options);
+         chunks       = [];
+         let videoURL = window.URL.createObjectURL(blob);
+         let url      = window.URL.createObjectURL(blob);
+         let a        = document.createElement("a");
+         document.body.appendChild(a);
+         a.style      = "display: none";
+         a.href       = url;
+         a.download   = "capture.webm";
+         a.click();
+         window.URL.revokeObjectURL(url);
+     };
+    
+    return mediaRecorder;
+}
+
 function keyPress(down, e) {
 	if (e.target.nodeName === 'BODY') {
 		// player.keyEvent(down, e);
 	}
+	if (e.altKey && down) {
+		if (e.key === 'r') {
+			if (mediaCap === null) {
+				mediaCap = piCreateMediaRecorder( () => console.log("capturing render"), canvas); 
+			}
+			if (!isCapturing) {
+				mediaCap.start();
+				isCapturing = true;
+			} else {
+				mediaCap.stop();
+				isCapturing = false;
+			}
+		}
+	}
+
 }
 
 // Raycast to sculptures
