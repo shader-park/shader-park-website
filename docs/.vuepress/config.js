@@ -23,11 +23,11 @@ module.exports = {
         children: [
           '/references/geometries/sphere', 
           '/references/geometries/box', 
-          '/references/geometries/roundedBox',
           '/references/geometries/torus', 
           '/references/geometries/line',
           '/references/geometries/cylinder',
-          '/references/geometries/ellipsoid'
+          '/references/geometries/ellipsoid',
+          '/references/geometries/roundedBox'
         ]
       },
       {
@@ -67,6 +67,7 @@ module.exports = {
           '/references/math/toSpherical',
           '/references/math/getRayDir',
           '/references/math/rot2',
+          '/references/math/softSquare',
           '/references/math/sphericalDistrib',
         ]
       },

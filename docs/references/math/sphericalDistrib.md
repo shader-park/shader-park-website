@@ -6,3 +6,4 @@ vec4 sphericalDistrib( vec3 p, float n );
 ```
 
 #### Example
+<iframe width="100%" height="450px" src="/sculpture/-LeUBfGOqBXNjLzb77Ec?example=true&embed=true" frameborder="0"></iframe>
