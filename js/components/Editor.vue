@@ -544,5 +544,8 @@ label {
     // right: 0px;
 }
 
+.CodeMirror-hints{
+    z-index: 100;
+}
 
 </style>

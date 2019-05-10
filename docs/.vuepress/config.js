@@ -65,10 +65,10 @@ module.exports = {
         children: [
           '/references/math/fromSpherical',
           '/references/math/toSpherical',
-          '/references/math/getRayDir',
+          '/references/math/getRayDirection',
           '/references/math/rot2',
           '/references/math/softSquare',
-          '/references/math/sphericalDistrib',
+          '/references/math/sphericalDistribution',
         ]
       },
       {
