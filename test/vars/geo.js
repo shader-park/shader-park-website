@@ -1,0 +1,11 @@
+let radius = 0.3;
+let test = vec3(0.5,0.5,0.5);
+let r2 = float(2.0);
+rotateY(time);
+displace(-0.15,0.0,add(r2,r2));
+sphere(radius);
+displace(0.3,0.0,mult(0.1, sin(mult(10.0,z))));
+sphere(sub(add(mult(r2,radius),test.y),0.3));
+displace(-0.15,mult(0.1,x),0.0);
+difference();
+sphere(0.25);

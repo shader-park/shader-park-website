@@ -1,28 +1,24 @@
 
 // Some Classes
-
+/*
 class Float {
+	constructor(name) {
+		this.name = name;
+	}
 
+	toString() {
+		return this.name;
+	}
 }
+*/
 
-class Vec2 {
-
-}
-
-class Vec3 {
-
-}
-
-class Vec4 {
-
-}
 
 // glsl transpilers
 
 
 function buildGeoSource(geo) {
 	src = "float surfaceDistance(vec3 p) {\n";
-	src += "float d;\n";
+	src += "float d = 99999999999.0;\n";
 	src += geo;
 	src += "return d;\n}";
 	return src;
@@ -42,11 +38,326 @@ function buildColorSource(col) {
 
 function sourceGenerator(jsSrc) {
 
-	src = "";
+	let src = "";
+	let varCount = 0;
+	let debug = true;
+
+	// put each of these inside other function, and unless passed
+	// extra inline parameter, assign a variable to the string value. 
+	// Also have all other math functions assign variables with types to their returns
+
+	function makeVar(source, type, dims, inline) {
+		this.type = type;
+		this.dims = dims;
+		if (inline) {
+			this.name = source;
+		} else {
+			let vname = "v_" + varCount;
+			src += this.type + " " + vname + " = " + source + ";\n";
+			varCount += 1;
+			this.name = vname;
+		}
+		this.toString = function() {
+			return this.name;
+		}
+		return this;
+	}
+
+	// Need to handle cases like - vec3(v.x, 0.1, mult(0.1, time))
+
+	function float(source, inline) {
+		if (typeof source === 'number') {
+			source = collapseToString(source);
+		}
+		return new makeVar(source, 'float', 1, inline);
+	}
+
+	function vec2(source, y, inline) {
+		if (typeof source === 'number') {
+			source = "vec2(" + collapseToString(source) + ", " 
+							 + collapseToString(y) + ")";
+		}
+		let self = new makeVar(source, 'vec2', 2, inline);
+		self.x = new makeVarWithDims(self.name + ".x", 1, true); //self.name + ".x";
+		self.y = new makeVarWithDims(self.name + ".y", 1, true); //self.name + ".y";
+		return self;
+	}
+
+	function vec3(source, y, z, inline) {
+		if (typeof source === 'number') {
+			source = "vec3(" + collapseToString(source) + ", " 
+							 + collapseToString(y) + ", " 
+							 + collapseToString(z) + ")";
+		}
+		let self = new makeVar(source, 'vec3', 3, inline);
+		self.x = new makeVarWithDims(self.name + ".x", 1, true);//self.name + ".x";
+		self.y = new makeVarWithDims(self.name + ".y", 1, true);//self.name + ".y";
+		self.z = new makeVarWithDims(self.name + ".z", 1, true);//self.name + ".z";
+		return self;
+	}
+
+	function vec4(source, y, z, w, inline) {
+		if (typeof source === 'number') {
+			source = "vec4(" + collapseToString(source) + ", " 
+							 + collapseToString(y) + ", " 
+							 + collapseToString(z) + ", "
+							 + collapseToString(w) + ")";
+		}
+		let self = new makeVar(source, 'vec4', 4, inline);
+		self.x = new makeVarWithDims(self.name + ".x", 1, true);//self.name + ".x";
+		self.y = new makeVarWithDims(self.name + ".y", 1, true);//self.name + ".y";
+		self.z = new makeVarWithDims(self.name + ".z", 1, true);//self.name + ".z";
+		self.w = new makeVarWithDims(self.name + ".w", 1, true);//self.name + ".w";
+		return self;
+	}
+
+	function makeVarWithDims(source, dims, inline) {
+		if (dims < 1 || dims > 4) compileError("Tried creating variable with dim: " + dims);
+		if (dims === 1) return new float(source, inline);
+		if (dims === 2) return new vec2(source, inline);
+		if (dims === 3) return new vec3(source, inline);
+		if (dims === 4) return new vec4(source, inline);
+	}
+
+	// Modes enum (TODO remove shell, it is not really a mode. It is same category as expand)
+	const modes = {
+		UNION: 10,
+		DIFFERENCE: 11,
+		INTERSECT: 12,
+		BLEND: 13,
+		MIX: 14,
+		SHELL: 15,
+	};
+	//let extraParamCutoff = 13;
+	let currentMode = modes.UNION;
+	let blendAmount = 0.0;
+	let mixAmount = 0.0;
+	let shellDepth = 0.0;
+
+	let time = new float("time", true);
+	let x = new float("p.x", true);
+	let y = new float("p.y", true);
+	let z = new float("p.z", true);
+	let p = new vec3("p", null, null, true);
+
+	function compileError(err) {
+		console.log(err, " char: " + src.length);
+	}
+
+	function ensureScalar(funcName, val) {
+		let tp = typeof val;
+		if (typeof val !== 'number' && val.type !=='float') {
+			compileError("'"+funcName+"'" + " accepts only a scalar. Was given: '" + val.type + "'");
+		}
+	}
+
+	function ensureGroupOp(funcName, a, b) {
+		if (typeof a !== 'string' && typeof b !== 'string') {
+			if (a.dims !== 1 && b.dims !== 1 && a.dims !== b.dims) {
+				compileError("'" + funcName + "'" + 
+					" dimension mismatch. Was given: '" + a.type + "' and '" + b.type + "'");
+			}
+		}
+	}
+
+	function collapseToString(val) {
+		if (typeof val === 'string') {
+			return val;
+		} else if (typeof val === 'number') {
+			return val.toFixed(8);
+		} else {
+			return val.toString();
+		}
+	}
+
+	// Modes (prepend these with GEO or something to indicate they are geometry modes?)
+
+	function union() {
+		currentMode = modes.UNION;
+	}
+
+	function difference() {
+		currentMode = modes.DIFFERENCE;
+	}
+
+	function intersect() {
+		currentMode = modes.INTERSECT;
+	}
+
+	function blend(amount) {
+		currentMode = modes.BLEND;
+		ensureScalar("blend",amount);
+		blendAmount = amount;
+	}
+
+	function mix(amount) {
+		currentMode = modes.MIX;
+		ensureScalar("mix",amount);
+		mixAmount = amount;
+	}
+
+	function shell(depth) {
+		currentMode = modes.SHELL;
+		ensureScalar("shell",depth);
+		shellDepth = depth;
+	}
+
+	function getMode() {
+		switch (currentMode) {
+			case modes.UNION:
+				return ["add"];
+				break;
+			case modes.DIFFERENCE:
+				return ["subtract"];
+				break;
+			case modes.INTERSECT:
+				return ["intersect"];
+				break;
+			case modes.BLEND:
+				return ["smoothAdd",blendAmount];
+				break;
+			case modes.MIX:
+				return ["mix",mixAmount];
+				break;
+			case modes.SHELL:
+				return ["shell",shellDepth];
+				break;
+			default:
+				return ["add"];
+		}
+	}
+
+	function applyMode(prim) {
+		let cmode = getMode();
+		src += "d = "+ cmode[0] + "( " + prim + ", d " +
+			(cmode.length > 1 ? "," + collapseToString(cmode[1]) : "") + " );\n"
+	}
+
+	function tryMakeNum(v) {
+		if (typeof v === 'number') {
+			return new float(v);
+		} else {
+			return v;
+		}
+	}
+
+	/// Math ///
+
+	// Group ops
+
+	function mult(a,b) {
+		if (typeof a === 'number' && typeof b === 'number') return (a*b);
+		a = tryMakeNum(a);
+ 		b = tryMakeNum(b);
+ 		if (debug) {
+			console.log("multiplying...");
+			console.log("a: ", a);
+			console.log("b: ", b);
+		}
+ 		ensureGroupOp("mult", a, b);
+ 		let dims = Math.max(a.dims, b.dims);
+ 		return new makeVarWithDims("(" + collapseToString(a) + "*" + collapseToString(b) + ")", dims);
+	}
+
+	function add(a,b) {
+ 		if (typeof a === 'number' && typeof b === 'number') return (a+b);
+ 		a = tryMakeNum(a);
+ 		b = tryMakeNum(b);
+ 		if (debug) {
+			console.log("adding...");
+			console.log("a: ", a);
+			console.log("b: ", b);
+		}
+ 		ensureGroupOp("add", a, b);
+ 		let dims = Math.max(a.dims, b.dims);
+ 		return new makeVarWithDims("(" + collapseToString(a) + "+" + collapseToString(b) + ")", dims);
+	}
+
+	function sub(a,b) {
+ 		if (typeof a === 'number' && typeof b === 'number') return (a-b);
+ 		a = tryMakeNum(a);
+ 		b = tryMakeNum(b);
+ 		if (debug) {
+			console.log("subtracting...");
+			console.log("a: ", a);
+			console.log("b: ", b);
+		}
+ 		ensureGroupOp("sub", a, b);
+ 		let dims = Math.max(a.dims, b.dims);
+ 		return new makeVarWithDims("(" + collapseToString(a) + "-" + collapseToString(b) + ")", dims);
+	}
+
+	// a -> a
+
+	function sin(x) {
+		x = tryMakeNum(x);
+		if (debug) {
+			console.log("sine...");
+			console.log("x: ", x);
+		}
+		return new makeVarWithDims("sin(" + x + ")", x.dims);
+	}
+
+	// Built-in primitives
 
 	function sphere(radius) {
-		src += "d = add(d, sphere(p, " + radius.toString() + "));\n"
+		ensureScalar("sphere",radius);
+		applyMode("sphere(p, " + collapseToString(radius) + ")"); 
 	}
+
+	// Displacements
+
+	function displace(xc, yc, zc) {
+		if (yc === undefined || zc === undefined) {
+			// ensureVec3()
+			src += "p -= " + collapseToString(vec3) + ";\n";
+		} else {
+			ensureScalar("displace",xc);
+			ensureScalar("displace",yc);
+			ensureScalar("displace",zc);
+			src += "p -= vec3( " + collapseToString(xc) + ", " 
+								 + collapseToString(yc) + ", " 
+								 + collapseToString(zc) + ");\n";
+		}
+	}
+
+	function expand(amount) {
+		ensureScalar("expand",amount);
+		src += "d -= " + collapseToString(amount) + ";\n";
+	}
+
+	// function shell(depth) {}
+
+	function rotateX(angle) {
+		ensureScalar("rotateX",angle);
+		src += "p.yz = p.yz*rot2(" + collapseToString(angle) + ");\n";
+	}
+
+	function rotateY(angle) {
+		ensureScalar("rotateY",angle);
+		src += "p.xz = p.xz*rot2(" + collapseToString(angle) + ");\n";
+	}
+
+	function rotateZ(angle) {
+		ensureScalar("rotateZ",angle);
+		src += "p.xy = p.xy*rot2(" + collapseToString(angle) + ");\n";
+	}
+
+	function mirrorX() {
+		src += "p.x = abs(p.x);\n";
+	}
+
+	function mirrorY() {
+		src += "p.y = abs(p.y);\n";
+	}
+
+	function mirrorZ() {
+		src += "p.z = abs(p.z);\n";
+	}
+
+
+
+	// Lighting
 
 	function basicLighting() {
 		src += "light = simpleLighting(p, normal, lightDirection);\n";
@@ -72,12 +383,23 @@ let generateGLSL = function(geoSrc, colorSrc) {
 
 let gs = 
 `let radius = 0.3;
-sphere(radius);`;
+let test = vec3(0.5,0.5,0.5);
+let r2 = float(2.0);
+rotateY(time);
+displace(-0.15,0.0,add(r2,r2));
+sphere(radius);
+displace(0.3,0.0,mult(0.1, sin(mult(10.0,z))));
+sphere(sub(add(mult(r2,radius),test.y),0.3));
+displace(-0.15,mult(0.1,x),0.0);
+difference();
+sphere(0.25);`;
 
 let cs = 
 `basicLighting();`;
 
-console.log( generateGLSL(gs,cs).colorGLSL );
+
+let glsl = generateGLSL(gs,cs);
+console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
 
 
 ///////////////////////////////////////////////////////
