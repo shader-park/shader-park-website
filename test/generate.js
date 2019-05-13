@@ -1,24 +1,8 @@
 
-// Some Classes
-/*
-class Float {
-	constructor(name) {
-		this.name = name;
-	}
-
-	toString() {
-		return this.name;
-	}
-}
-*/
-
-
-// glsl transpilers
-
-
 function buildGeoSource(geo) {
 	src = "float surfaceDistance(vec3 p) {\n";
-	src += "float d = 99999999999.0;\n";
+	src += "float d = 1000000000.0;\n";
+	src += "vec3 op = p;\n";
 	src += geo;
 	src += "return d;\n}";
 	return src;
@@ -26,11 +10,15 @@ function buildGeoSource(geo) {
 
 function buildColorSource(col) {
 	src = "vec3 shade(vec3 p, vec3 normal) {\n";
+	src += "float d = 1000000000.0;\n";
+	src += "vec3 op = p;\n";
 	src += "vec3 lightDirection = vec3(0.0, 1.0, 0.0);\n";
 	src += "float light = 0.9;\n";
+	src += "float occ = 1.0;\n";
 	src += "vec3 color = vec3(1.0,1.0,1.0);\n";
+	src += "vec3 selectedColor = vec3(1.0,1.0,1.0);\n";
 	src += col;
-	src += "return color*light;\n}";
+	src += "return color*light*occ;\n}";
 	return src;
 }
 
@@ -38,9 +26,20 @@ function buildColorSource(col) {
 
 function sourceGenerator(jsSrc) {
 
-	let src = "";
+	let geoSrc = "";
+	let colorSrc = "";
 	let varCount = 0;
-	let debug = true;
+	let primCount = 0;
+	let debug = false;
+
+	function appendSources(source) {
+		geoSrc += source;
+		colorSrc += source;
+	}
+
+	function appendColorSource(source) {
+		colorSrc += source;
+	}
 
 	// put each of these inside other function, and unless passed
 	// extra inline parameter, assign a variable to the string value. 
@@ -53,7 +52,7 @@ function sourceGenerator(jsSrc) {
 			this.name = source;
 		} else {
 			let vname = "v_" + varCount;
-			src += this.type + " " + vname + " = " + source + ";\n";
+			appendSources(this.type + " " + vname + " = " + source + ";\n");
 			varCount += 1;
 			this.name = vname;
 		}
@@ -126,19 +125,20 @@ function sourceGenerator(jsSrc) {
 		INTERSECT: 12,
 		BLEND: 13,
 		MIX: 14,
-		SHELL: 15,
 	};
+	const additiveModes = [modes.UNION, modes.BLEND, modes.MIX];
 	//let extraParamCutoff = 13;
 	let currentMode = modes.UNION;
 	let blendAmount = 0.0;
 	let mixAmount = 0.0;
-	let shellDepth = 0.0;
 
 	let time = new float("time", true);
 	let x = new float("p.x", true);
 	let y = new float("p.y", true);
 	let z = new float("p.z", true);
 	let p = new vec3("p", null, null, true);
+
+	let currentColor = new vec3("color", null, null, true);
 
 	function compileError(err) {
 		console.log(err, " char: " + src.length);
@@ -196,12 +196,6 @@ function sourceGenerator(jsSrc) {
 		mixAmount = amount;
 	}
 
-	function shell(depth) {
-		currentMode = modes.SHELL;
-		ensureScalar("shell",depth);
-		shellDepth = depth;
-	}
-
 	function getMode() {
 		switch (currentMode) {
 			case modes.UNION:
@@ -219,9 +213,6 @@ function sourceGenerator(jsSrc) {
 			case modes.MIX:
 				return ["mix",mixAmount];
 				break;
-			case modes.SHELL:
-				return ["shell",shellDepth];
-				break;
 			default:
 				return ["add"];
 		}
@@ -229,8 +220,14 @@ function sourceGenerator(jsSrc) {
 
 	function applyMode(prim) {
 		let cmode = getMode();
-		src += "d = "+ cmode[0] + "( " + prim + ", d " +
-			(cmode.length > 1 ? "," + collapseToString(cmode[1]) : "") + " );\n"
+		let primName = "prim_" + primCount;
+		primCount += 1;
+		appendSources("float " + primName + " = " + prim + ";\n");
+		if (additiveModes.includes(currentMode)) {
+			appendColorSource("if (" + primName + " < d) { color = selectedColor; }\n" );
+		}
+		appendSources("d = "+ cmode[0] + "( " + primName + ", d " +
+			(cmode.length > 1 ? "," + collapseToString(cmode[1]) : "") + " );\n");
 	}
 
 	function tryMakeNum(v) {
@@ -298,6 +295,15 @@ function sourceGenerator(jsSrc) {
 		return new makeVarWithDims("sin(" + x + ")", x.dims);
 	}
 
+	function cos(x) {
+		x = tryMakeNum(x);
+		if (debug) {
+			console.log("cosine...");
+			console.log("x: ", x);
+		}
+		return new makeVarWithDims("cos(" + x + ")", x.dims);
+	}
+
 	// Built-in primitives
 
 	function sphere(radius) {
@@ -305,74 +311,114 @@ function sourceGenerator(jsSrc) {
 		applyMode("sphere(p, " + collapseToString(radius) + ")"); 
 	}
 
+	function torus(radius, thickness) {
+		ensureScalar("torus", radius);
+		ensureScalar("torus", thickness);
+		applyMode("torus(p, vec2(" + collapseToString(radius) + 
+			", " + collapseToString(thickness) + "))");
+	}
+
 	// Displacements
+
+	function reset() {
+		appendSources("p = op;\n");
+	}
 
 	function displace(xc, yc, zc) {
 		if (yc === undefined || zc === undefined) {
 			// ensureVec3()
-			src += "p -= " + collapseToString(vec3) + ";\n";
+			appendSources("p -= " + collapseToString(vec3) + ";\n");
 		} else {
 			ensureScalar("displace",xc);
 			ensureScalar("displace",yc);
 			ensureScalar("displace",zc);
-			src += "p -= vec3( " + collapseToString(xc) + ", " 
+			appendSources("p -= vec3( " + collapseToString(xc) + ", " 
 								 + collapseToString(yc) + ", " 
-								 + collapseToString(zc) + ");\n";
+								 + collapseToString(zc) + ");\n");
 		}
 	}
 
 	function expand(amount) {
 		ensureScalar("expand",amount);
-		src += "d -= " + collapseToString(amount) + ";\n";
+		appendSources("d -= " + collapseToString(amount) + ";\n");
 	}
 
 	// function shell(depth) {}
 
+	function shell(depth) {
+		ensureScalar("shell",depth);
+		appendSources("d = shell( d," + collapseToString(depth) + ");\n");
+	}
+
 	function rotateX(angle) {
 		ensureScalar("rotateX",angle);
-		src += "p.yz = p.yz*rot2(" + collapseToString(angle) + ");\n";
+		appendSources("p.yz = p.yz*rot2(" + collapseToString(angle) + ");\n");
 	}
 
 	function rotateY(angle) {
 		ensureScalar("rotateY",angle);
-		src += "p.xz = p.xz*rot2(" + collapseToString(angle) + ");\n";
+		appendSources("p.xz = p.xz*rot2(" + collapseToString(angle) + ");\n");
 	}
 
 	function rotateZ(angle) {
 		ensureScalar("rotateZ",angle);
-		src += "p.xy = p.xy*rot2(" + collapseToString(angle) + ");\n";
+		appendSources("p.xy = p.xy*rot2(" + collapseToString(angle) + ");\n");
 	}
 
 	function mirrorX() {
-		src += "p.x = abs(p.x);\n";
+		appendSources("p.x = abs(p.x);\n");
 	}
 
 	function mirrorY() {
-		src += "p.y = abs(p.y);\n";
+		appendSources("p.y = abs(p.y);\n");
 	}
 
 	function mirrorZ() {
-		src += "p.z = abs(p.z);\n";
+		appendSources("p.z = abs(p.z);\n");
 	}
 
 
+	// Color/Lighting
 
-	// Lighting
+	function color(col, green, blue) {
+		if (green !== undefined) {
+			ensureScalar("color", col);
+			ensureScalar("color", green);
+			ensureScalar("color", blue);
+			appendColorSource("selectedColor = vec3(" + 
+				collapseToString(col) + ", " + 
+				collapseToString(green) + ", " +
+				collapseToString(blue) + ");\n");
+		} else {
+			if (col.type !== 'vec3') compileError("color must be vec3");
+			appendColorSource("selectedColor = " + collapseToString(col) + ";\n");
+		}
+	}
 
 	function basicLighting() {
-		src += "light = simpleLighting(p, normal, lightDirection);\n";
+		appendColorSource("light = simpleLighting(p, normal, lightDirection);\n");
+	}
+
+	function occlusion() {
+		appendColorSource("occ = occlusion(p,normal);\n");
 	}
 
 	function test() {
-		src += "//this is a test\n";
+		appendSources("//this is a test\n");
 	}
 
 	eval(jsSrc);
 
-	return src;
+	let geoFinal = buildGeoSource(geoSrc);
+	let colorFinal = buildColorSource(colorSrc);
 
+	return {
+		geoGLSL: geoFinal,
+		colorGLSL: colorFinal
+	};
 }
 
+/*
 let generateGLSL = function(geoSrc, colorSrc) {
 	// This doesn't need to be code, could just be a drop down or not even exist
 	return {
@@ -380,25 +426,28 @@ let generateGLSL = function(geoSrc, colorSrc) {
 		  colorGLSL: buildColorSource(sourceGenerator(colorSrc))
 		};
 }
+*/
 
-let gs = 
-`let radius = 0.3;
-let test = vec3(0.5,0.5,0.5);
-let r2 = float(2.0);
-rotateY(time);
-displace(-0.15,0.0,add(r2,r2));
-sphere(radius);
-displace(0.3,0.0,mult(0.1, sin(mult(10.0,z))));
-sphere(sub(add(mult(r2,radius),test.y),0.3));
-displace(-0.15,mult(0.1,x),0.0);
-difference();
-sphere(0.25);`;
+let singleSource =
+`rotateY(time);
+displace(-0.3,0.0,0.0);
+color(0.1,0.2,0.3);
+sphere(0.1);
+displace(0.2,0.0,0.0);
+color(0.3,0.2,0.1);
+sphere(0.1);
+displace(0.2,0.0,0.0);
+color(0.7,0.1,0.3);
+sphere(0.1);
+displace(0.2,0.0,0.0);
+color(0.1,0.3,0.8);
+sphere(0.1);
 
-let cs = 
-`basicLighting();`;
+basicLighting();
+//occlusion();`;
 
 
-let glsl = generateGLSL(gs,cs);
+let glsl = sourceGenerator(singleSource); //generateGLSL(gs,cs);
 console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
 
 
