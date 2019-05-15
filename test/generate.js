@@ -42,10 +42,7 @@ function sourceGenerator(jsSrc) {
 		colorSrc += "    " + source;
 	}
 
-	// put each of these inside other function, and unless passed
-	// extra inline parameter, assign a variable to the string value. 
-	// Also have all other math functions assign variables with types to their returns
-
+	// General Variable class
 	function makeVar(source, type, dims, inline) {
 		this.type = type;
 		this.dims = dims;
@@ -119,7 +116,7 @@ function sourceGenerator(jsSrc) {
 		if (dims === 4) return new vec4(source, inline);
 	}
 
-	// Modes enum (TODO remove shell, it is not really a mode. It is same category as expand)
+	// Modes enum
 	const modes = {
 		UNION: 10,
 		DIFFERENCE: 11,
