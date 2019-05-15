@@ -1,24 +1,24 @@
 
 function buildGeoSource(geo) {
 	src = "float surfaceDistance(vec3 p) {\n";
-	src += "float d = 1000000000.0;\n";
-	src += "vec3 op = p;\n";
+	src += "    float d = 1000000000.0;\n";
+	src += "    vec3 op = p;\n";
 	src += geo;
-	src += "return d;\n}";
+	src += "    return d;\n}";
 	return src;
 }
 
 function buildColorSource(col) {
 	src = "vec3 shade(vec3 p, vec3 normal) {\n";
-	src += "float d = 1000000000.0;\n";
-	src += "vec3 op = p;\n";
-	src += "vec3 lightDirection = vec3(0.0, 1.0, 0.0);\n";
-	src += "float light = 0.9;\n";
-	src += "float occ = 1.0;\n";
-	src += "vec3 color = vec3(1.0,1.0,1.0);\n";
-	src += "vec3 selectedColor = vec3(1.0,1.0,1.0);\n";
+	src += "    float d = 1000000000.0;\n";
+	src += "    vec3 op = p;\n";
+	src += "    vec3 lightDirection = vec3(0.0, 1.0, 0.0);\n";
+	src += "    float light = 0.9;\n";
+	src += "    float occ = 1.0;\n";
+	src += "    vec3 color = vec3(1.0,1.0,1.0);\n";
+	src += "    vec3 selectedColor = vec3(1.0,1.0,1.0);\n";
 	src += col;
-	src += "return color*light*occ;\n}";
+	src += "    return color*light*occ;\n}";
 	return src;
 }
 
@@ -33,12 +33,12 @@ function sourceGenerator(jsSrc) {
 	let debug = false;
 
 	function appendSources(source) {
-		geoSrc += source;
-		colorSrc += source;
+		geoSrc += "    " + source;
+		colorSrc += "    " + source;
 	}
 
 	function appendColorSource(source) {
-		colorSrc += source;
+		colorSrc += "    " + source;
 	}
 
 	// put each of these inside other function, and unless passed
