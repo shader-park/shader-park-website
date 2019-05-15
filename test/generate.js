@@ -1,26 +1,26 @@
 function buildGeoSource(geo) {
 	return `
-		float surfaceDistance(vec3 p) {
-			float d = 1000000000.0;
-			vec3 op = p;
-			${geo};
-			return d;
-		}`;
+float surfaceDistance(vec3 p) {
+    float d = 1000000000.0;
+    vec3 op = p;
+${geo}
+    return d;
+}`;
 }
 
 function buildColorSource(col) {
 	return `
-		vec3 shade(vec3 p, vec3 normal) {
-	    float d = 1000000000.0;
-	    vec3 op = p;
-	    vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-	    float light = 0.9;
-	    float occ = 1.0;
-	    vec3 color = vec3(1.0,1.0,1.0);
-	    vec3 selectedColor = vec3(1.0,1.0,1.0);
-			${col};
-			return color*light*occ;
-		}`;
+vec3 shade(vec3 p, vec3 normal) {
+    float d = 1000000000.0;
+    vec3 op = p;
+    vec3 lightDirection = vec3(0.0, 1.0, 0.0);
+    float light = 0.9;
+    float occ = 1.0;
+    vec3 color = vec3(1.0,1.0,1.0);
+    vec3 selectedColor = vec3(1.0,1.0,1.0);
+${col}
+    return color*light*occ;
+}`;
 }
 
 ////// Default
