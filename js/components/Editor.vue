@@ -31,7 +31,21 @@
             <!-- <span>by</span> -->
             <!-- <input type="text" id="editor-author-name" size="30"></input> -->
         </div>
-        <div @keyup="()=>{}" @keydown.stop="()=>{removeEditorModalUI()}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div>
+        <!-- <div @keyup="()=>{}" @keydown.stop="()=>{removeEditorModalUI()}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div> -->
+        <!-- <codemirror ref="myCm"
+            :value="code" 
+            :options="cmOptions"
+            @ready="onCmReady"
+            @focus="onCmFocus"
+            @input="onCmCodeChange">
+        </codemirror> -->
+        <codemirror ref="myCm"
+            :value="code" 
+            :options="cmOptions"
+            @ready="onCmReady"
+            @input="onCmCodeChange" @keydown.stop="()=>{}" @click.stop="()=>{}">
+        </codemirror>
+
     </div>
 </div>
 
@@ -39,6 +53,12 @@
 
 <script>
 import {sculptureStarterCode, fragFooter} from '../default-shader.js'
+import { codemirror } from 'vue-codemirror'
+import {sourceGenerator} from '../../test/generate.js';
+
+import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/keymap/sublime.js';
+
 export default {
     props: {
         cachedWidth: { type: String, default: '49vw' }
@@ -46,6 +66,18 @@ export default {
     data () {
         return {
             cm: null,
+            code: '',
+            cmOptions: {
+                tabSize: 4,
+                mode: 'text/javascript',
+                theme: 'default',
+                lineNumbers: true,
+                matchBrackets: true,
+                keyMap: 'sublime',
+                autoCloseBrackets: true,
+                line: true,
+                viewportMargin: Infinity,
+            },
             initialized: false,
             isExample: false,
             autoUpdate: true,
@@ -67,6 +99,9 @@ export default {
             editorHasDisplayedModal: false
         }
     },
+    components: {
+        codemirror
+    },
     mounted() {
         console.log('mounted editor');
         document.addEventListener('keydown', this.keypress.bind(null, true));
@@ -75,6 +110,10 @@ export default {
         
     },
     computed : {
+        codemirror() {
+            return this.$refs.myCm.codemirror;
+        },
+
         saveText() {
             if(this.selectedSculpture) {
                 if(!this.selectedSculpture.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.uid) {
@@ -152,8 +191,8 @@ export default {
                 }
                 this.currWidth = this.cachedWidth;
                 if(!this.initialized) {
-                    
-                    this.initCodeMirror(obj.sculpture.fragmentShader);
+                    this.code = obj.sculpture.fragmentShader;
+                    // this.initCodeMirror(obj.sculpture.fragmentShader);
                     this.initialized = true;
                     console.log('initializing code mirror');
                 } else {
@@ -180,6 +219,21 @@ export default {
         }
     },
     methods: {
+        onCmReady(cm) {
+            console.log('the editor is readied!', cm);
+        },
+        onCmFocus(cm) {
+            console.log('the editor is focus!', cm);
+        },
+        onCmCodeChange(newCode) {
+            
+            this.code = newCode;
+            if(this.selectedSculpture){
+                let source = sourceGenerator(this.code);
+                console.log('SOURCE',source);
+                this.selectedSculpture.shaderSource = source.colorGLSL + source.geoGLSL;
+            }
+        },
         save() {
             return new Promise((resolve, reject) => {
                 if(this.currUser != null) {
@@ -365,7 +419,6 @@ export default {
                         }
                         this.removeEditorModalUI();
                     });
-
                 }
                 window.cm = this.cm;
                 this.cm.shader.canvas.on('processedShader', (data) => {
@@ -387,6 +440,7 @@ export default {
 <style lang="less">
 
 @import '../codemirror/glslEditor.css';
+@import 'codemirror/lib/codemirror.css';
 
 .editor-button {
     padding: 5px 15px 5px 15px;

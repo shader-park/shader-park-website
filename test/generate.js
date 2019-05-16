@@ -25,7 +25,7 @@ ${col}
 
 ////// Default
 
-function sourceGenerator(jsSrc) {
+export function sourceGenerator(jsSrc) {
 
 	let geoSrc = "";
 	let colorSrc = "";
@@ -445,8 +445,8 @@ basicLighting();
 //occlusion();`;
 
 
-let glsl = sourceGenerator(singleSource); //generateGLSL(gs,cs);
-console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
+// let glsl = sourceGenerator(singleSource); //generateGLSL(gs,cs);
+// console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
 
 
 ///////////////////////////////////////////////////////
