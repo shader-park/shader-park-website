@@ -18,19 +18,8 @@ void main()
 }
 `;
 
-export const defaultFragSource = `// Define the signed distance function (SDF) of your object here
-float surfaceDistance(vec3 p) {
-    float d = sphere(p, 0.3);
-	return d;
-}
-
-// Here you can define how your object at point p will be colored.
-vec3 shade(vec3 p, vec3 normal) {
-    vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-    float light = simpleLighting(p, normal, lightDirection);
-    vec3 color = vec3(1.0, 1.0, 1.0);
-	return color*light;
-}
+export const defaultFragSource = `basicLighting();
+sphere(0.2);
 `;
 
 export const sculptureStarterCode = `
