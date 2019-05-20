@@ -63,14 +63,14 @@ export function sourceGenerator(jsSrc) {
 	// Need to handle cases like - vec3(v.x, 0.1, mult(0.1, time))
 
 	function float(source, inline) {
-		if (typeof source === 'number') {
+		if (typeof source !== 'string') {
 			source = collapseToString(source);
 		}
 		return new makeVar(source, 'float', 1, inline);
 	}
 
 	function vec2(source, y, inline) {
-		if (typeof source === 'number') {
+		if (typeof source !== 'string') {
 			source = "vec2(" + collapseToString(source) + ", " 
 							 + collapseToString(y) + ")";
 		}
@@ -81,7 +81,7 @@ export function sourceGenerator(jsSrc) {
 	}
 
 	function vec3(source, y, z, inline) {
-		if (typeof source === 'number') {
+		if (typeof source !== 'string') {
 			source = "vec3(" + collapseToString(source) + ", " 
 							 + collapseToString(y) + ", " 
 							 + collapseToString(z) + ")";
@@ -94,7 +94,7 @@ export function sourceGenerator(jsSrc) {
 	}
 
 	function vec4(source, y, z, w, inline) {
-		if (typeof source === 'number') {
+		if (typeof source !== 'string') {
 			source = "vec4(" + collapseToString(source) + ", " 
 							 + collapseToString(y) + ", " 
 							 + collapseToString(z) + ", "
@@ -111,9 +111,9 @@ export function sourceGenerator(jsSrc) {
 	function makeVarWithDims(source, dims, inline) {
 		if (dims < 1 || dims > 4) compileError("Tried creating variable with dim: " + dims);
 		if (dims === 1) return new float(source, inline);
-		if (dims === 2) return new vec2(source, inline);
-		if (dims === 3) return new vec3(source, inline);
-		if (dims === 4) return new vec4(source, inline);
+		if (dims === 2) return new vec2(source, null, inline);
+		if (dims === 3) return new vec3(source, null, null, inline);
+		if (dims === 4) return new vec4(source, null, null, null, inline);
 	}
 
 	// Modes enum
@@ -139,6 +139,7 @@ export function sourceGenerator(jsSrc) {
 	let currentColor = new vec3("color", null, null, true);
 
 	function compileError(err) {
+		// todo: throw actual error
 		console.log(err, " char: " + src.length);
 	}
 
@@ -169,6 +170,7 @@ export function sourceGenerator(jsSrc) {
 	}
 
 	// Modes (prepend these with GEO or something to indicate they are geometry modes?)
+	// Also 'mix' name needs to be changed to avoid collision with built in
 
 	function union() {
 		currentMode = modes.UNION;
@@ -324,8 +326,7 @@ export function sourceGenerator(jsSrc) {
 
 	function displace(xc, yc, zc) {
 		if (yc === undefined || zc === undefined) {
-			// ensureVec3()
-			appendSources("p -= " + collapseToString(vec3) + ";\n");
+			appendSources("p -= " + collapseToString(xc) + ";\n");
 		} else {
 			ensureScalar("displace",xc);
 			ensureScalar("displace",yc);
