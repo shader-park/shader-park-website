@@ -1,3 +1,6 @@
+let escodegen = require('escodegen');
+let esprima = require('esprima');
+
 function buildGeoSource(geo) {
 	return `
 float surfaceDistance(vec3 p) {
@@ -23,9 +26,42 @@ ${col}
 }`;
 }
 
+function replaceBinaryOp(syntaxTree) {
+
+	if (typeof syntaxTree === 'object') {
+		for (let node in syntaxTree) {
+			if (syntaxTree.hasOwnProperty(node)) {
+				replaceBinaryOp(syntaxTree[node]);
+			}
+		}
+	}
+
+	if (syntaxTree['type'] === 'BinaryExpression') {
+		let op = syntaxTree['operator'];
+		if (op === '*' || op === '/' || op === '-' || op === '+') {
+			if (op === '*' ) {
+				syntaxTree['callee'] = {type:'Identifier', name:'mult'};
+			} else if (op === '/') {
+				syntaxTree['callee'] = {type:'Identifier', name:'divide'};
+			} else if (op === '-') {
+				syntaxTree['callee'] = {type:'Identifier', name:'sub'};
+			} else if (op === '+') {
+				syntaxTree['callee'] = {type:'Identifier', name:'add'};
+			}
+			syntaxTree['type'] = 'CallExpression';
+			syntaxTree['arguments'] = [syntaxTree['left'], syntaxTree['right']];
+			syntaxTree['operator'] = undefined;
+		}
+	}
+}
+
 ////// Default
 
 export function sourceGenerator(jsSrc) {
+
+	let tree = esprima.parse(jsSrc);
+	replaceBinaryOp(tree);
+	jsSrc = escodegen.generate(tree);
 
 	let geoSrc = "";
 	let colorSrc = "";
@@ -63,9 +99,9 @@ export function sourceGenerator(jsSrc) {
 	// Need to handle cases like - vec3(v.x, 0.1, mult(0.1, time))
 
 	function float(source, inline) {
-		if (typeof source !== 'string') {
+		//if (typeof source !== 'string') {
 			source = collapseToString(source);
-		}
+		//}
 		return new makeVar(source, 'float', 1, inline);
 	}
 
@@ -139,8 +175,8 @@ export function sourceGenerator(jsSrc) {
 	let currentColor = new vec3("color", null, null, true);
 
 	function compileError(err) {
-		// todo: throw actual error
-		console.log(err, " char: " + src.length);
+		// todo: throw actual error (and color error?)
+		console.log(err, " char: " + geoSrc.length);
 	}
 
 	function ensureScalar(funcName, val) {
@@ -284,6 +320,20 @@ export function sourceGenerator(jsSrc) {
  		return new makeVarWithDims("(" + collapseToString(a) + "-" + collapseToString(b) + ")", dims);
 	}
 
+	function divide(a,b) {
+		if (typeof a === 'number' && typeof b === 'number') return (a/b);
+		a = tryMakeNum(a);
+		b = tryMakeNum(b);
+		if (debug) {
+		   console.log("dividing...");
+		   console.log("a: ", a);
+		   console.log("b: ", b);
+	   }
+		ensureGroupOp("divide", a, b);
+		let dims = Math.max(a.dims, b.dims);
+		return new makeVarWithDims("(" + collapseToString(a) + "/" + collapseToString(b) + ")", dims);
+   }
+
 	// a -> a
 
 	function sin(x) {
@@ -394,12 +444,13 @@ export function sourceGenerator(jsSrc) {
 		}
 	}
 
+	// should this also be 'op'?
 	function basicLighting() {
 		appendColorSource("light = simpleLighting(p, normal, lightDirection);\n");
 	}
 
 	function occlusion() {
-		appendColorSource("occ = occlusion(p,normal);\n");
+		appendColorSource("occ = occlusion(op,normal);\n");
 	}
 
 	function test() {
@@ -417,37 +468,26 @@ export function sourceGenerator(jsSrc) {
 	};
 }
 
-/*
-let generateGLSL = function(geoSrc, colorSrc) {
-	// This doesn't need to be code, could just be a drop down or not even exist
-	return {
-		    geoGLSL: buildGeoSource(sourceGenerator(geoSrc)), 
-		  colorGLSL: buildColorSource(sourceGenerator(colorSrc))
-		};
-}
-*/
-
 let singleSource =
-`rotateY(time);
-displace(-0.3,0.0,0.0);
-color(0.1,0.2,0.3);
-sphere(0.1);
-displace(0.2,0.0,0.0);
-color(0.3,0.2,0.1);
-sphere(0.1);
-displace(0.2,0.0,0.0);
-color(0.7,0.1,0.3);
-sphere(0.1);
-displace(0.2,0.0,0.0);
-color(0.1,0.3,0.8);
-sphere(0.1);
+`basicLighting();
+let ringCount = 6;
 
-basicLighting();
-//occlusion();`;
+for (let i=0; i<ringCount; i++) {
+	let ringCycle = 2*Math.PI*i/ringCount+time;
+	let radius = 0.25-0.2*cos(ringCycle);
 
+	displace(0.0, 0.2*sin(ringCycle), 0.0);
+	let val = i/ringCount;
+	color(val,val,val);
+	torus( radius, 0.04);
+	reset();
+}
 
-// let glsl = sourceGenerator(singleSource); //generateGLSL(gs,cs);
-// console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
+intersect();
+torus(0.25,0.22);`;
+
+ //let glsl = sourceGenerator(singleSource); //generateGLSL(gs,cs);
+ //console.log( glsl.geoGLSL + "\n" + glsl.colorGLSL );
 
 
 ///////////////////////////////////////////////////////
