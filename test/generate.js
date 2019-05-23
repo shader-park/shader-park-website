@@ -363,6 +363,20 @@ export function sourceGenerator(jsSrc) {
 		return new makeVarWithDims("abs(" + x + ")", x.dims);
 	}
 
+	function pow(a, b) {
+		if (typeof a === 'number' && typeof b === 'number') return (Math.pow(a, b));
+		a = tryMakeNum(a);
+		b = tryMakeNum(b);
+		if (debug) {
+			console.log("pow...");
+			console.log("a: ", a);
+			console.log("b: ", b);
+		}
+		ensureGroupOp("pow", a, b);
+		let dims = Math.max(a.dims, b.dims);
+		return new makeVarWithDims("pow(" + collapseToString(a) + "," + collapseToString(b) + ")", dims);
+	}
+
 	// Built-in primitives
 
 	function sphere(radius) {
