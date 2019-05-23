@@ -368,6 +368,19 @@ export function sourceGenerator(jsSrc) {
 			", " + collapseToString(thickness) + "))");
 	}
 
+	function box(xc, yc, zc) {
+		if (yc === undefined || zc === undefined) {
+			applyMode("box(p, " + collapseToString(xc) + ");\n");
+		} else {
+			ensureScalar("box", xc);
+			ensureScalar("box", yc);
+			ensureScalar("box", zc);
+			applyMode("box(p, vec3(" + collapseToString(xc) + ", "
+				+ collapseToString(yc) + ", "
+				+ collapseToString(zc) + "));\n");
+		}
+	}
+
 	// Displacements
 
 	function reset() {
