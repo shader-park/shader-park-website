@@ -354,29 +354,6 @@ export function sourceGenerator(jsSrc) {
 		return new makeVarWithDims("cos(" + x + ")", x.dims);
 	}
 
-	function abs(x) {
-		x = tryMakeNum(x);
-		if (debug) {
-			console.log("abs...");
-			console.log("x: ", x);
-		}
-		return new makeVarWithDims("abs(" + x + ")", x.dims);
-	}
-
-	function pow(a, b) {
-		if (typeof a === 'number' && typeof b === 'number') return (Math.pow(a, b));
-		a = tryMakeNum(a);
-		b = tryMakeNum(b);
-		if (debug) {
-			console.log("pow...");
-			console.log("a: ", a);
-			console.log("b: ", b);
-		}
-		ensureGroupOp("pow", a, b);
-		let dims = Math.max(a.dims, b.dims);
-		return new makeVarWithDims("pow(" + collapseToString(a) + "," + collapseToString(b) + ")", dims);
-	}
-
 	// Built-in primitives
 
 	function sphere(radius) {
@@ -389,19 +366,6 @@ export function sourceGenerator(jsSrc) {
 		ensureScalar("torus", thickness);
 		applyMode("torus(p, vec2(" + collapseToString(radius) + 
 			", " + collapseToString(thickness) + "))");
-	}
-
-	function box(xc, yc, zc) {
-		if (yc === undefined || zc === undefined) {
-			applyMode("box(p, " + collapseToString(xc) + ");\n");
-		} else {
-			ensureScalar("box", xc);
-			ensureScalar("box", yc);
-			ensureScalar("box", zc);
-			applyMode("box(p, vec3(" + collapseToString(xc) + ", "
-				+ collapseToString(yc) + ", "
-				+ collapseToString(zc) + "));\n");
-		}
 	}
 
 	// Displacements
