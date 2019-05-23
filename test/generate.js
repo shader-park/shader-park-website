@@ -354,6 +354,15 @@ export function sourceGenerator(jsSrc) {
 		return new makeVarWithDims("cos(" + x + ")", x.dims);
 	}
 
+	function abs(x) {
+		x = tryMakeNum(x);
+		if (debug) {
+			console.log("abs...");
+			console.log("x: ", x);
+		}
+		return new makeVarWithDims("abs(" + x + ")", x.dims);
+	}
+
 	// Built-in primitives
 
 	function sphere(radius) {
