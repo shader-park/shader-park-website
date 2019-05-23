@@ -457,6 +457,18 @@ export function sourceGenerator(jsSrc) {
 		}
 	}
 
+	function lightDirection(x, y, z) {
+		if (y === undefined || z === undefined) {
+			appendColorSource("lightDirection = " + collapseToString(x) + ";\n");
+		} else {
+			ensureScalar("displace", x);
+			ensureScalar("displace", y);
+			ensureScalar("displace", z);
+			appendColorSource("lightDirection = vec3( " + collapseToString(x) + ", "
+				+ collapseToString(y) + ", "
+				+ collapseToString(z) + ");\n");
+		}
+	}
 	// should this also be 'op'?
 	function basicLighting() {
 		appendColorSource("light = simpleLighting(p, normal, lightDirection);\n");
