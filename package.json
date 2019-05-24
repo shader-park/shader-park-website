@@ -36,7 +36,7 @@
   },
   "scripts": {
     "qDeploy": "gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
-    "deploy": "npm run build && npm run docs:build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
+    "deploy": "npm run build && npm run docs:build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version --no-promote",
     "browse": "gcloud app browse --project $npm_package_gcloud_id",
     "build": "npm run less && NODE_ENV=production browserify -t vueify -e js/index.js -o client/bundle.js",
     "less": "lessc less/style.less client/style.css",
