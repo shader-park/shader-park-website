@@ -392,8 +392,6 @@ export function sourceGenerator(jsSrc) {
 		appendSources("d -= " + collapseToString(amount) + ";\n");
 	}
 
-	// function shell(depth) {}
-
 	function shell(depth) {
 		ensureScalar("shell",depth);
 		appendSources("d = shell( d," + collapseToString(depth) + ");\n");
@@ -426,6 +424,9 @@ export function sourceGenerator(jsSrc) {
 		appendSources("p.z = abs(p.z);\n");
 	}
 
+	function mirrorXYZ() {
+		appendSources("p = abs(p);\n");
+	}
 
 	// Color/Lighting
 
