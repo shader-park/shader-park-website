@@ -18,8 +18,21 @@ void main()
 }
 `;
 
-export const defaultFragSource = `basicLighting();
+export const defaultFragSourceJS = `basicLighting();
 sphere(0.2);
+`;
+
+export const defaultFragSourceGLSL = `float surfaceDistance(vec3 p) {
+    float d = sphere(p, 0.3);
+	return d;
+}
+
+vec3 shade(vec3 p, vec3 normal) {
+    vec3 lightDirection = vec3(0.0, 1.0, 0.0);
+    float light = simpleLighting(p, normal, lightDirection);
+    vec3 color = vec3(1.0, 1.0, 1.0);
+	return color*light;
+}
 `;
 
 export const sculptureStarterCode = `
