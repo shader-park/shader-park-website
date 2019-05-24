@@ -202,13 +202,13 @@ export default {
                     // this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = obj.isExample;
                     // console.log('selected sculp', this.selectedSculpture, this.selectedSculpture.saved);
-                    
-                    // let interval = setInterval(() => this.cm.editor.refresh(), 10);
-                    // setTimeout(() => {
-                    //     clearInterval(interval)
-                    //     this.saved = tempSaved;
-                    // }, 1000);
                 }
+                let interval = setInterval(() => this.codemirror.refresh(), 10);
+                setTimeout(() => {
+                    this.codemirror.refresh()
+                    clearInterval(interval);
+                //     this.saved = tempSaved;
+                }, 1000);
             } else {
                 this.currWidth = '0px';
             }
@@ -217,6 +217,7 @@ export default {
     methods: {
         onCmReady(cm) {
             console.log('the editor is readied!', cm);
+            window.cm = cm;
         },
         onCmFocus(cm) {
             console.log('the editor is focus!', cm);
