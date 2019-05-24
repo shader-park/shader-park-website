@@ -30,6 +30,15 @@ export const routes = [
     }
   },
   {
+    path: '/new/:type',
+    name: 'new',
+    component: New,
+    meta: {
+      title: 'New Sculpture',
+      selectedSculpture: true
+    }
+  },
+  {
     path: '/new',
     name: 'new',
     component: New,
