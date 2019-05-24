@@ -51,6 +51,11 @@ export default {
 				});
 			} else {
 				this.finishedLoadingSculp = true;
+				let sculptureType = this.$route.params.type;
+				this.emptySculpture.type = 'js';
+				if(sculptureType && sculptureType === 'glsl') {
+					this.emptySculpture.type = sculptureType;
+				}
 				this.setSelectedSculpture();
 			}
 		});

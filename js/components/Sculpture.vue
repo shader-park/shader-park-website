@@ -1,12 +1,5 @@
 
 <template>
-    <!-- <div>
-        <span>Title {{title}} </span>
-        <span>Favorites {{favorites}}</span>
-        <span>Views {{views}}</span>
-        <span>Comments {{comments}}</span>
-        <span>Forks {{forks}}</span>
-    </div> -->
 </template>
 
 <script>
@@ -15,8 +8,9 @@
 
 import {Sculpture} from '../SculptureN.js';
 import * as THREE from 'three';
-import { defaultFragSource } from '../default-shader.js'
+import { defaultFragSourceJS, defaultFragSourceGLSL } from '../default-shader.js'
 import {mapGetters} from 'vuex';
+import {sourceGenerator} from '../../test/generate.js';
 
 function defaultMap(obj, id, def) {
     if(obj && obj[id]) {
@@ -47,7 +41,8 @@ export default {
             featured : this.sculpData.featured || false,
             visibility : this.sculpData.visibility || 'public', //draft, public, private
             license : this.sculpData.license || null, 
-            shaderSource: this.sculpData.shaderSource || defaultFragSource,
+            shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: defaultFragSourceJS),
+            type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
             //sculpture is not saved to the db
             sculpture: this.sculpGeom || null
@@ -55,9 +50,23 @@ export default {
     },
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
-        if(!this.sculpture) {
+        console.log('mounted sculp');
+        let shadeSource = this.shaderSource.slice();
+        if(this.type === 'js') {
+                let source = sourceGenerator(this.shaderSource);
+                let glsl = source.geoGLSL + source.colorGLSL;
+                shadeSource = glsl;
+                if(!this.sculpture) {
+                    this.sculpture = new Sculpture(glsl);
+                } else {
+                    this.sculpture.setShaderSource(glsl);
+                    //TODO THIS MIGHT BE Very large added computation
+                    this.sculpture.refreshMaterial();
+                }
+        } else if(!this.sculpture) {
             this.sculpture = new Sculpture(this.shaderSource);
         }
+        
         if(this.id) {
             this.sculpture.mesh.name = this.id;
         } else {
@@ -84,9 +93,16 @@ export default {
     },
     watch: {
         shaderSource: function (val) {
+            console.log('setting shader source', val);
             if(this.sculpture) {
                 this.shaderSource = val;
-                this.sculpture.setShaderSource(val);
+                if(this.type === 'js') {
+                    let source = sourceGenerator(val);
+                    let glsl = source.geoGLSL + source.colorGLSL;
+                    this.sculpture.setShaderSource(glsl);
+                } else {
+                    this.sculpture.setShaderSource(val);
+                }
                 this.sculpture.refreshMaterial();
             }
         },
@@ -114,7 +130,7 @@ export default {
         },
         setSelectedSculpture(obj) {
             if(obj && obj.name == this.sculpture.mesh.name) {
-                console.log('selected!!');
+                console.log('selected!!', this.$data);
                 this.$store.state.selectedSculpture = this.$data;
                 this.sculpture.selectedSculpture(true);
             } else {
