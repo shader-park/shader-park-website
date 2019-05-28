@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 import {createPedestalEdges} from './create-pedestal-edges.js'
-import {defaultFragSource, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
+import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
 
 export class Sculpture {
-    constructor(fragmentShader = defaultFragSource) {
+    constructor(fragmentShader = defaultFragSourceGLSL) {
         this.vertexShader = defaultVertexSource;
         this.fragmentShader = fragmentShader;
         this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);

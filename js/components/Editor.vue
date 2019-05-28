@@ -117,7 +117,7 @@ export default {
         saveText() {
             if(this.selectedSculpture) {
                 if(!this.selectedSculpture.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.uid) {
-                    if(this.saved) {
+                    if(this.selectedSculpture.saved) {
                         return 'Saved';
                     } else {
                         return 'Save';
@@ -183,36 +183,32 @@ export default {
             console.log('set sculpture isExample to ' + value);
         },
         selectedSculpture(obj) {
-            console.log('found Sculp form editor');
-            
+            console.log('found Sculp form editor', obj);
             if(obj) {
                 if(obj.title) {
                     this.titleInput.width = obj.title.length + 'ch';
                 }
                 this.currWidth = this.cachedWidth;
                 if(!this.initialized) {
-                    this.code = obj.sculpture.fragmentShader;
+                    this.code = obj.shaderSource;
                     // this.initCodeMirror(obj.sculpture.fragmentShader);
                     this.initialized = true;
                     console.log('initializing code mirror');
                 } else {
                     this.closed = false;
                     console.log('selected sculp', this.selectedSculpture);
-                    
-                    let tempSaved = this.selectedSculpture.saved;
-                    console.log("SCULPU Save", tempSaved)
-                    this.cm.editor.setValue(obj.sculpture.fragmentShader);
-                    this.isExample = this.selectedSculpture.isExample;
+                    this.code = obj.shaderSource;
+                    console.log('OBJ Shader', obj);
+                    // this.cm.editor.setValue(obj.sculpture.fragmentShader);
+                    this.isExample = obj.isExample;
                     // console.log('selected sculp', this.selectedSculpture, this.selectedSculpture.saved);
-                    
-                    let interval = setInterval(() => this.cm.editor.refresh(), 10);
-                    console.log("SCULPU Save", tempSaved)
-                        this.saved = tempSaved;
-                    setTimeout(() => {
-                        clearInterval(interval)
-                        this.saved = tempSaved;
-                    }, 1000);
                 }
+                let interval = setInterval(() => this.codemirror.refresh(), 10);
+                setTimeout(() => {
+                    this.codemirror.refresh()
+                    clearInterval(interval);
+                //     this.saved = tempSaved;
+                }, 1000);
             } else {
                 this.currWidth = '0px';
             }
@@ -221,24 +217,26 @@ export default {
     methods: {
         onCmReady(cm) {
             console.log('the editor is readied!', cm);
+            window.cm = cm;
         },
         onCmFocus(cm) {
             console.log('the editor is focus!', cm);
         },
         onCmCodeChange(newCode) {
+            if(newCode !== this.selectedSculpture.shaderSource){
+                this.selectedSculpture.saved = false;
+            }
             
             this.code = newCode;
             if(this.selectedSculpture){
-                let source = sourceGenerator(this.code);
-                console.log('SOURCE',source);
-                this.selectedSculpture.shaderSource = source.colorGLSL + source.geoGLSL;
+                console.log('SOURCE',this.code);
+                this.selectedSculpture.shaderSource = this.code; 
             }
         },
         save() {
             return new Promise((resolve, reject) => {
                 if(this.currUser != null) {
                     this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
-                        this.saved = true;
                         this.selectedSculpture.saved = true;
                         resolve();
                     });
@@ -291,7 +289,7 @@ export default {
                 this.$store.state.selectedSculpture = null;
                 this.$store.state.selectedObject = null;
             };
-            if(this.saved) {
+            if(this.selectedSculpture.saved) {
                 close();
             } else {
                 this.$modal.show('dialog', {
@@ -425,8 +423,6 @@ export default {
                     this.editorContainsErrors = data.containsError;
                     if(this.autoUpdate && !data.containsError && !this.closed) {
                         console.log('updating sculpture!!');
-                        
-                        this.saved = false;
                         this.selectedSculpture.saved = false;
                         this.updateSculpture();
                     }
