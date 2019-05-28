@@ -145,6 +145,12 @@ float box( vec3 p, vec3 box ){
   return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
 }
 
+float box( vec3 p, float bx, float by, float bz) {
+    vec3 box = vec3(bx,by,bz);
+    vec3 d = abs(p) - box;
+    return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
+}
+
 float roundedBox( vec3 p, vec3 box , float r){
   return length(max(abs(p)-box,0.0))-r;
 }
@@ -154,14 +160,20 @@ float torus( vec3 p, vec2 t ){
   return length(q)-t.y;
 }
 
-float cylinder( vec3 p, vec3 c )
+float torus( vec3 p, float tx, float ty ){
+    vec2 q = vec2(length(p.xz)-tx,p.y);
+    return length(q)-ty;
+}
+
+float infCylinder( vec3 p, vec3 c )
 {
   return length(p.xz-c.xy)-c.z;
 }
 
-float cappedCylinder( vec3 p, vec3 c )
+float cylinder( vec3 p, vec2 h )
 {
-  return length(p.xz-c.xy)-c.z;
+  vec2 d = abs(vec2(length(p.xz),p.y)) - h;
+  return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 
 float cone( vec3 p, vec2 c )
@@ -175,6 +187,12 @@ float plane( vec3 p, vec4 n )
 {
   // n must be normalized
   return dot(p,n.xyz) + n.w;
+}
+
+float plane( vec3 p, float nx, float ny, float nz, float nw)
+{
+  // n must be normalized
+  return dot(p,normalize(vec3(nx,ny,nz))) + nw;
 }
 
 float hexPrism( vec3 p, vec2 h )
@@ -196,17 +214,6 @@ float capsule( vec3 p, vec3 a, vec3 b, float r )
     return length( pa - ba*h ) - r;
 }
 
-float cappedCylinder( vec3 p, vec2 h )
-{
-  vec2 d = abs(vec2(length(p.xz),p.y)) - h;
-  return min(max(d.x,d.y),0.0) + length(max(d,0.0));
-}
-
-float cylinder( vec3 p, vec2 h )
-{
-  vec2 d = abs(vec2(length(p.xz),p.y)) - h;
-  return min(max(d.x,d.y),0.0) + length(max(d,0.0));
-}
 
 float triangularPrism( vec3 p, vec2 h ) {
     vec3 q = abs(p);
@@ -222,6 +229,31 @@ float cappedCone( in vec3 p, in vec3 c )
     vec2 qv = vec2( dot(v,w), v.x*w.x );
     vec2 d = max(qv,0.0)*qv/vv;
     return sqrt( dot(w,w) - max(d.x,d.y) ) * sign(max(q.y*v.x-q.x*v.y,w.y));
+}
+
+float roundCone(vec3 p, vec3 a, vec3 b, float r1, float r2)
+{
+    // sampling independent computations (only depend on shape)
+    vec3  ba = b - a;
+    float l2 = dot(ba,ba);
+    float rr = r1 - r2;
+    float a2 = l2 - rr*rr;
+    float il2 = 1.0/l2;
+    
+    // sampling dependant computations
+    vec3 pa = p - a;
+    float y = dot(pa,ba);
+    float z = y - l2;
+    vec3 rv = pa*l2 - ba*y;
+    float x2 = dot(rv,rv);
+    float y2 = y*y*l2;
+    float z2 = z*z*l2;
+
+    // single square root!
+    float k = sign(rr)*rr*rr*x2;
+    if( sign(z)*a2*z2 > k ) return  sqrt(x2 + z2)        *il2 - r2;
+    if( sign(y)*a2*y2 < k ) return  sqrt(x2 + y2)        *il2 - r1;
+                            return (sqrt(x2*a2*il2)+y*rr)*il2 - r1;
 }
 
 float ellipsoid( in vec3 p, in vec3 r )
