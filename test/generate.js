@@ -1,3 +1,10 @@
+import {
+	geometryFunctions, 
+	mathFunctions, 
+	glslBuiltInOneToOne, 
+	glslBuiltInOther
+} from './glsl-built-in.js';
+
 let escodegen = require('escodegen');
 let esprima = require('esprima');
 
@@ -26,6 +33,7 @@ ${col}
 }`;
 }
 
+// Converts binary math operators to our own version
 function replaceBinaryOp(syntaxTree) {
 
 	if (typeof syntaxTree === 'object') {
@@ -55,14 +63,14 @@ function replaceBinaryOp(syntaxTree) {
 	}
 }
 
-////// Default
 
-export function sourceGenerator(jsSrc) {
+export function sourceGenerator(userProvidedSrc) {
 
-	let tree = esprima.parse(jsSrc);
+	let tree = esprima.parse(userProvidedSrc);
 	replaceBinaryOp(tree);
-	jsSrc = escodegen.generate(tree);
+	userProvidedSrc = escodegen.generate(tree);
 
+	let generatedJSFuncsSource = "";
 	let geoSrc = "";
 	let colorSrc = "";
 	let varCount = 0;
@@ -158,10 +166,9 @@ export function sourceGenerator(jsSrc) {
 		DIFFERENCE: 11,
 		INTERSECT: 12,
 		BLEND: 13,
-		MIX: 14,
+		MIXGEO: 14,
 	};
-	const additiveModes = [modes.UNION, modes.BLEND, modes.MIX];
-	//let extraParamCutoff = 13;
+	const additiveModes = [modes.UNION, modes.BLEND, modes.MIXGEO];
 	let currentMode = modes.UNION;
 	let blendAmount = 0.0;
 	let mixAmount = 0.0;
@@ -171,6 +178,7 @@ export function sourceGenerator(jsSrc) {
 	let y = new float("p.y", true);
 	let z = new float("p.z", true);
 	let p = new vec3("p", null, null, true);
+	let mouse = new vec3("mouse", null, null, true);
 
 	let currentColor = new vec3("color", null, null, true);
 
@@ -181,7 +189,7 @@ export function sourceGenerator(jsSrc) {
 
 	function ensureScalar(funcName, val) {
 		let tp = typeof val;
-		if (typeof val !== 'number' && val.type !=='float') {
+		if (typeof val !== 'number' && val.type !== 'float') {
 			compileError("'"+funcName+"'" + " accepts only a scalar. Was given: '" + val.type + "'");
 		}
 	}
@@ -226,9 +234,9 @@ export function sourceGenerator(jsSrc) {
 		blendAmount = amount;
 	}
 
-	function mix(amount) {
-		currentMode = modes.MIX;
-		ensureScalar("mix",amount);
+	function mixGeo(amount) {
+		currentMode = modes.MIXGEO;
+		ensureScalar("mixGeo",amount);
 		mixAmount = amount;
 	}
 
@@ -246,8 +254,8 @@ export function sourceGenerator(jsSrc) {
 			case modes.BLEND:
 				return ["smoothAdd",blendAmount];
 				break;
-			case modes.MIX:
-				return ["mix",mixAmount];
+			case modes.MIXGEO:
+				return ["mixGeo",mixAmount];
 				break;
 			default:
 				return ["add"];
@@ -332,41 +340,79 @@ export function sourceGenerator(jsSrc) {
 		ensureGroupOp("divide", a, b);
 		let dims = Math.max(a.dims, b.dims);
 		return new makeVarWithDims("(" + collapseToString(a) + "/" + collapseToString(b) + ")", dims);
-   }
+    }
 
-	// a -> a
-
-	function sin(x) {
-		x = tryMakeNum(x);
-		if (debug) {
-			console.log("sine...");
-			console.log("x: ", x);
+    let primitivesJS = "";
+	// generate js which generates glsl geometry
+    for (let [funcName, body] of Object.entries(geometryFunctions)) {
+		let argList = body['args'];
+		primitivesJS += "function " + funcName + "(";
+		for (let argIdx = 0;argIdx<argList.length; argIdx++) {
+			if (argIdx !== 0) primitivesJS += ", ";
+			primitivesJS += "arg_" + argIdx;
 		}
-		return new makeVarWithDims("sin(" + x + ")", x.dims);
-	}
-
-	function cos(x) {
-		x = tryMakeNum(x);
-		if (debug) {
-			console.log("cosine...");
-			console.log("x: ", x);
+		primitivesJS += ") {\n";
+		let argIdxB = 0;
+		for (let argDim of argList) {
+			if (argDim === 1) {
+				primitivesJS += "    ensureScalar(\"" + funcName + "\", arg_" + argIdxB + ");\n"; 
+			}
+			argIdxB += 1;
 		}
-		return new makeVarWithDims("cos(" + x + ")", x.dims);
-	}
+		primitivesJS += "    applyMode(\"" + funcName + "(p, \" + ";
+		for (let argIdx = 0; argIdx<argList.length; argIdx++) {
+			primitivesJS += "collapseToString(arg_" + argIdx + ") + ";
+			if (argIdx < argList.length-1) primitivesJS += "\", \" + ";
+		}
+		primitivesJS += "\")\");\n}\n\n";
+	} 
+	generatedJSFuncsSource += primitivesJS;
 
-	// Built-in primitives
-
-	function sphere(radius) {
-		ensureScalar("sphere",radius);
-		applyMode("sphere(p, " + collapseToString(radius) + ")"); 
+	function generateGLSLWrapper(funcJSON) {
+		let wrapperSrc = "";
+		for (let [funcName, body] of Object.entries(funcJSON)) {
+			let argList = body['args'];
+			let returnType = body['ret'];
+			wrapperSrc += "function " + funcName + "(";
+			for (let argIdx = 0; argIdx<argList.length; argIdx++) {
+				if (argIdx !== 0) wrapperSrc += ", ";
+				wrapperSrc += "arg_" + argIdx;
+			}
+			wrapperSrc += ") {\n";
+			let argIdxB = 0;
+			for (let arg of argList) {
+				wrapperSrc += "    arg_" + argIdxB + " = tryMakeNum(arg_" + argIdxB + ");\n";
+				argIdxB += 1;
+			}
+			// debug here
+			wrapperSrc += "    return new makeVarWithDims(\"" + funcName + "(\" + ";
+			for (let argIdx = 0; argIdx<argList.length; argIdx++) {
+				wrapperSrc += "arg_" + argIdx + " + ";
+				if (argIdx < argList.length-1) wrapperSrc += "\", \" + ";
+			}
+			wrapperSrc += "\")\", " + returnType + ");\n}\n";
+		}
+		return wrapperSrc;
 	}
+	
+	let mathFunctionsJS = generateGLSLWrapper(mathFunctions);
+	generatedJSFuncsSource += mathFunctionsJS;
 
-	function torus(radius, thickness) {
-		ensureScalar("torus", radius);
-		ensureScalar("torus", thickness);
-		applyMode("torus(p, vec2(" + collapseToString(radius) + 
-			", " + collapseToString(thickness) + "))");
+	let builtInOtherJS = generateGLSLWrapper(glslBuiltInOther);
+	generatedJSFuncsSource += builtInOtherJS;
+
+	let builtInOneToOneJS = "";
+	for (let funcName of glslBuiltInOneToOne) {
+		builtInOneToOneJS += 
+`function ${funcName}(x) {
+    x = tryMakeNum(x);
+	// debug here
+	return new makeVarWithDims("${funcName}(" + x + ")", x.dims);
+}
+
+`;	
 	}
+	generatedJSFuncsSource += builtInOneToOneJS;
 
 	// Displacements
 
@@ -470,7 +516,7 @@ export function sourceGenerator(jsSrc) {
 		appendSources("//this is a test\n");
 	}
 
-	eval(jsSrc);
+	eval( generatedJSFuncsSource + userProvidedSrc );
 
 	let geoFinal = buildGeoSource(geoSrc);
 	let colorFinal = buildColorSource(colorSrc);
