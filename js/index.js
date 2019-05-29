@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+
 // import io from 'socket.io-client';
 import * as THREE from 'three';
 import * as OrbitControls from  './THREE_Helpers/OrbitControls.js'
@@ -23,7 +24,7 @@ Vue.use(VModal, {dialog: true});
 Vue.use(Vuelidate);
 // Vue.use(window['vue-js-modal'].default, { dialog: true });
 Vue.config.devtools = true;
-Vue.config.productionTip = false;
+// Vue.config.productionTip = false;
 window.db = firebase.database();
 
 const router = new VueRouter({routes: routes, mode: 'history'});
@@ -42,29 +43,29 @@ let isCapturing = false;
 router.beforeEach((to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 
-        const nextRoute = () => {
-          store.state.selectedObject = null;
-          animationPaused = true;
-          allSculpturesOpacity.opacity = 0.0;
-          sculptureHasBeenDeselected = false;
-          sculptureHasBeenSelected = false;
-          selectedSculptureOpacity.opacity = 0.0;
-          store.state.selectedSculpture = null;
-		  cachedSelectedSculptureId = null;
-		  cachedCameraPose = null;
-          firstTimeAtRoute = true;
-          const requiresAuth =
-              to.matched.some(record => record.meta.requiresAuth);
-          if (requiresAuth && !currentUser) {
-            this.$store.commit('displayLogin', true);
-            // next('/sign-in');
-          } else if (requiresAuth && currentUser) {
-            next();
-          } else {
-            next();
-          }
-          animationPaused = false;
-		};
+	const nextRoute = () => {
+		store.state.selectedObject = null;
+		animationPaused = true;
+		allSculpturesOpacity.opacity = 0.0;
+		sculptureHasBeenDeselected = false;
+		sculptureHasBeenSelected = false;
+		selectedSculptureOpacity.opacity = 0.0;
+		store.state.selectedSculpture = null;
+		cachedSelectedSculptureId = null;
+		cachedCameraPose = null;
+		firstTimeAtRoute = true;
+		const requiresAuth =
+				to.matched.some(record => record.meta.requiresAuth);
+		if (requiresAuth && !currentUser) {
+			this.$store.commit('displayLogin', true);
+			// next('/sign-in');
+		} else if (requiresAuth && currentUser) {
+			next();
+		} else {
+			next();
+		}
+		animationPaused = false;
+	};
 	if (store.state.selectedSculpture) { //fade single sculpture if selected
 		let id = store.state.selectedSculpture.id;
 		transitionSculptureOpacity(id, 0.0, 1000).then(() => {
