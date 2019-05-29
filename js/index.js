@@ -345,12 +345,17 @@ function render(time) {
 	TWEEN.update(time);
 	// if(player) player.update();
 	// updateRemotePlayers();
+	let enableKeys = store.state.selectedSculpture ? false : true;
+	mapControls.enableKeys = enableKeys;
+	controls.enableKeys = enableKeys;
+
 	if(controls.enabled) {
 		controls.update();
 	}
 	if(mapControls.enabled) {
 		mapControls.update();
 	}
+	
 	
 	renderer.render(scene, camera);	
 
