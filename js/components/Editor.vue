@@ -225,6 +225,7 @@ export default {
         onCmCodeChange(newCode) {
             if(newCode !== this.selectedSculpture.shaderSource){
                 this.selectedSculpture.saved = false;
+                this.$store.commit('setUnsavedChanges', {[this.selectedSculpture.id] : false})
             }
             
             this.code = newCode;
@@ -238,6 +239,7 @@ export default {
                 if(this.currUser != null) {
                     this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
                         this.selectedSculpture.saved = true;
+                        this.$store.commit('setUnsavedChanges', {[this.selectedSculpture.id] : true});
                         resolve();
                     });
                 } else {
@@ -566,10 +568,10 @@ label {
     margin-right: 5px;
 }
 
-.ge_editor {
+.CodeMirror-scroll {
     height: auto;
     overflow: scroll !important;
-    max-height: 82vh;
+    max-height: 81vh;
     max-width: 100%;
     &.embed {
         max-height: 92vh;

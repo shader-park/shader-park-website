@@ -14,6 +14,7 @@
 <script>
 import Sculpture from './Sculpture.vue';
 import Room from './Room.vue';
+import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 
 export default {
 	data: function() {
@@ -30,61 +31,69 @@ export default {
 	computed: {
 		currUser () {
 			return this.$store.getters.getUser;
+		},
+		route() {
+			return this.$route;
 		}
 	},
-	created() {
-		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
-		console.log(this.$route.params.username);
-
-		// this.$route.params.id;
-		console.log('$route.params.id');
-		const username = this.$route.params.username;
-		if(username) {
-			this.roomName = username;
-			this.$store.commit('setRouteTitle', username);
-
-			this.$store.dispatch('getUserIdFromUsername', username).then(uid => {
-				if(uid) {
-					this.$store.dispatch('fetchUserSculptures', username).then(sculptures => {
-						this.setSculpturesAndJoinRoom(sculptures);
-						if(sculptures.length <= 5) {
-							let count = sculptures.length -1;
-							this.$store.commit('setInitialCameraPose', [count / 2 + count, 2.5, 4] );
-						}
-						if(sculptures.length == 0) {
-							this.modalText = "This user doesn't have any sculptures yet"
-							this.$modal.show('profile-modal');
-						}
-					});
-				} else {
-					this.showModal();
-				}
-			});
-		} else {
-			//this 
-			this.roomName = this.currUser.displayName;
-			this.$store.commit('setProfileBadgeCount', 0);
-			this.$store.dispatch('fetchUserSculptures', this.currUser.displayName).then(sculptures => {
-				this.setSculpturesAndJoinRoom(sculptures);
-				if(sculptures.length == 0) {
-					this.$modal.show('profile-modal-empty');
-				}
-			})
-			console.log(this.currUserID);
-			// console.log(this.$store.state.scene);
+	mounted() {
+		this.initUserProfile();
+	},
+	watch : {
+		route(val) {
+			this.initUserProfile();
 		}
 	},
 	methods : {
+		initUserProfile() {
+			this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
+			const username = this.$route.params.username;
+			if(username) {
+				this.roomName = username;
+				this.$store.commit('setRouteTitle', username);
+
+				this.$store.dispatch('getUserIdFromUsername', username).then(uid => {
+					if(uid) {
+						this.$store.dispatch('fetchUserSculptures', username).then(sculptures => {
+							this.setSculpturesAndJoinRoom(sculptures);
+							if(sculptures.length <= 5) {
+								let count = sculptures.length -1;
+								this.$store.commit('setInitialCameraPose', [count / 2 + count, 2.5, 4] );
+							}
+							if(sculptures.length == 0) {
+								this.modalText = "This user doesn't have any sculptures yet"
+								this.$modal.show('profile-modal');
+							}
+						});
+					} else {
+						this.showModal();
+					}
+				});
+			} else {
+				//this 
+				this.roomName = this.currUser.displayName;
+				this.$store.commit('setRouteTitle', this.roomName);
+				this.$store.commit('setProfileBadgeCount', 0);
+				this.$store.dispatch('fetchUserSculptures', this.roomName).then(sculptures => {
+					this.setSculpturesAndJoinRoom(sculptures);
+					if(sculptures.length == 0) {
+						this.$modal.show('profile-modal-empty');
+					}
+				})
+				console.log(this.currUserID);
+				// console.log(this.$store.state.scene);
+			}
+		},
 		setSculpturesAndJoinRoom(sculptures) {
 			if(sculptures) {
-					let temp = [];
-					Object.keys(sculptures).forEach(key => {
-						temp.push(sculptures[key]);
-					})
-					temp.reverse();
-					this.sculptures = temp; //array.push isn't tracked by state, resetting is
-				}
-			console.log(this.sculptures);
+				let temp = [];
+				Object.keys(sculptures).forEach(key => {
+					temp.push(sculptures[key]);
+				})
+				temp.reverse();
+				this.sculptures = [];
+				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+			}
 			this.$store.commit('joinRoom', this.roomName);
 		},
 		showModal() {
@@ -93,6 +102,9 @@ export default {
 	},
 	destroyed: function() {
 		this.$store.commit('setRouteTitle', null);
+	},
+	beforeRouteLeave (to, from, next) {
+		handelUnsavedChanges(next, this);
 	}
 };
 

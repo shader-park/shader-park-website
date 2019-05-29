@@ -5,6 +5,7 @@
 <script>
 import Sculpture from './Sculpture.vue';
 import Room from './Room.vue';
+import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 
 export default {
 	data: function() {
@@ -33,6 +34,10 @@ export default {
 	},
 	destroyed() {
 		this.$store.commit('leaveRoom', this.roomName);
+	},
+	beforeRouteLeave (to, from, next) {
+		handelUnsavedChanges(next, this);
 	}
+	
 };
 </script>

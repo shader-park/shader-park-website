@@ -9,7 +9,7 @@
 
 <script>
 import Sculpture from './Sculpture.vue';
-
+import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 export default {
 	data: function() {
 		return {
@@ -46,7 +46,7 @@ export default {
 						}
 						this.setSelectedSculpture();
 					} else {
-						this.showModal();
+						this.$modal.show('no-sculpture-data-found');
 					}
 				});
 			} else {
@@ -69,9 +69,6 @@ export default {
 		setUser: function() {
 			this.$store.dispatch('setUser');
 		},
-		showModal() {
-			this.$modal.show('no-sculpture-data-found');
-		},
 		setSelectedSculpture() {
 			this.$nextTick(function() {
 				const sculp = this.$refs.sculpture;
@@ -90,7 +87,12 @@ export default {
 	},
 	destroyed: function() {
 		this.$store.commit('setRouteTitle', null);
+	},
+	beforeRouteLeave (to, from, next) {
+		handelUnsavedChanges(next, this);
 	}
+
+
 };
 </script>
 
