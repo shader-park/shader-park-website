@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+
 import * as THREE from 'three';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -27,9 +28,13 @@ export const store = new Vuex.Store({
     canvasSize: {width: 0, height: 0},
     displayLogin: false,
     displaySignUp: false,
-    routeTitle: null
+    routeTitle: null,
+    unsavedChanges: {}
   },
   getters: {
+    unsavedChanges: state => {
+      return state.unsavedChanges;
+    },
     routeTitle: state => {
       return state.routeTitle;
     },
@@ -59,6 +64,18 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setUnsavedChanges(state, payload) {
+      Object.keys(payload).forEach(key => {
+        if(payload[key]){
+          delete state.unsavedChanges[key];
+        } else {
+          state.unsavedChanges[key] = payload[key];
+        }
+      });
+    },
+    resetUnsavedChanges(state) {
+      state.unsavedChanges = {};
+    },
     setClickEnabled(state, payload) {
       state.clickEnabled = payload;
     },
