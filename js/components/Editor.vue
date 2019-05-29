@@ -568,10 +568,10 @@ label {
     margin-right: 5px;
 }
 
-.ge_editor {
+.CodeMirror-scroll {
     height: auto;
     overflow: scroll !important;
-    max-height: 82vh;
+    max-height: 81vh;
     max-width: 100%;
     &.embed {
         max-height: 92vh;
