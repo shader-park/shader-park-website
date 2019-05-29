@@ -23,7 +23,7 @@ export const mathFunctions = {
     osc: { args: [1], ret:1},
     noise: { args: [3], ret:1 },
     fractalNoise: { args: [3], ret:1 },
-    sphericalDistribution: { args: [3], ret:4 },
+    sphericalDistribution: { args: [3,1], ret:4 },
 };
 
 // these all have a single input/output and are overloaded for 
