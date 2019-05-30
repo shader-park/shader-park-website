@@ -340,7 +340,12 @@ export function sourceGenerator(userProvidedSrc) {
 		ensureGroupOp("divide", a, b);
 		let dims = Math.max(a.dims, b.dims);
 		return new makeVarWithDims("(" + collapseToString(a) + "/" + collapseToString(b) + ")", dims);
-    }
+	}
+	
+	function applyDistance(dist) {
+		ensureScalar(dist);
+		applyMode(collapseToString(dist));
+	}
 
     let primitivesJS = "";
 	// generate js which generates glsl geometry
