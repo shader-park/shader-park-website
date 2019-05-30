@@ -513,8 +513,13 @@ export function sourceGenerator(userProvidedSrc) {
 		appendColorSource("light = 1.0;\n");
 	}
 
-	function occlusion() {
-		appendColorSource("occ = occlusion(op,normal);\n");
+	function occlusion(amount) {
+		let amt = "1.0";
+		if (amount !== undefined) {
+			ensureScalar(amount);
+			amt = collapseToString(amount);
+		} 
+		appendColorSource("occ = mix(1.0, occlusion(op,normal), " + amt + ");\n");
 	}
 
 	function test() {
