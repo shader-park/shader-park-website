@@ -24,7 +24,7 @@ vec3 shade(vec3 p, vec3 normal) {
     float d = 1000000000.0;
     vec3 op = p;
     vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-    float light = 0.9;
+    float light = simpleLighting(p, normal, lightDirection);
     float occ = 1.0;
     vec3 color = vec3(1.0,1.0,1.0);
     vec3 selectedColor = vec3(1.0,1.0,1.0);
@@ -503,9 +503,9 @@ export function sourceGenerator(userProvidedSrc) {
 				+ collapseToString(z) + ");\n");
 		}
 	}
-	// should this also be 'op'?
-	function basicLighting() {
-		appendColorSource("light = simpleLighting(p, normal, lightDirection);\n");
+	// should this also be 'op'? 
+	function noLighting() {
+		appendColorSource("light = 1.0;\n");
 	}
 
 	function occlusion() {
@@ -528,8 +528,7 @@ export function sourceGenerator(userProvidedSrc) {
 }
 
 let singleSource =
-`basicLighting();
-let ringCount = 6;
+`let ringCount = 6;
 
 for (let i=0; i<ringCount; i++) {
 	let ringCycle = 2*Math.PI*i/ringCount+time;

@@ -18,9 +18,7 @@ void main()
 }
 `;
 
-export const defaultFragSourceJS = `basicLighting();
-sphere(0.2);
-`;
+export const defaultFragSourceJS = 'sphere(0.2);';
 
 export const defaultFragSourceGLSL = `float surfaceDistance(vec3 p) {
     float d = sphere(p, 0.3);
