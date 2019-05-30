@@ -513,6 +513,9 @@ export function sourceGenerator(userProvidedSrc) {
 		appendColorSource("light = 1.0;\n");
 	}
 
+	// replaced with a noop for now to prevent errors
+	function basicLighting() {}
+
 	function occlusion(amount) {
 		let amt = "1.0";
 		if (amount !== undefined) {
