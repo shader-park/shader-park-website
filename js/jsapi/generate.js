@@ -343,7 +343,7 @@ export function sourceGenerator(userProvidedSrc) {
 	}
 	
 	function applyDistance(dist) {
-		ensureScalar(dist);
+		ensureScalar("applyDistance", dist);
 		applyMode(collapseToString(dist));
 	}
 
@@ -519,7 +519,7 @@ export function sourceGenerator(userProvidedSrc) {
 	function occlusion(amount) {
 		let amt = "1.0";
 		if (amount !== undefined) {
-			ensureScalar(amount);
+			ensureScalar("occlusion", amount);
 			amt = collapseToString(amount);
 		} 
 		appendColorSource("occ = mix(1.0, occlusion(op,normal), " + amt + ");\n");
