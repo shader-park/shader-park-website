@@ -10,7 +10,7 @@ import {Sculpture} from '../SculptureN.js';
 import * as THREE from 'three';
 import { defaultFragSourceJS, defaultFragSourceGLSL } from '../default-shader.js'
 import {mapGetters} from 'vuex';
-import {sourceGenerator} from '../../test/generate.js';
+import {sourceGenerator} from '../jsapi/generate.js';
 
 function defaultMap(obj, id, def) {
     if(obj && obj[id]) {

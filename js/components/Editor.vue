@@ -54,7 +54,7 @@
 <script>
 import {sculptureStarterCode, fragFooter} from '../default-shader.js'
 import { codemirror } from 'vue-codemirror'
-import {sourceGenerator} from '../../test/generate.js';
+import {sourceGenerator} from '../jsapi/generate.js';
 
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';
