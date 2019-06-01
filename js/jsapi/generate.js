@@ -47,7 +47,7 @@ function replaceBinaryOp(syntaxTree) {
 		}
 	}
 
-	if (syntaxTree['type'] === 'BinaryExpression') {
+	if (syntaxTree !== null && syntaxTree['type'] === 'BinaryExpression') {
 		let op = syntaxTree['operator'];
 		if (op === '*' || op === '/' || op === '-' || op === '+') {
 			if (op === '*' ) {
