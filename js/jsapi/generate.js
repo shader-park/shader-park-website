@@ -11,6 +11,7 @@ let esprima = require('esprima');
 function buildGeoSource(geo) {
 	return `
 float surfaceDistance(vec3 p) {
+    vec3 normal = vec3(0.0,1.0,0.0);
     float d = 100.0;
     vec3 op = p;
 ${geo}
@@ -18,17 +19,19 @@ ${geo}
 }`;
 }
 
-function buildColorSource(col) {
+function buildColorSource(col, useLighting) {
+	let lgt = useLighting ? '    light = simpleLighting(p, normal, lightDirection);' : '';
 	return `
 vec3 shade(vec3 p, vec3 normal) {
     float d = 100.0;
     vec3 op = p;
-    vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-    float light = simpleLighting(p, normal, lightDirection);
+	vec3 lightDirection = vec3(0.0, 1.0, 0.0);
+	float light = 1.0;
     float occ = 1.0;
     vec3 color = vec3(1.0,1.0,1.0);
     vec3 selectedColor = vec3(1.0,1.0,1.0);
 ${col}
+${lgt}
     return color*light*occ;
 }`;
 }
@@ -75,6 +78,7 @@ export function sourceGenerator(userProvidedSrc) {
 	let colorSrc = "";
 	let varCount = 0;
 	let primCount = 0;
+	let useLighting = true;
 	let debug = false;
 
 	function appendSources(source) {
@@ -179,6 +183,7 @@ export function sourceGenerator(userProvidedSrc) {
 	let z = new float("p.z", true);
 	let p = new vec3("p", null, null, true);
 	let mouse = new vec3("mouse", null, null, true);
+	let normal = new vec3("normal", null, null, true);
 
 	let currentColor = new vec3("color", null, null, true);
 
@@ -500,9 +505,9 @@ export function sourceGenerator(userProvidedSrc) {
 		if (y === undefined || z === undefined) {
 			appendColorSource("lightDirection = " + collapseToString(x) + ";\n");
 		} else {
-			ensureScalar("displace", x);
-			ensureScalar("displace", y);
-			ensureScalar("displace", z);
+			ensureScalar("lightDirection", x);
+			ensureScalar("lightDirection", y);
+			ensureScalar("lightDirection", z);
 			appendColorSource("lightDirection = vec3( " + collapseToString(x) + ", "
 				+ collapseToString(y) + ", "
 				+ collapseToString(z) + ");\n");
@@ -510,7 +515,7 @@ export function sourceGenerator(userProvidedSrc) {
 	}
 	// should this also be 'op'? 
 	function noLighting() {
-		appendColorSource("light = 1.0;\n");
+		useLighting = false;
 	}
 
 	// replaced with a noop for now to prevent errors
@@ -532,7 +537,7 @@ export function sourceGenerator(userProvidedSrc) {
 	eval( generatedJSFuncsSource + userProvidedSrc );
 
 	let geoFinal = buildGeoSource(geoSrc);
-	let colorFinal = buildColorSource(colorSrc);
+	let colorFinal = buildColorSource(colorSrc, useLighting);
 
 	return {
 		geoGLSL: geoFinal,

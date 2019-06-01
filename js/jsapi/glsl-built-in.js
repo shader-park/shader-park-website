@@ -20,6 +20,7 @@ export const mathFunctions = {
     rgb2hsv: { args: [3], ret:3 },
     toSpherical: { args: [3], ret:3 },
     fromSpherical: { args: [3], ret:3 },
+    getRayDirection: { args: [], ret:3 },
     osc: { args: [1], ret:1},
     noise: { args: [3], ret:1 },
     fractalNoise: { args: [3], ret:1 },
