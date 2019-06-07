@@ -4,7 +4,8 @@ import {createPedestalEdges} from './create-pedestal-edges.js'
 import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
 
 export class Sculpture {
-    constructor(fragmentShader = defaultFragSourceGLSL) {
+    constructor(fragmentShader = defaultFragSourceGLSL, MSDFTexture) {
+        this.MSDFTexture = MSDFTexture;
         this.vertexShader = defaultVertexSource;
         this.fragmentShader = fragmentShader;
         this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
@@ -57,12 +58,13 @@ export class Sculpture {
           mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
           opacity: {value: 1.0},
           sculptureCenter: {value: new THREE.Vector3()},
-          stepSize: { value: 0.8 }
+          stepSize: { value: 0.8 },
+          map: this.MSDFTexture || new THREE.Texture()
         },
         vertexShader,
         fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
         transparent: true,
-	side: THREE.BackSide
+	    side: THREE.BackSide
       });
       material.extensions.fragDepth = false;
       return material;

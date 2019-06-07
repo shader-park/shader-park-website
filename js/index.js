@@ -15,6 +15,7 @@ import {dbConfig} from './dbConfig.js';
 import {Player} from './player.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
+import { loadFonts } from './THREE_Helpers/loadFonts.js';
 
 
 firebase.initializeApp(dbConfig);
@@ -192,6 +193,13 @@ let prevCanvasSize;
 let tweeningSculpturesOpacity = false;
 let fogDistance = 8.0;
 window.fogDistance = fogDistance;
+
+loadFonts({
+	font: '/fonts/Roboto-msdf.json',
+	image: '/fonts/Roboto-msdf.png'
+}, (font, texture) => {
+	store.commit('setMSDFTexture', texture);
+});
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');

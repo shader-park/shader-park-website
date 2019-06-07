@@ -45,19 +45,19 @@ export default {
             type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
             //sculpture is not saved to the db
-            sculpture: this.sculpGeom || null
+            sculpture: this.sculpGeom || null,
         };
     },
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
-        console.log('mounted sculp');
+        // console.log('mounted sculp');
         let shadeSource = this.shaderSource.slice();
         if(this.type === 'js') {
                 let source = sourceGenerator(this.shaderSource);
                 let glsl = source.geoGLSL + source.colorGLSL;
                 shadeSource = glsl;
                 if(!this.sculpture) {
-                    this.sculpture = new Sculpture(glsl);
+                    this.sculpture = new Sculpture(glsl, this.$store.getters.getMSDFTexture);
                 } else {
                     this.sculpture.setShaderSource(glsl);
                     //TODO THIS MIGHT BE Very large added computation

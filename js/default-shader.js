@@ -1,16 +1,18 @@
 export const defaultVertexSource = `
 varying vec4 worldPos;
+varying vec2 vUv;
 void main()
 {
     vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
     worldPos = modelMatrix*vec4(position,1.0);
-
+    vUv = uv;
     gl_Position = projectionMatrix * mvPosition;
 }
 `;
 
 export const voxelVertexSource = `
 varying vec4 worldPos;
+
 void main()
 {
     worldPos = vec4(position, 1.0);
@@ -40,7 +42,10 @@ uniform float opacity;
 uniform vec3 sculptureCenter;
 uniform vec3 mouse;
 uniform float stepSize;
+uniform sampler2D map;
+vec3 msdfTexture;
 
+varying vec2 vUv;
 varying vec4 worldPos;
 
 float surfaceDistance(vec3 p);
@@ -550,7 +555,8 @@ void main() {
 	vec3 rayOrigin = worldPos.xyz-sculptureCenter;
 	vec3 rayDirection = getRayDirection();
 	rayOrigin -= rayDirection*2.0;
-	float t = intersect(rayOrigin, rayDirection, stepSize);
+    float t = intersect(rayOrigin, rayDirection, stepSize);
+    msdfTexture = texture2D(map, vUv).rgb;
 	if(t < 2.5) {
 		vec3 p = (rayOrigin + rayDirection*t);
 		//vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);
