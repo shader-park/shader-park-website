@@ -237,9 +237,10 @@ export default {
         save() {
             return new Promise((resolve, reject) => {
                 if(this.currUser != null) {
+                    let id = this.selectedSculpture.id;
                     this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
                         this.selectedSculpture.saved = true;
-                        this.$store.commit('setUnsavedChanges', {[this.selectedSculpture.id] : true});
+                        this.$store.commit('setUnsavedChanges', {[id] : true});
                         resolve();
                     });
                 } else {
