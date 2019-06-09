@@ -4,8 +4,9 @@ import {createPedestalEdges} from './create-pedestal-edges.js'
 import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
 
 export class Sculpture {
-    constructor(fragmentShader = defaultFragSourceGLSL, MSDFTexture) {
-        this.MSDFTexture = MSDFTexture;
+    constructor(fragmentShader, msdfTexture) {
+        this.MSDFTexture = msdfTexture;
+        console.log("MSDF TEXT Constructor", msdfTexture);
         this.vertexShader = defaultVertexSource;
         this.fragmentShader = fragmentShader;
         this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
@@ -26,6 +27,12 @@ export class Sculpture {
         this.selected = false;
         this.setOpacity(0.0);
         // this.mesh.visible = true;
+    }
+
+    setMSDFTexture(texture) {
+        console.log('setting MSDF texture in sculp', texture)
+        this.MSDFTexture = texture;
+        this.refreshMaterial();
     }
 
     selectedSculpture(selected) {
@@ -52,6 +59,7 @@ export class Sculpture {
     }
 
     generateMaterial(vertexShader, fragmentShader) {
+        console.log('MSDF TEXTURE', this.MSDFTexture);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: {value: 0.0},
@@ -59,7 +67,7 @@ export class Sculpture {
           opacity: {value: 1.0},
           sculptureCenter: {value: new THREE.Vector3()},
           stepSize: { value: 0.8 },
-          map: this.MSDFTexture || new THREE.Texture()
+          msdf: {value : this.MSDFTexture || new THREE.Texture()}
         },
         vertexShader,
         fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,

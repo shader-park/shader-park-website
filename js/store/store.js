@@ -30,10 +30,11 @@ export const store = new Vuex.Store({
     displaySignUp: false,
     routeTitle: null,
     unsavedChanges: {},
-    MSDFTexture: null
+    MSDFTexture: {}
   },
   getters: {
     getMSDFTexture: state => {
+      console.log('getting msdf texture', state.MSDFTexture);
       return state.MSDFTexture;
     },
     unsavedChanges: state => {
@@ -69,7 +70,8 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setMSDFTexture(state, payload) {
-      state.MSDFTexture = payload;
+      console.log('setting MSDF texture mutation', payload)
+      state.MSDFTexture = {texture: payload};
     },
     setUnsavedChanges(state, payload) {
       Object.keys(payload).forEach(key => {

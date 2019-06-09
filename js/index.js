@@ -196,7 +196,7 @@ window.fogDistance = fogDistance;
 
 loadFonts({
 	font: '/fonts/Roboto-msdf.json',
-	image: '/fonts/Roboto-msdf.png'
+	image: '/fonts/msdf.png'
 }, (font, texture) => {
 	store.commit('setMSDFTexture', texture);
 });

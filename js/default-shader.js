@@ -42,7 +42,7 @@ uniform float opacity;
 uniform vec3 sculptureCenter;
 uniform vec3 mouse;
 uniform float stepSize;
-uniform sampler2D map;
+uniform sampler2D msdf;
 vec3 msdfTexture;
 
 varying vec2 vUv;
@@ -556,7 +556,7 @@ void main() {
 	vec3 rayDirection = getRayDirection();
 	rayOrigin -= rayDirection*2.0;
     float t = intersect(rayOrigin, rayDirection, stepSize);
-    msdfTexture = texture2D(map, vUv).rgb;
+    msdfTexture = texture2D(msdf, vUv).rgb;
 	if(t < 2.5) {
 		vec3 p = (rayOrigin + rayDirection*t);
 		//vec4 sp = projectionMatrix*viewMatrix*vec4(p,1.0);

@@ -51,13 +51,17 @@ export default {
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
         // console.log('mounted sculp');
+        
+
         let shadeSource = this.shaderSource.slice();
         if(this.type === 'js') {
                 let source = sourceGenerator(this.shaderSource);
                 let glsl = source.geoGLSL + source.colorGLSL;
                 shadeSource = glsl;
                 if(!this.sculpture) {
-                    this.sculpture = new Sculpture(glsl, this.$store.getters.getMSDFTexture);
+                    let msdf = this.MSDFTexture;
+                    console.log('Sculpture.vue MSDF mounted', msdf);
+                    this.sculpture = new Sculpture(glsl, msdf);
                 } else {
                     this.sculpture.setShaderSource(glsl);
                     //TODO THIS MIGHT BE Very large added computation
@@ -91,7 +95,23 @@ export default {
         // scene.add(create_hl_box(grid));
         // scene.add(create_sculps(grid, [], this.$store.state.socket));
     },
+    computed: {
+        MSDFTexture () {
+            return this.$store.getters.getMSDFTexture.texture;
+        },
+        currUserID () {
+            return this.$store.getters.getUser.uid
+        },
+        selectedObject() {
+            return this.$store.state.selectedObject;
+        }
+    },
     watch: {
+        MSDFTexture: function(val) {
+            console.log('MSDF Texture loaded', val)
+            this.sculpture.setMSDFTexture(val);
+            // this.sculpture.MSDFTexture = val;
+        },
         shaderSource: function (val) {
             console.log('setting shader source', val);
             if(this.sculpture) {
@@ -111,14 +131,6 @@ export default {
         },
         id: function (val) {
             console.log('id of sculp changed to' + val);
-        }
-    },
-    computed: {
-        currUserID () {
-            return this.$store.getters.getUser.uid
-        },
-        selectedObject() {
-            return this.$store.state.selectedObject;
         }
     },
     methods: {
