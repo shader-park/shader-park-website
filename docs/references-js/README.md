@@ -15,7 +15,7 @@ Shader Park provides a set of built in functions to help you create your sculptu
 displace(), reset()
 
 #### Geometry Operations
-add(), subtract(), blend(), intersect(), shell(), mix()
+union(), [difference()](/references-js/operations/difference), blend(), intersect(), shell(), mix()
 
 toSpherical(), fromSpherical(), sphericalDistribution()
 
