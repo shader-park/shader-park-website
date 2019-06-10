@@ -1,4 +1,4 @@
-### Difference()
+### difference()
 
 ### Example
 ```js

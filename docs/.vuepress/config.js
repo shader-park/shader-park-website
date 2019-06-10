@@ -21,7 +21,7 @@ module.exports = {
       '/references-js/': [
         {
           title: 'Geometries',
-          collapsable: true,
+          collapsable: false,
           children: [
             '/references-js/geometries/sphere',
             '/references-js/geometries/box',
@@ -31,9 +31,16 @@ module.exports = {
         },
         {
           title: 'Color',
-          collapsable: true,
+          collapsable: false,
           children: [
             '/references-js/color/color',
+          ]
+        },
+        {
+          title: 'Operations',
+          collapsable: false,
+          children: [
+            '/references-js/operations/difference',
           ]
         },
       ],
