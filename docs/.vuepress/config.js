@@ -12,82 +12,114 @@ module.exports = {
   themeConfig: {
     nav: [
       {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
-      { text: 'References', link: '/references/' },
+      { text: 'References GLSL', link: '/references/' },
+      { text: 'References JS', link: '/references-js/' },
       {text: 'Home', link: 'http://shader-park.appspot.com'}
     ],
     // sidebar: 'auto'
-    sidebar: [
-      {
-        title: 'Geometries',
-        collapsable: false,
-        children: [
-          '/references/geometries/sphere', 
-          '/references/geometries/box', 
-          '/references/geometries/torus', 
-          '/references/geometries/line',
-          '/references/geometries/cylinder',
-          '/references/geometries/ellipsoid',
-          '/references/geometries/roundedBox'
-        ]
-      },
-      {
-        title: 'Modifiers',
-        collapsable: false,
-        children: [
-          '/references/operations/add',
-          '/references/operations/subtract',
-          '/references/operations/intersect',
-          '/references/operations/smoothAdd',
-          '/references/operations/shell',
-          '/references/operations/mix',
-        ]
-      },
-      {
-        title: 'Lighting',
-        collapsable: false,
-        children: [
-          '/references/lighting/simpleLighting',
-          '/references/lighting/specularLighting',
-          '/references/lighting/occlusion',
-        ]
-      },
-      {
-        title: 'Color',
-        collapsable: false,
-        children: [
-          '/references/color/hsv2rgb',
-          '/references/color/rgb2hsv',
-        ]
-      },
-      {
-        title: 'Math',
-        collapsable: false,
-        children: [
-          '/references/math/fromSpherical',
-          '/references/math/toSpherical',
-          '/references/math/getRayDirection',
-          '/references/math/rot2',
-          '/references/math/softSquare',
-          '/references/math/sphericalDistribution',
-        ]
-      },
-      {
-        title: 'Noise',
-        collapsable: false,
-        children: [
-          '/references/noise/noise',
-          '/references/noise/fractalNoise',
-        ]
-      },
-      {
-        title: 'Interactive',
-        collapsable: false,
-        children: [
-          '/references/mouse-interactions/mouse',
-          '/references/mouse-interactions/mouseIntersection',
-        ]
-      }
-    ],
+    sidebar: {
+      '/references-js/': [
+        {
+          title: 'Geometries',
+          collapsable: false,
+          children: [
+            '/references-js/geometries/sphere',
+            '/references-js/geometries/box',
+            '/references-js/geometries/torus',
+            '/references-js/geometries/line',
+          ]
+        },
+        {
+          title: 'Color',
+          collapsable: false,
+          children: [
+            '/references-js/color/color',
+          ]
+        },
+        {
+          title: 'Operations',
+          collapsable: false,
+          children: [
+            '/references-js/operations/displace',
+            '/references-js/operations/difference',
+            
+          ]
+        },
+      ],
+      '/references/' : 
+      [
+        {
+          title: 'Geometries',
+          collapsable: false,
+          children: [
+            '/references/geometries/sphere', 
+            '/references/geometries/box', 
+            '/references/geometries/torus', 
+            '/references/geometries/line',
+            '/references/geometries/cylinder',
+            '/references/geometries/ellipsoid',
+            '/references/geometries/roundedBox'
+          ]
+        },
+        {
+          title: 'Modifiers',
+          collapsable: false,
+          children: [
+            '/references/operations/add',
+            '/references/operations/subtract',
+            '/references/operations/intersect',
+            '/references/operations/smoothAdd',
+            '/references/operations/shell',
+            '/references/operations/mix',
+          ]
+        },
+        {
+          title: 'Lighting',
+          collapsable: false,
+          children: [
+            '/references/lighting/simpleLighting',
+            '/references/lighting/specularLighting',
+            '/references/lighting/occlusion',
+          ]
+        },
+        {
+          title: 'Color',
+          collapsable: false,
+          children: [
+            '/references/color/hsv2rgb',
+            '/references/color/rgb2hsv',
+          ]
+        },
+        {
+          title: 'Math',
+          collapsable: false,
+          children: [
+            '/references/math/fromSpherical',
+            '/references/math/toSpherical',
+            '/references/math/getRayDirection',
+            '/references/math/rot2',
+            '/references/math/softSquare',
+            '/references/math/sphericalDistribution',
+          ]
+        },
+        {
+          title: 'Noise',
+          collapsable: false,
+          children: [
+            '/references/noise/noise',
+            '/references/noise/fractalNoise',
+          ]
+        },
+        {
+          title: 'Interactive',
+          collapsable: false,
+          children: [
+            '/references/mouse-interactions/mouse',
+            '/references/mouse-interactions/mouseIntersection',
+          ]
+        }
+      ]
+    },
     repo: 'Computer-Graphics-And-Pretty-Pictures/SculpturePark',
     // Customising the header label
     // Defaults to "GitHub"/"GitLab"/"Bitbucket" depending on `themeConfig.repo`
