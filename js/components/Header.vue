@@ -11,7 +11,7 @@
               
             <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Gallery</router-link>
             <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
-            <a class="link" href="/references" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
+            <a class="link" href="/references-js" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
             <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>
             <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
             
