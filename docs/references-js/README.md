@@ -5,17 +5,17 @@ sidebar: false
 Shader Park provides a set of built in functions to help you create your sculptures.
 
 ### Geometry
-[sphere()](/references-js/geometries/sphere), [box()](/references-js/geometries/box), [torus()](/references-js/geometries/torus), [line()](/references-js/geometries/line), roundedBox(), cylinder(), cone(), roundedCone(), plane()
+[sphere()](/references-js/geometries/sphere.html), [box()](/references-js/geometries/box.html), [torus()](/references-js/geometries/torus.html), [line()](/references-js/geometries/line.html), roundedBox(), cylinder(), cone(), roundedCone(), plane()
 
 ### Color
-[color()](/references-js/color/color), hsv2rgb(), rgb2hsv()
+[color()](/references-js/color/color.html), hsv2rgb(), rgb2hsv()
 ### Operations
 
 #### Translations
-displace(), reset()
+[displace()](/references-js/operations/displace.html), reset()
 
 #### Geometry Operations
-union(), [difference()](/references-js/operations/difference), blend(), intersect(), shell(), mix()
+union(), [difference()](/references-js/operations/difference.html), blend(), intersect(), shell(), mix()
 
 toSpherical(), fromSpherical(), sphericalDistribution()
 

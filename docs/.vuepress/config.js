@@ -40,7 +40,9 @@ module.exports = {
           title: 'Operations',
           collapsable: false,
           children: [
+            '/references-js/operations/displace',
             '/references-js/operations/difference',
+            
           ]
         },
       ],
