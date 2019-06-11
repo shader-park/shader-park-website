@@ -72,7 +72,7 @@ export class Sculpture {
         vertexShader,
         fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
         transparent: true,
-	    side: THREE.BackSide
+        side: THREE.BackSide
       });
       material.extensions.fragDepth = false;
       return material;
