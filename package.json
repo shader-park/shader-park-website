@@ -38,7 +38,7 @@
     "qDeploy": "gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
     "deploy": "npm run build && npm run docs:build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version --no-promote",
     "browse": "gcloud app browse --project $npm_package_gcloud_id",
-    "build": "npm run less && NODE_ENV=production browserify -t vueify -e envify -e js/index.js | uglifyjs -cm --verbose > client/bundle.js",
+    "build": "npm run less && NODE_ENV=production browserify -t vueify -e envify -e js/index.js | uglifyjs -cm> client/bundle.js",
     "less": "lessc less/style.less client/style.css",
     "start": "node server.js",
     "watch": "npm run less && concurrently \"npm run watchify\" \"autoless less/ client/\" \"nodemon server.js\"",
