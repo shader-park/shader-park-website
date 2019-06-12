@@ -260,7 +260,7 @@ export function sourceGenerator(userProvidedSrc) {
 				return ["smoothAdd",blendAmount];
 				break;
 			case modes.MIXGEO:
-				return ["mixGeo",mixAmount];
+				return ["mix",mixAmount];
 				break;
 			default:
 				return ["add"];
