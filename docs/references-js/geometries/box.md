@@ -1,13 +1,6 @@
 ### box()
 
-#### Example
-```js
-box(0.2, 0.2, 0.2);
-
-//alternatively
-let size = vec3(0.2, 0.3, 0.2);
-box(size);
-```
+### Example
 
 <iframe width="100%" height="450px" src="/sculpture/-LguJt5PTu5bu-5C7TBU?example=true&embed=true" frameborder="0"></iframe>
 

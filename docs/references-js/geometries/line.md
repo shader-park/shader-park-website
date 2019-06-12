@@ -1,11 +1,6 @@
 ### line()
 
 ### Example
-```js
-let pos1 = vec3(-0.2, -0.2, -0.2);
-let pos2 = vec3(0.2, 0.2, 0.2);
-line(pos1, pos2, 0.02);
-```
 
 <iframe width="100%" height="450px" src="/sculpture/-LguKbv-eG-uzde919UQ?example=true&embed=true" frameborder="0"></iframe>
 
