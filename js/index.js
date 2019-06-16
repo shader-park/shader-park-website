@@ -195,7 +195,7 @@ let fogDistance = 8.0;
 window.fogDistance = fogDistance;
 
 loadFonts({
-	font: '/fonts/Roboto-msdf.json',
+	font: '/fonts/Helvetica2.json',
 	image: '/fonts/msdf.png'
 }, (font, texture) => {
 	store.commit('setMSDFTexture', texture);
@@ -203,8 +203,9 @@ loadFonts({
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new THREE.WebGLRenderer({ antialias: true});
+	renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+	window.renderer = renderer;
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
     renderer.setPixelRatio(window.devicePixelRatio);
