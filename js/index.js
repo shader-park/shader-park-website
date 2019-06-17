@@ -415,7 +415,7 @@ function keyPress(down, e) {
 		// player.keyEvent(down, e);
 	}
 	if (e.altKey && down) {
-		if (e.key === 'r') {
+		if (e.key === 'r' || e.key === '®') {
 			if (mediaCap === null) {
 				mediaCap = piCreateMediaRecorder( () => console.log("capturing render"), canvas); 
 			}
