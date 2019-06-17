@@ -5,8 +5,8 @@ import {
 	glslBuiltInOther
 } from './glsl-built-in.js';
 
-let escodegen = require('escodegen');
-let esprima = require('esprima');
+import * as escodegen from 'escodegen';
+import * as esprima from 'esprima';
 
 function buildGeoSource(geo) {
 	return `
