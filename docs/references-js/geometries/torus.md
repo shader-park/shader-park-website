@@ -2,10 +2,6 @@
 
 ### Example
 
-```js
-torus(0.3, 0.08);
-```
-
 <iframe width="100%" height="450px" src="/sculpture/-LguLNqKbqMoFasH7mMM?example=true&embed=true" frameborder="0"></iframe>
 
 ### Description

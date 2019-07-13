@@ -15,9 +15,13 @@ Shader Park provides a set of built in functions to help you create your sculptu
 [displace()](/references-js/operations/displace.html), reset()
 
 #### Geometry Operations
-union(), [difference()](/references-js/operations/difference.html), blend(), intersect(), shell(), mix()
+union(), [difference()](/references-js/operations/difference.html), blend(), [intersect()](/references-js/operations/intersect.html), shell(), [mixGeo()](/references-js/operations/mixGeo.html)
 
 toSpherical(), fromSpherical(), sphericalDistribution()
+
+mirrorX(), mirrorY(), mirrorZ()
+
+rotateX(), rotateY(), rotateZ()
 
 ### Interactions
 mouse, mouseIntersection(), worldPosition, getRayDirection()

@@ -1,13 +1,6 @@
 ### displace()
 
 ### Example
-```js
-let xPos = sin(time * 2.0) * 0.3;
-let yPos = cos(time * 2.0) * 0.3;
-displace(xPos,yPos, 0);
-sphere(0.2);
-
-```
 
 <iframe width="100%" height="450px" src="/sculpture/-LgzZJVtRnw4NHNGjX_G?example=true&embed=true" frameborder="0"></iframe>
 

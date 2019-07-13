@@ -1,13 +1,6 @@
 ### color()
 
 ### Example
-```js
-color(0.2, 1.0, 0.0);
-
-//alternatively
-let col = color(0.2, 1.0, 0.0);
-color(col);
-```
 
 <iframe width="100%" height="450px" src="/sculpture/-Lgym7_BlrojhkWDlC51?example=true&embed=true" frameborder="0"></iframe>
 

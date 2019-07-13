@@ -42,6 +42,8 @@ module.exports = {
           children: [
             '/references-js/operations/displace',
             '/references-js/operations/difference',
+            '/references-js/operations/intersect',
+            '/references-js/operations/mixGeo',
             
           ]
         },
