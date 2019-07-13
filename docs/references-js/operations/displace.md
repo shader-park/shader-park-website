@@ -9,7 +9,7 @@
 <iframe width="100%" height="450px" src="/sculpture/-Lgz7za4PCYhmR2Ihx50?example=true&embed=true" frameborder="0"></iframe>
 
 ### Description
-Translate, or distort the coordinate space by the given positions
+Translate, or distort the coordinate space by the given positions.
 
 ### Syntax
 ```js

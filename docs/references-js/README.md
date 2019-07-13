@@ -12,16 +12,16 @@ Shader Park provides a set of built in functions to help you create your sculptu
 ### Operations
 
 #### Translations
-[displace()](/references-js/operations/displace.html), reset()
+[displace()](/references-js/operations/displace.html), [reset()](/references-js/operations/reset.html)
 
 #### Geometry Operations
-union(), [difference()](/references-js/operations/difference.html), blend(), [intersect()](/references-js/operations/intersect.html), shell(), [mixGeo()](/references-js/operations/mixGeo.html)
+[union()](/references-js/operations/union.html), [difference()](/references-js/operations/difference.html),[blend()](/references-js/operations/blend.html), [intersect()](/references-js/operations/intersect.html), [shell()](/references-js/operations/shell.html), [expand()](/references-js/operations/expand.html),[mixGeo()](/references-js/operations/mixGeo.html)
 
 toSpherical(), fromSpherical(), sphericalDistribution()
 
-mirrorX(), mirrorY(), mirrorZ()
+[mirrorX()](/references-js/operations/mirrorX.html), [mirrorY()](/references-js/operations/mirrorY.html), [mirrorZ()](/references-js/operations/mirrorX.html)
 
-rotateX(), rotateY(), rotateZ()
+[rotateX()](/references-js/operations/rotateX.html), [rotateY()](/references-js/operations/rotateY.html), [rotateZ()](/references-js/operations/rotateZ.html)
 
 ### Interactions
 mouse, mouseIntersection(), worldPosition, getRayDirection()

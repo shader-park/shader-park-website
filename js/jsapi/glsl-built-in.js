@@ -46,7 +46,7 @@ export const glslBuiltInOneToOne = [
     "sign",
     "floor",
     "ceil",
-    "fract",
+    "fract"
 ];
 
 // need better overloading system

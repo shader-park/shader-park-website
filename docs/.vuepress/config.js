@@ -41,9 +41,20 @@ module.exports = {
           collapsable: false,
           children: [
             '/references-js/operations/displace',
+            '/references-js/operations/reset',
+            '/references-js/operations/union',
+            '/references-js/operations/blend',
             '/references-js/operations/difference',
             '/references-js/operations/intersect',
+            '/references-js/operations/shell',
+            '/references-js/operations/expand',
             '/references-js/operations/mixGeo',
+            '/references-js/operations/mirrorX',
+            '/references-js/operations/mirrorY',
+            '/references-js/operations/mirrorZ',
+            '/references-js/operations/rotateX',
+            '/references-js/operations/rotateY',
+            '/references-js/operations/rotateZ',
             
           ]
         },

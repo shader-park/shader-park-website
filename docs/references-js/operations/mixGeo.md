@@ -5,7 +5,7 @@
 <iframe width="100%" height="450px" src="/sculpture/-LhBKYiVaq9-d-LmnImX?example=true&embed=true" frameborder="0"></iframe>
 
 ### Description
-Mix between two geometries
+Mix between two geometries.
 
 ### Syntax
 ```js
