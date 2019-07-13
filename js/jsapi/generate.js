@@ -184,6 +184,10 @@ export function sourceGenerator(userProvidedSrc) {
 	let p = new vec3("p", null, null, true);
 	let mouse = new vec3("mouse", null, null, true);
 	let normal = new vec3("normal", null, null, true);
+	let PI = Math.PI;
+	let TWO_PI = PI*2;
+	let TAO = TWO_PI;
+
 
 	let currentColor = new vec3("color", null, null, true);
 
