@@ -11,28 +11,35 @@ Shader Park provides a set of built in functions to help you create your sculptu
 [color()](/references-js/color/color.html), hsv2rgb(), rgb2hsv()
 ### Operations
 
-#### Translations
-[displace()](/references-js/operations/displace.html), [reset()](/references-js/operations/reset.html)
+#### Geometry Construction Modes
+[union()](/references-js/operations/union.html), [difference()](/references-js/operations/difference.html), [blend()](/references-js/operations/blend.html), [intersect()](/references-js/operations/intersect.html), [mixGeo()](/references-js/operations/mixGeo.html)
 
-#### Geometry Operations
-[union()](/references-js/operations/union.html), [difference()](/references-js/operations/difference.html),[blend()](/references-js/operations/blend.html), [intersect()](/references-js/operations/intersect.html), [shell()](/references-js/operations/shell.html), [expand()](/references-js/operations/expand.html),[mixGeo()](/references-js/operations/mixGeo.html)
 
-toSpherical(), fromSpherical(), sphericalDistribution()
+#### Geometry Modifiers
+[shell()](/references-js/operations/shell.html), [expand()](/references-js/operations/expand.html)
+
+#### Coordinate Space Modifiers 
+[displace()](/references-js/operations/displace.html)
 
 [mirrorX()](/references-js/operations/mirrorX.html), [mirrorY()](/references-js/operations/mirrorY.html), [mirrorZ()](/references-js/operations/mirrorX.html)
 
 [rotateX()](/references-js/operations/rotateX.html), [rotateY()](/references-js/operations/rotateY.html), [rotateZ()](/references-js/operations/rotateZ.html)
 
+
+[reset()](/references-js/operations/reset.html)
+
 ### Interactions
 mouse, mouseIntersection(), worldPosition, getRayDirection()
 
 ### Lighting
-basicLighting(), occlusion(), specularLighting()
+lightDirection(), basicLighting(), occlusion(), specularLighting()
 
 ### Math
 sin(), cos(), tan(), asin(), acos(), exp(), log(), exp2(), log2(), sqrt(), inversesqrt(), abs(), sign(), floor(), ceil(), fract()
 
 pow(), mod(), min(), max(), clamp(), mix(), smoothstep(), length(), distance(), dot(), cross(), normalize(), reflect(), refract()
+
+toSpherical(), fromSpherical(), sphericalDistribution()
 
 ### Noise
 
