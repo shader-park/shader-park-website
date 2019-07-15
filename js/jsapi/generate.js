@@ -186,7 +186,7 @@ export function sourceGenerator(userProvidedSrc) {
 	let normal = new vec3("normal", null, null, true);
 	let PI = Math.PI;
 	let TWO_PI = PI*2;
-	let TAO = TWO_PI;
+	let TAU = TWO_PI;
 
 
 	let currentColor = new vec3("color", null, null, true);
