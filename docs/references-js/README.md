@@ -21,7 +21,7 @@ Shader Park provides a set of built in functions to help you create your sculptu
 #### Coordinate Space Modifiers 
 [displace()](/references-js/operations/displace.html)
 
-[mirrorX()](/references-js/operations/mirrorX.html), [mirrorY()](/references-js/operations/mirrorY.html), [mirrorZ()](/references-js/operations/mirrorX.html)
+[mirrorX()](/references-js/operations/mirrorX.html), [mirrorY()](/references-js/operations/mirrorY.html), [mirrorZ()](/references-js/operations/mirrorX.html), [mirrorXYZ()](/references-js/operations/mirrorXYZ.html)
 
 [rotateX()](/references-js/operations/rotateX.html), [rotateY()](/references-js/operations/rotateY.html), [rotateZ()](/references-js/operations/rotateZ.html)
 
