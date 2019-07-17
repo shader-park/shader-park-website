@@ -12,7 +12,7 @@ import Vuelidate from 'vuelidate';
 
 import App from './App.vue';
 import {dbConfig} from './dbConfig.js';
-import {Player} from './player.js';
+// import {Player} from './player.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
 

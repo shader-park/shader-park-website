@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import {createPedestalEdges} from './create-pedestal-edges.js'
-import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from './default-shader.js'
+import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from 'sculpture-park-core'
 
 export class Sculpture {
     constructor(fragmentShader = defaultFragSourceGLSL) {

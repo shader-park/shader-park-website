@@ -52,9 +52,8 @@
 </template>
 
 <script>
-import {sculptureStarterCode, fragFooter} from '../default-shader.js'
 import { codemirror } from 'vue-codemirror'
-import {sourceGenerator} from '../jsapi/generate.js';
+import {sourceGenerator, sculptureStarterCode, fragFooter} from 'sculpture-park-core';
 
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';

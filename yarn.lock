@@ -4101,7 +4101,7 @@ esprima@^3.1.3:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
   integrity sha1-/cpRzuYTOJXjyI1TXOSdv/YqRjM=
 
-esprima@^4.0.0:
+esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
@@ -8184,6 +8184,13 @@ schema-utils@^1.0.0:
     ajv "^6.1.0"
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
+
+"sculpture-park-core@github:bnanner/sculpture-park-core":
+  version "0.0.1"
+  resolved "https://codeload.github.com/bnanner/sculpture-park-core/tar.gz/2ef4b3d9361b9bc3543dfabbafa0096d2cf54a92"
+  dependencies:
+    escodegen "^1.11.1"
+    esprima "^4.0.1"
 
 section-matter@^1.0.0:
   version "1.0.0"

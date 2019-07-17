@@ -8,9 +8,8 @@
 
 import {Sculpture} from '../SculptureN.js';
 import * as THREE from 'three';
-import { defaultFragSourceJS, defaultFragSourceGLSL } from '../default-shader.js'
 import {mapGetters} from 'vuex';
-import {sourceGenerator} from '../jsapi/generate.js';
+import {defaultFragSourceJS, defaultFragSourceGLSL, sourceGenerator} from 'sculpture-park-core';
 
 function defaultMap(obj, id, def) {
     if(obj && obj[id]) {
