@@ -31,7 +31,6 @@ export default {
 				})
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
 			}
-			console.log(this.sculptures);
 			this.$store.commit('joinRoom', this.roomName);
 		})
 	},

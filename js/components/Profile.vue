@@ -80,8 +80,6 @@ export default {
 						this.$modal.show('profile-modal-empty');
 					}
 				})
-				console.log(this.currUserID);
-				// console.log(this.$store.state.scene);
 			}
 		},
 		setSculpturesAndJoinRoom(sculptures) {

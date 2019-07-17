@@ -102,7 +102,6 @@ export default {
         codemirror
     },
     mounted() {
-        console.log('mounted editor');
         document.addEventListener('keydown', this.keypress.bind(null, true));
         document.addEventListener('keyup', this.keypress.bind(null, false));
 
@@ -179,10 +178,8 @@ export default {
         },
         isExample(value) {
             this.selectedSculpture.isExample = value;
-            console.log('set sculpture isExample to ' + value);
         },
         selectedSculpture(obj) {
-            console.log('found Sculp form editor', obj);
             if(obj) {
                 if(obj.title) {
                     this.titleInput.width = obj.title.length + 'ch';
@@ -190,17 +187,11 @@ export default {
                 this.currWidth = this.cachedWidth;
                 if(!this.initialized) {
                     this.code = obj.shaderSource;
-                    // this.initCodeMirror(obj.sculpture.fragmentShader);
                     this.initialized = true;
-                    console.log('initializing code mirror');
                 } else {
                     this.closed = false;
-                    console.log('selected sculp', this.selectedSculpture);
                     this.code = obj.shaderSource;
-                    console.log('OBJ Shader', obj);
-                    // this.cm.editor.setValue(obj.sculpture.fragmentShader);
                     this.isExample = obj.isExample;
-                    // console.log('selected sculp', this.selectedSculpture, this.selectedSculpture.saved);
                 }
                 let interval = setInterval(() => this.codemirror.refresh(), 10);
                 setTimeout(() => {
@@ -215,11 +206,9 @@ export default {
     },
     methods: {
         onCmReady(cm) {
-            console.log('the editor is readied!', cm);
             window.cm = cm;
         },
         onCmFocus(cm) {
-            console.log('the editor is focus!', cm);
         },
         onCmCodeChange(newCode) {
             if(newCode !== this.selectedSculpture.shaderSource){
@@ -229,7 +218,6 @@ export default {
             
             this.code = newCode;
             if(this.selectedSculpture){
-                console.log('SOURCE',this.code);
                 this.selectedSculpture.shaderSource = this.code; 
             }
         },
@@ -247,12 +235,10 @@ export default {
                     this.$store.commit('displayLogin', true);
                     reject();
                 }
-                console.log('save');
             });
         },
         play() {
             this.updateSculpture();
-            console.log('play');
         },
         share() {
             let shareEl = this.$refs.share;
@@ -274,15 +260,11 @@ export default {
             document.body.removeChild(el);
         },
         exportSculpture() {
-            console.log(this.selectedSculpture);
             const data = this.selectedSculpture.sculpture.generateMesh(0.0);
-            console.log(data);
             let count = 0;
                 for (let i=0; i<data.length; i++) {
                 count += data[i];
             }
-                console.log("sum: " + count);
-            console.log('export that shith');
         },
         close() {
             let close = () => {
@@ -355,10 +337,8 @@ export default {
         },
         removeEditorModalUI() {
             if(this.cm && this.cm.helpers.activeModal && this.cm.helpers.activeModal.isVisible){
-                console.log('click Active modal ' + this.editorHasDisplayedModal);
                 if(this.editorHasDisplayedModal) {
                     cm.helpers.activeModal.removeModal();
-                    console.log('removing Modal');
                     this.editorHasDisplayedModal = false;
                 } else {
                     this.editorHasDisplayedModal = true;
@@ -374,9 +354,8 @@ export default {
             const currSculp = this.selectedSculpture;
             if(currSculp){ //&& this.cm.errorsDisplay.widgets.length !== 1) {
                 currSculp.shaderSource = fragmentShader;
-                // console.log('updated Sculp Code');
             } else {
-                console.log('Sculp not updated because of Error in code');
+                console.error('Sculp not updated because of Error in code');
             }
 
         },   
@@ -392,7 +371,6 @@ export default {
 
             this.$nextTick(function() {
                 if(!this.cm) {   
-                    console.log('reinitializing CM');
                     this.cm = new GlslEditor(this.$refs.codeMirror, { 
                         canvas_size: 1,
                         canvas_draggable: false,
@@ -411,7 +389,7 @@ export default {
                         editor.classList.add('embed');
                     }
                     editor.addEventListener('click', () => {
-                        console.log('click');
+                        
 
                         if(this.shareText.length > 0) {
                             this.shareText = '';
@@ -424,7 +402,6 @@ export default {
                 this.cm.shader.canvas.on('processedShader', (data) => {
                     this.editorContainsErrors = data.containsError;
                     if(this.autoUpdate && !data.containsError && !this.closed) {
-                        console.log('updating sculpture!!');
                         this.selectedSculpture.saved = false;
                         this.updateSculpture();
                     }

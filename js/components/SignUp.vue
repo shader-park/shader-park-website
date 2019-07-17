@@ -68,10 +68,6 @@ export default {
                 alert(error.message);
             });
         },
-        checkUsername(username) {
-            console.log('TODO: check username');
-            // return this.$db.object(`usernames/${username.toLowercase()}`);
-        },
         close: function() {
 			this.$store.commit('displaySignUp', false);
 		},

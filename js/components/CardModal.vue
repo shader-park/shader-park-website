@@ -15,9 +15,7 @@ export default {
     watch : {
         position(val) {
             let container = this.$refs.container;
-            if(container) {
-                console.log(container);
-            }
+            
         }
     }
 };

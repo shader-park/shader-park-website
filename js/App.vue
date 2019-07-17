@@ -60,7 +60,6 @@ export default {
 		}
 	},
 	created() {
-		console.log(this.tempSculp);
 	// when the app is created run the set user method
 	// this uses Vuex to check if a user is signed in
 	// check out mutations in the store.js file
@@ -68,7 +67,6 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(function () {
-			console.log('mounted app');
 			this.isMounted = true;
 		})
 		

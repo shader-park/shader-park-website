@@ -49,7 +49,6 @@ export default {
     },
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
-        console.log('mounted sculp');
         let shadeSource = this.shaderSource.slice();
         if(this.type === 'js') {
                 let source = sourceGenerator(this.shaderSource);
@@ -92,7 +91,6 @@ export default {
     },
     watch: {
         shaderSource: function (val) {
-            console.log('setting shader source', val);
             if(this.sculpture) {
                 this.shaderSource = val;
                 if(this.type === 'js') {
@@ -129,7 +127,6 @@ export default {
         },
         setSelectedSculpture(obj) {
             if(obj && obj.name == this.sculpture.mesh.name) {
-                console.log('selected!!', this.$data);
                 this.$store.state.selectedSculpture = this.$data;
                 this.sculpture.selectedSculpture(true);
             } else {

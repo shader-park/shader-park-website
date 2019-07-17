@@ -23,7 +23,6 @@ export default {
 			this.$store.commit('setInitialCameraPose', [0, 0, 2]);
 			this.$store.commit('sculpturesLoaded', false);
 			if(this.clickEnabled != null) {
-				console.log(this.clickEnabled);
 				this.$store.commit('setClickEnabled', this.clickEnabled === 'true');
 			}
 			

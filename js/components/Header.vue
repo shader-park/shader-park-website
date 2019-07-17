@@ -84,7 +84,6 @@ export default {
             });
         }, 
         signIn: function() {
-            console.log('login');
             this.$store.commit('displayLogin', true);
         }
     }
