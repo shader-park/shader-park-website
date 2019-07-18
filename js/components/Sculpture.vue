@@ -55,14 +55,15 @@ export default {
                 let glsl = source.geoGLSL + source.colorGLSL;
                 shadeSource = glsl;
                 if(!this.sculpture) {
-                    this.sculpture = new Sculpture(glsl);
+                    this.sculpture = new Sculpture(glsl, this.MSDFTexture);
                 } else {
                     this.sculpture.setShaderSource(glsl);
+                    //this.sculpture.setMSDFTexture(this.MSDFTexture);
                     //TODO THIS MIGHT BE Very large added computation
                     this.sculpture.refreshMaterial();
                 }
         } else if(!this.sculpture) {
-            this.sculpture = new Sculpture(this.shaderSource);
+            this.sculpture = new Sculpture(this.shaderSource, this.MSDFTexture);
         }
         
         if(this.id) {
@@ -116,7 +117,10 @@ export default {
         },
         selectedObject() {
             return this.$store.state.selectedObject;
-        }
+        },
+        MSDFTexture () {
+            return this.$store.getters.getMSDFTexture;
+        },
     },
     methods: {
         setPose(pose){

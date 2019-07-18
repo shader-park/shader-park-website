@@ -111,6 +111,14 @@ let tweeningSculpturesOpacity = false;
 let fogDistance = 8.0;
 window.fogDistance = fogDistance;
 
+let loader = new THREE.TextureLoader();
+loader.load('/images/msdf3.png', (texture) => {
+	store.commit('setMSDFTexture', texture)
+}, undefined,
+(err) => {
+	console.error('An error happened.', err);
+});
+
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
 	renderer = new THREE.WebGLRenderer({ antialias: true});

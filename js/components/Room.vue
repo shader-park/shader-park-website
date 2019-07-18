@@ -32,14 +32,14 @@ export default {
         //     // this.$store.state.objectsToRaycast.push(this.sculpture.mesh);
             
         // });
-
+        
         let index = 0;
         let col = 0;
         this.$store.commit('sculpturesLoaded', false);
         while (index < this.sculptures.length) {
             let row = 0;
             while (row < this.grid.x && index < this.sculptures.length) {
-                const newSculp = new SculpOBJ.Sculpture(this.sculptures[index].shaderSource);
+                const newSculp = new SculpOBJ.Sculpture(this.sculptures[index].shaderSource, this.MSDFTexture);
                 // const currMesh = this.sculptures[index].sculpture.mesh;
                 let pos = newSculp.mesh.position;
                 pos.x = row * this.grid.spacing;
@@ -50,11 +50,9 @@ export default {
             }
             col++;
         }
-        
         setTimeout(() => { //wait for main thread to lag compiling shaders
             this.$store.commit('sculpturesLoaded', true);    
         }, 1);
-        
         // this.sculptures.forEach(sculp => {
         //     sculp.sculpture.mesh.position
         // })
@@ -91,7 +89,7 @@ export default {
     },
     components : {
         sculpture : Sculpture
-    }
+    },
     // watch: {
     //     initializedSculps: function (val) {
     //         if(val == this.sculptures.length) {
@@ -99,10 +97,10 @@ export default {
     //         }
     //     }
     // },
-    // computed : {
-    //     initializedSculps() {
-    //         return this.$store.state.objectsToRaycast.length;
-    //     }
-    // }
+    computed : {
+        MSDFTexture () {
+            return this.$store.getters.getMSDFTexture;
+        },
+    }
 }
 </script>

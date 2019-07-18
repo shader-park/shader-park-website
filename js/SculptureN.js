@@ -4,7 +4,8 @@ import {createPedestalEdges} from './create-pedestal-edges.js'
 import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from 'sculpture-park-core'
 
 export class Sculpture {
-    constructor(fragmentShader = defaultFragSourceGLSL) {
+    constructor(fragmentShader = defaultFragSourceGLSL, msdfTexture) {
+        this.MSDFTexture = msdfTexture;
         this.vertexShader = defaultVertexSource;
         this.fragmentShader = fragmentShader;
         this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
@@ -25,6 +26,12 @@ export class Sculpture {
         this.selected = false;
         this.setOpacity(0.0);
         // this.mesh.visible = true;
+    }
+
+    setMSDFTexture(texture) {
+        console.log('setting MSDF texture in sculp', texture)
+        this.MSDFTexture = texture;
+        this.refreshMaterial();
     }
 
     selectedSculpture(selected) {
@@ -57,7 +64,8 @@ export class Sculpture {
           mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
           opacity: {value: 1.0},
           sculptureCenter: {value: new THREE.Vector3()},
-          stepSize: { value: 0.8 }
+          stepSize: { value: 0.8 },
+          msdf: { value: this.MSDFTexture || new THREE.Texture() }
         },
         vertexShader,
         fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
@@ -87,7 +95,9 @@ export class Sculpture {
     }
 
     refreshMaterial() {
-        this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader);
+        this.mesh.material.fragmentShader = sculptureStarterCode + this.fragmentShader + fragFooter;
+        this.mesh.material.needsUpdate = true;
+        // this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader);
     }
 
     update(time) {
@@ -95,6 +105,7 @@ export class Sculpture {
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['stepSize'].value = this.stepSize;
+        this.mesh.material.uniforms['msdf'].value = this.MSDFTexture;
     }
 
     generateMesh(time) {
