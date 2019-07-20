@@ -393,8 +393,9 @@ function onMouseUp(event) {
 	tempIntersectedObject = null;
 }
 
+window.THREE = THREE;
 
-function tweenCameraToSculpturePosition(endTargetPos) {
+function tweenCameraToSculpturePosition(endTargetPos, duration=1000) {
 	let camTarget;
 	if (controls.enabled) {
 		camTarget = new THREE.Vector3().copy(controls.target);
@@ -404,7 +405,7 @@ function tweenCameraToSculpturePosition(endTargetPos) {
 		controls.target = new THREE.Vector3().copy(mapControls.target);
 	}
 	let tweenControlsTarget = new TWEEN.Tween(camTarget)
-		.to(endTargetPos, 1000)
+		.to(endTargetPos, duration)
 		.easing(TWEEN.Easing.Quadratic.InOut)
 		.onUpdate(function () {
 			controls.target.set(camTarget.x, camTarget.y, camTarget.z);
@@ -414,7 +415,7 @@ function tweenCameraToSculpturePosition(endTargetPos) {
 	let endCamPos = new THREE.Vector3().copy(endTargetPos);
 	endCamPos.z += 2;
 	let tweenCamera = new TWEEN.Tween(camPos)
-		.to(endCamPos, 1000)
+		.to(endCamPos, duration)
 		.easing(TWEEN.Easing.Quadratic.InOut)
 		.onUpdate(function () {
 			camera.position.set(camPos.x, camPos.y, camPos.z);
