@@ -19,7 +19,7 @@ function defaultMap(obj, id, def) {
     }
 }
 export default {
-    props: ['sculpData', 'sculpGeom'],
+    props: ['sculpData', 'sculpPosition'],
     data: function() {
         return {
             //This all gets saved to the Database!!!!
@@ -44,7 +44,7 @@ export default {
             type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
             //sculpture is not saved to the db
-            sculpture: this.sculpGeom || null
+            sculpture: null
         };
     },
     mounted() {
@@ -54,18 +54,12 @@ export default {
                 let source = sourceGenerator(this.shaderSource);
                 let glsl = source.geoGLSL + source.colorGLSL;
                 shadeSource = glsl;
-                if(!this.sculpture) {
-                    this.sculpture = new Sculpture(glsl, this.MSDFTexture);
-                } else {
-                    this.sculpture.setShaderSource(glsl);
-                    //this.sculpture.setMSDFTexture(this.MSDFTexture);
-                    //TODO THIS MIGHT BE Very large added computation
-                    this.sculpture.refreshMaterial();
-                }
-        } else if(!this.sculpture) {
-            this.sculpture = new Sculpture(this.shaderSource, this.MSDFTexture);
         }
+        this.sculpture = new Sculpture(shadeSource, this.MSDFTexture);
         
+        if(this.sculpPosition) {
+            this.setPose(this.sculpPosition);
+        }
         if(this.id) {
             this.sculpture.mesh.name = this.id;
         } else {
@@ -77,18 +71,6 @@ export default {
         if(this.$store.state.selectedObject) {
             this.setSelectedSculpture(this.$store.state.selectedObject);
         }
-        
-        // console.log('this.$data');
-        // console.log(this.$data);
-        // console.log(this.$store.state.scene);
-
-        // let grid = {x: 1, z: 1, spacing: 4.0, size: 1.0, ceiling: 2.0};
-        // let scene = this.$store.state.scene;
-        // scene.remove(scene.getObjectByName('hl-boxes'));
-        // scene.remove(scene.getObjectByName('sculptures'));
-
-        // scene.add(create_hl_box(grid));
-        // scene.add(create_sculps(grid, [], this.$store.state.socket));
     },
     watch: {
         shaderSource: function (val) {
@@ -123,8 +105,8 @@ export default {
         },
     },
     methods: {
-        setPose(pose){
-            // this.sculpture.mesh.
+        setPose(pose) {
+            this.sculpture.mesh.position = this.sculpPosition;
         },
         setSaved(saved) {
             this.saved = saved;
