@@ -4,14 +4,15 @@ import {createPedestalEdges} from './create-pedestal-edges.js'
 import { defaultFragSourceGLSL, defaultVertexSource, voxelVertexSource, fragFooter, voxelFooter, sculptureStarterCode} from 'sculpture-park-core'
 
 export class Sculpture {
-    constructor(fragmentShader = defaultFragSourceGLSL, msdfTexture) {
+    constructor(fragmentShader = defaultFragSourceGLSL, msdfTexture, uniforms) {
+        this.uniforms = uniforms;
         this.MSDFTexture = msdfTexture;
         this.vertexShader = defaultVertexSource;
         this.fragmentShader = fragmentShader;
         this.geometry = new THREE.BoxBufferGeometry(1.0, 1.0, 1.0);
         this.mesh = new THREE.Mesh(
             this.geometry,
-            this.generateMaterial(defaultVertexSource, fragmentShader));
+            this.generateMaterial(defaultVertexSource, fragmentShader, uniforms));
         const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
         this.opacity = 0.0;
         this.stepSize = 0.8;
@@ -31,7 +32,7 @@ export class Sculpture {
     setMSDFTexture(texture) {
         console.log('setting MSDF texture in sculp', texture)
         this.MSDFTexture = texture;
-        this.refreshMaterial();
+        this.refreshMaterial(this.uniforms);
     }
 
     selectedSculpture(selected) {
@@ -57,55 +58,97 @@ export class Sculpture {
         this.pedestal.material.opacity = this.opacity;
     }
 
-    generateMaterial(vertexShader, fragmentShader) {
-      const material = new THREE.ShaderMaterial({
-        uniforms: {
-          time: {value: 0.0},
-          mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
-          opacity: {value: 1.0},
-          sculptureCenter: {value: new THREE.Vector3()},
-          stepSize: { value: 0.8 },
-          msdf: { value: this.MSDFTexture || new THREE.Texture() }
-        },
-        vertexShader,
-        fragmentShader: sculptureStarterCode + fragmentShader + fragFooter,
-        transparent: true,
-	side: THREE.BackSide
-      });
-      material.extensions.fragDepth = false;
-      return material;
+    generateMaterial(vertexShader, fragmentShader, uniforms) {
+        this.uniforms = uniforms;
+        let finalUniforms = {
+            time: { value: 0.0 },
+            mouse: { value: new THREE.Vector3(0.5, 0.5, 0.5) },
+            opacity: { value: 1.0 },
+            sculptureCenter: { value: new THREE.Vector3() },
+            stepSize: { value: 0.8 },
+            msdf: { value: this.MSDFTexture || new THREE.Texture() },
+        }
+        if(uniforms) {
+            uniforms.forEach(uniform => {
+                finalUniforms[uniform.name] = {value: uniform.value}
+            });
+        }
+        // if(uniforms.length) {
+        //     for (const [name, value] of Object.entries(uniforms)) {
+        //         uniforms[name] = { value };
+        //     }
+        // }
+        let uniformCode = this.generateUniformCode(uniforms);
+        const material = new THREE.ShaderMaterial({
+            uniforms: finalUniforms,
+            vertexShader,
+            fragmentShader: uniformCode + sculptureStarterCode + fragmentShader + fragFooter,
+            transparent: true,
+            side: THREE.BackSide
+        });
+        material.extensions.fragDepth = false;
+        return material;
     }
 
     generateVoxelsMesh(vertexShader, fragmentShader) {
-	const material = new THREE.ShaderMaterial({
-	    uniforms: {
- 	        time: {value: 0.0},
-		mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
-		sculptureCenter: {value: new THREE.Vector3()}
-	    },
-	    vertexShader,
-	    fragmentShader: sculptureStarterCode + fragmentShader + voxelFooter
-	});
-	const geo = new THREE.BoxBufferGeometry(1.0,1.0,1.0);
-	return new THREE.Mesh(geo,material);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                time: {value: 0.0},
+                mouse: {value: new THREE.Vector3(0.5,0.5,0.5)},
+                sculptureCenter: {value: new THREE.Vector3()}
+            },
+            vertexShader,
+            fragmentShader: sculptureStarterCode + fragmentShader + voxelFooter
+        });
+        const geo = new THREE.BoxBufferGeometry(1.0,1.0,1.0);
+        return new THREE.Mesh(geo,material);
     }
 
     setShaderSource(fragmentShader) {
         this.fragmentShader = fragmentShader;
     }
 
-    refreshMaterial() {
-        this.mesh.material.fragmentShader = sculptureStarterCode + this.fragmentShader + fragFooter;
-        this.mesh.material.needsUpdate = true;
-        // this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader);
+    generateUniformCode(uniforms) {
+
+        let output = '';
+        if(uniforms) {
+            uniforms.forEach(uniform => {
+                output += `uniform ${uniform.type} ${uniform.name};\n`;
+            });
+            // console.log('UNIFORM CODE', output)
+        }
+        return output;
     }
 
-    update(time) {
-        this.mesh.material.uniforms['time'].value = time * 0.001;
+    refreshMaterial(uniforms = []) {
+        // let uniformCode = this.generateUniformCode(uniforms);
+        // this.mesh.material.fragmentShader = uniformCode + sculptureStarterCode + this.fragmentShader + fragFooter;
+        // this.mesh.material.needsUpdate = true;
+        this.mesh.material = this.generateMaterial(this.vertexShader, this.fragmentShader, uniforms);
+    }
+
+    update(uniforms) {
+        
+        // this.mesh.material.uniforms['time'].value = time * 0.001;
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['stepSize'].value = this.stepSize;
         this.mesh.material.uniforms['msdf'].value = this.MSDFTexture;
+        // console.log(this.mesh.material.uniforms, uniforms);
+        // console.log('update', uniforms);
+        uniforms.forEach(uniform => {
+            // console.log(uniform);
+            this.mesh.material.uniforms[uniform.name].value = uniform.value;
+        });
+        // if (uniforms && Object.keys(uniforms).length) {
+        //     for (const [name, value] of Object.entries(uniforms)) {
+        //         console.log(name, value);
+        //         this.mesh.material.uniforms[name].value = value;
+        //     }
+        // }
+        // uniforms.forEach(uniform => {
+        //     this.mesh.material.uniforms[]
+        // })
     }
 
     generateMesh(time) {

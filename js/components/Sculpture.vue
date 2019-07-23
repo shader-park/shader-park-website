@@ -50,12 +50,16 @@ export default {
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
         let shadeSource = this.shaderSource.slice();
+        
         if(this.type === 'js') {
-                let source = sourceGenerator(this.shaderSource);
-                let glsl = source.geoGLSL + source.colorGLSL;
-                shadeSource = glsl;
+            shadeSource = this.generateJSSource(this.shaderSource);
+                // let source = sourceGenerator(this.shaderSource);
+                
+                // let glsl = source.geoGLSL + source.colorGLSL;
+                // shadeSource = glsl;
+                // this.uniforms = source.uniforms;
         }
-        this.sculpture = new Sculpture(shadeSource, this.MSDFTexture);
+        this.sculpture = new Sculpture(shadeSource, this.MSDFTexture, this.uniforms);
         
         if(this.sculpPosition) {
             this.setPose(this.sculpPosition);
@@ -73,17 +77,16 @@ export default {
         }
     },
     watch: {
-        shaderSource: function (val) {
+        shaderSource: function (input) {
             if(this.sculpture) {
-                this.shaderSource = val;
+                this.shaderSource = input;
                 if(this.type === 'js') {
-                    let source = sourceGenerator(val);
-                    let glsl = source.geoGLSL + source.colorGLSL;
+                    let glsl = this.generateJSSource(input);
                     this.sculpture.setShaderSource(glsl);
                 } else {
-                    this.sculpture.setShaderSource(val);
+                    this.sculpture.setShaderSource(input);
                 }
-                this.sculpture.refreshMaterial();
+                this.sculpture.refreshMaterial(this.uniforms);
             }
         },
         selectedObject: function (obj) {
@@ -105,6 +108,15 @@ export default {
         },
     },
     methods: {
+        generateJSSource(input) {
+            let source = sourceGenerator(input);
+            if(source.error) {
+                console.error(source.error);
+            }
+            let glsl = source.geoGLSL + source.colorGLSL;
+            this.uniforms = source.uniforms;
+            return glsl;
+        },
         setPose(pose) {
             this.sculpture.mesh.position = this.sculpPosition;
         },

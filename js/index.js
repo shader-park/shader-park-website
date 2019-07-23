@@ -235,12 +235,20 @@ function render(time) {
 		sculptureHasBeenSelected = false;
 	}
 	
+	let currTime = t * 0.001;
 	store.state.objectsToUpdate.forEach(sculpture => {
 		if (!store.state.selectedSculpture && !tweeningSculpturesOpacity && store.state.sculpturesLoaded){
 			let fadeOpacity = calcSculptureOpacityForCameraDistance(sculpture);
 			sculpture.setOpacity(fadeOpacity);
 		}
-		sculpture.update(t);
+		let uniforms = [];
+		// console.log(sculpture, store.state.selectedSculpture)
+		uniforms.push({ name: 'time', value: currTime, type: 'float' });
+		if (store.state.selectedSculpture && store.state.selectedSculpture.sculpture === sculpture) {
+			window.uniforms = sculpture.uniforms;
+			uniforms = uniforms.concat(sculpture.uniforms);
+		}
+		sculpture.update(uniforms);
 	});	
 
 	const objectsToRaycast = store.state.objectsToRaycast;
