@@ -137,8 +137,9 @@ export class Sculpture {
         // console.log(this.mesh.material.uniforms, uniforms);
         // console.log('update', uniforms);
         uniforms.forEach(uniform => {
-            // console.log(uniform);
-            this.mesh.material.uniforms[uniform.name].value = uniform.value;
+            if(uniform && uniform.name) {
+                this.mesh.material.uniforms[uniform.name].value = uniform.value;
+            }
         });
         // if (uniforms && Object.keys(uniforms).length) {
         //     for (const [name, value] of Object.entries(uniforms)) {
