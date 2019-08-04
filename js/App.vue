@@ -8,6 +8,7 @@
 			<signUp v-if="displaySignUp"></signUp>
 			<main-container></main-container>
 		</div>
+		<uniformGUI></uniformGUI>
 	</main>
 </template>
 
@@ -16,13 +17,15 @@ import Header from './components/Header.vue';
 import MainContainer from './components/MainContainer.vue';
 import SignIn from './components/SignIn.vue';
 import SignUp from './components/SignUp.vue';
+import UniformGUI from './components/UniformGUI.vue';
 
 export default {
 	components: {
 		navMain: Header,
 		mainContainer: MainContainer,
 		signIn: SignIn,
-		signUp: SignUp
+		signUp: SignUp,
+		uniformGUI: UniformGUI
 	},
 	data: function() {
 		return {

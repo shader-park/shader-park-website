@@ -7,13 +7,13 @@ import Vue from 'vue';
 import VModal from 'vue-js-modal'
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
-
+import anime from 'animejs';
 import App from './App.vue';
 import {dbConfig} from './dbConfig.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
 
-
+window.anime = anime;
 firebase.initializeApp(dbConfig);
 Vue.use(VueRouter);
 
@@ -95,6 +95,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 const scene = store.state.scene;
+window.scene = scene;
 scene.background = new THREE.Color(1.0, 1.0, 1.0);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 

@@ -160,7 +160,7 @@ export const store = new Vuex.Store({
       }
     },
     removeObjectFromSceneByName(state, name) {
-      state.scene.remove(state.scene.getObjectByName(name));
+      window.scene.remove(window.scene.getObjectByName(name));
     },
     joinRoom(state, roomName) {
       // state.socket.emit('joinRoom', roomName);
