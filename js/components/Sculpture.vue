@@ -98,7 +98,7 @@ export default {
     },
     computed: {
         currUserID () {
-            return this.$store.getters.getUser.uid
+            return this.$store.getters.getUser.uid;
         },
         selectedObject() {
             return this.$store.state.selectedObject;
