@@ -28,7 +28,7 @@
                 </router-link>
                                         
                 <div v-show="showProfileDropDown" class="dropDown">
-                    <a class="link" v-on:click="signOut" v-bind:class="{ mobile: isMobile }"  v-if="user" active-class="active">Sign Out </a>
+                    <a class="link" v-on:click="signOut" v-bind:class="{ mobile: isMobile }"  v-if="user" active-class="active">Sign Out</a>
                 </div>
             </div>
             
@@ -214,7 +214,7 @@ export default {
         position: relative;
         .dropDown {
             position: absolute;
-            width: 114px;
+            width: 144px;
             padding: 15px;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
             background-color: white;
