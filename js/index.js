@@ -113,7 +113,7 @@ let fogDistance = 8.0;
 window.fogDistance = fogDistance;
 
 let loader = new THREE.TextureLoader();
-loader.load('/images/msdf3.png', (texture) => {
+loader.load('/images/msdf-left-align.png', (texture) => {
 	store.commit('setMSDFTexture', texture)
 }, undefined,
 (err) => {
