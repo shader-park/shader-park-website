@@ -81,8 +81,15 @@ export default {
             if(this.sculpture) {
                 this.shaderSource = input;
                 if(this.type === 'js') {
-                    let glsl = this.generateJSSource(input);
-                    this.sculpture.setShaderSource(glsl);
+                    let glsl;
+                    try {
+                        glsl = this.generateJSSource(input);
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    if(glsl) {
+                        this.sculpture.setShaderSource(glsl);
+                    }
                 } else {
                     this.sculpture.setShaderSource(input);
                 }
