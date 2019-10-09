@@ -31,6 +31,7 @@
             <!-- <span>by</span> -->
             <!-- <input type="text" id="editor-author-name" size="30"></input> -->
         </div>
+        
         <!-- <div @keyup="()=>{}" @keydown.stop="()=>{removeEditorModalUI()}" @click.stop="()=>{}" ref="codeMirror" class="code-editor"> </div> -->
         <!-- <codemirror ref="myCm"
             :value="code" 
@@ -45,7 +46,9 @@
             @ready="onCmReady"
             @input="onCmCodeChange" @keydown.stop="()=>{}" @click.stop="()=>{}">
         </codemirror>
-
+        <div class="bottom-controls">
+            <button  @click.stop="download" class="centerY editor-button">Download Source</button>
+        </div>
     </div>
 </div>
 
@@ -103,9 +106,7 @@ export default {
     },
     mounted() {
         document.addEventListener('keydown', this.keypress.bind(null, true));
-        document.addEventListener('keyup', this.keypress.bind(null, false));
-
-        
+        // document.addEventListener('keyup', this.keypress.bind(null, false));
     },
     computed : {
         codemirror() {
@@ -172,9 +173,12 @@ export default {
             }
         },
         autoUpdate(value) {
-            if(this.cm) {
-                this.cm.autoUpdate = value;
+            if(value) {
+                this.onCmCodeChange(this.code);
             }
+            // if(this.cm) {
+            //     this.cm.autoUpdate = value;
+            // }
         },
         isExample(value) {
             this.selectedSculpture.isExample = value;
@@ -215,10 +219,11 @@ export default {
                 this.selectedSculpture.saved = false;
                 this.$store.commit('setUnsavedChanges', {[this.selectedSculpture.id] : false})
             }
-            
             this.code = newCode;
-            if(this.selectedSculpture){
-                this.selectedSculpture.shaderSource = this.code; 
+            if(this.autoUpdate) {
+                if(this.selectedSculpture){
+                    this.selectedSculpture.shaderSource = this.code; 
+                }
             }
         },
         save() {
@@ -238,7 +243,9 @@ export default {
             });
         },
         play() {
-            this.updateSculpture();
+            if(this.selectedSculpture){
+                this.selectedSculpture.shaderSource = this.code; 
+            }
         },
         share() {
             let shareEl = this.$refs.share;
@@ -259,12 +266,44 @@ export default {
             document.execCommand('copy');
             document.body.removeChild(el);
         },
-        exportSculpture() {
-            const data = this.selectedSculpture.sculpture.generateMesh(0.0);
-            let count = 0;
-                for (let i=0; i<data.length; i++) {
-                count += data[i];
+        download() {
+            console.log(this.code);
+            console.log(this.$store.state.selectedSculpture.type, 'type')
+            // fragmentShader: uniformCode + sculptureStarterCode + fragmentShader + fragFooter,
+            let output = this.generateJSSource(this.code);
+            console.log(output)
+
+        },
+        generateUniformCode(uniforms) {
+            let output = '';
+            if(uniforms) {
+                uniforms.forEach(uniform => {
+                    output += `uniform ${uniform.type} ${uniform.name};\n`;
+                });
+                // console.log('UNIFORM CODE', output)
             }
+            return output;
+        },
+        generateJSSource(input) {
+            console.log('source', source);
+            let source = sourceGenerator(input);
+            
+            if(source.error) {
+                console.error(source.error);
+                return;
+            }
+
+            let uniforms = this.generateUniformCode(source.uniforms)
+            let glsl = source.geoGLSL + source.colorGLSL;
+            return uniforms + sculptureStarterCode + glsl + fragFooter;
+        },
+        exportSculpture() {
+            //Unused
+            // const data = this.selectedSculpture.sculpture.generateMesh(0.0);
+            // let count = 0;
+            //     for (let i=0; i<data.length; i++) {
+            //     count += data[i];
+            // }
         },
         close() {
             let close = () => {
@@ -350,16 +389,17 @@ export default {
         updateSculpture(){
         // _.debounce(function (e) {
             
-            const fragmentShader = this.cm.editor.getValue();
-            const currSculp = this.selectedSculpture;
-            if(currSculp){ //&& this.cm.errorsDisplay.widgets.length !== 1) {
-                currSculp.shaderSource = fragmentShader;
-            } else {
-                console.error('Sculp not updated because of Error in code');
-            }
+            // const fragmentShader = this.cm.editor.getValue();
+            // const currSculp = this.selectedSculpture;
+            // if(currSculp){ //&& this.cm.errorsDisplay.widgets.length !== 1) {
+            //     currSculp.shaderSource = fragmentShader;
+            // } else {
+            //     console.error('Sculp not updated because of Error in code');
+            // }
 
         },   
         initCodeMirror(shader) {
+            //DEPRICATED
             
             this.prefix = `
             
@@ -412,7 +452,7 @@ export default {
 }
 
 </script>
-<style lang="less">
+<style lang="less" scoped>
 
 @import '../codemirror/glslEditor.css';
 @import 'codemirror/lib/codemirror.css';
@@ -445,13 +485,24 @@ export default {
 }
 
 .controls {
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.controls, .bottom-controls {
     min-height: 50px;
     position: relative;
     height: 8vh;
-    border-bottom: 2px solid #f5f5f5;
+    
     padding-left: 20px;
     padding-right: 20px;
     overflow: hidden;
+}
+
+.bottom-controls {
+    border-top: 2px solid #f5f5f5;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
 }
 
 .save {
@@ -569,8 +620,14 @@ label {
     }
     overflow: hidden;
     // position: absolute;
-    top: 85px;
+    // top: 85px;
+    position: relative;
     // right: 0px;
+}
+
+.vue-codemirror {
+    max-height: 74vh;
+    overflow: scroll;
 }
 
 .CodeMirror-hints{
