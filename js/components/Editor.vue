@@ -56,7 +56,7 @@
 
 <script>
 import { codemirror } from 'vue-codemirror'
-import {sourceGenerator, sculptureStarterCode, fragFooter} from 'sculpture-park-core';
+import {sculptToThreeJSShaderSource} from 'sculpture-park-core';
 
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';
@@ -256,8 +256,6 @@ export default {
                 shareEl.classList.add('selected');
                 this.shareText = 'Copied URL';
             }
-            
-            
             const el = document.createElement('textarea');
             let example = this.selectedSculpture.isExample? '?example=true' :'';
             el.value = `https://shader-park.appspot.com/sculpture/${this.selectedSculpture.id}${example}?hideeditor=true&hidepedestal=true`;
@@ -268,42 +266,12 @@ export default {
         },
         download() {
             console.log(this.code);
-            console.log(this.$store.state.selectedSculpture.type, 'type')
-            // fragmentShader: uniformCode + sculptureStarterCode + fragmentShader + fragFooter,
-            let output = this.generateJSSource(this.code);
-            console.log(output)
-
-        },
-        generateUniformCode(uniforms) {
-            let output = '';
-            if(uniforms) {
-                uniforms.forEach(uniform => {
-                    output += `uniform ${uniform.type} ${uniform.name};\n`;
-                });
-                // console.log('UNIFORM CODE', output)
-            }
-            return output;
-        },
-        generateJSSource(input) {
-            console.log('source', source);
-            let source = sourceGenerator(input);
-            
-            if(source.error) {
-                console.error(source.error);
-                return;
-            }
-
-            let uniforms = this.generateUniformCode(source.uniforms)
-            let glsl = source.geoGLSL + source.colorGLSL;
-            return uniforms + sculptureStarterCode + glsl + fragFooter;
+            console.log(this.$store.state.selectedSculpture.type, 'type');
+            let output = sculptToThreeJSShaderSource(this.code);
+            console.log(output);
         },
         exportSculpture() {
             //Unused
-            // const data = this.selectedSculpture.sculpture.generateMesh(0.0);
-            // let count = 0;
-            //     for (let i=0; i<data.length; i++) {
-            //     count += data[i];
-            // }
         },
         close() {
             let close = () => {
@@ -385,68 +353,6 @@ export default {
             } else {
                 this.editorHasDisplayedModal = false;
             }
-        },
-        updateSculpture(){
-        // _.debounce(function (e) {
-            
-            // const fragmentShader = this.cm.editor.getValue();
-            // const currSculp = this.selectedSculpture;
-            // if(currSculp){ //&& this.cm.errorsDisplay.widgets.length !== 1) {
-            //     currSculp.shaderSource = fragmentShader;
-            // } else {
-            //     console.error('Sculp not updated because of Error in code');
-            // }
-
-        },   
-        initCodeMirror(shader) {
-            //DEPRICATED
-            
-            this.prefix = `
-            
-            precision highp float;
-            precision highp int;
-            uniform vec3 cameraPosition;
-            uniform mat4 viewMatrix;
-            ` ;
-
-            this.$nextTick(function() {
-                if(!this.cm) {   
-                    this.cm = new GlslEditor(this.$refs.codeMirror, { 
-                        canvas_size: 1,
-                        canvas_draggable: false,
-                        theme: 'default',
-                        multipleBuffers: false,
-                        watchHash: false,
-                        fileDrops: false,
-                        menu: false,
-                        frag_header : this.prefix + sculptureStarterCode,
-                        frag: shader,
-                        frag_footer: fragFooter
-                    });
-
-                    let editor = document.querySelector('.ge_editor');
-                    if(this.isEmbeded) {
-                        editor.classList.add('embed');
-                    }
-                    editor.addEventListener('click', () => {
-                        
-
-                        if(this.shareText.length > 0) {
-                            this.shareText = '';
-                            this.$refs.share.classList.remove('selected');
-                        }
-                        this.removeEditorModalUI();
-                    });
-                }
-                window.cm = this.cm;
-                this.cm.shader.canvas.on('processedShader', (data) => {
-                    this.editorContainsErrors = data.containsError;
-                    if(this.autoUpdate && !data.containsError && !this.closed) {
-                        this.selectedSculpture.saved = false;
-                        this.updateSculpture();
-                    }
-                });
-            });
         }
     }
 }

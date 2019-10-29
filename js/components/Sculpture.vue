@@ -4,12 +4,10 @@
 
 <script>
 
-
-
-import {Sculpture} from '../SculptureN.js';
+import {Sculpture} from '../threejs-sculpture/SculptureN.js';
 import * as THREE from 'three';
 import {mapGetters} from 'vuex';
-import {defaultFragSourceJS, defaultFragSourceGLSL, sourceGenerator} from 'sculpture-park-core';
+import {defaultFragSourceGLSL} from 'sculpture-park-core';
 
 function defaultMap(obj, id, def) {
     if(obj && obj[id]) {
@@ -40,7 +38,7 @@ export default {
             featured : this.sculpData.featured || false,
             visibility : this.sculpData.visibility || 'public', //draft, public, private
             license : this.sculpData.license || null, 
-            shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: defaultFragSourceJS),
+            shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: 'sphere(0.2);'),
             type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
             //sculpture is not saved to the db
@@ -49,17 +47,10 @@ export default {
     },
     mounted() {
         // this.$data = Object.assign(this.$data, this.sculpData);
-        let shadeSource = this.shaderSource.slice();
-        
-        if(this.type === 'js') {
-            shadeSource = this.generateJSSource(this.shaderSource);
-                // let source = sourceGenerator(this.shaderSource);
-                
-                // let glsl = source.geoGLSL + source.colorGLSL;
-                // shadeSource = glsl;
-                // this.uniforms = source.uniforms;
-        }
-        this.sculpture = new Sculpture(shadeSource, this.MSDFTexture, this.uniforms);
+
+        // this is just to make a copy??
+        let shaderSourceCopy = this.shaderSource.slice();
+        this.sculpture = new Sculpture(this.type !== 'js', shaderSourceCopy, this.MSDFTexture);
         
         if(this.sculpPosition) {
             this.setPose(this.sculpPosition);
@@ -80,20 +71,7 @@ export default {
         shaderSource: function (input) {
             if(this.sculpture) {
                 this.shaderSource = input;
-                if(this.type === 'js') {
-                    let glsl;
-                    try {
-                        glsl = this.generateJSSource(input);
-                    } catch (e) {
-                        console.error(e)
-                    }
-                    if(glsl) {
-                        this.sculpture.setShaderSource(glsl);
-                    }
-                } else {
-                    this.sculpture.setShaderSource(input);
-                }
-                this.sculpture.refreshMaterial(this.uniforms);
+                this.sculpture.refreshMaterial(input);
             }
         },
         selectedObject: function (obj) {
@@ -115,15 +93,6 @@ export default {
         },
     },
     methods: {
-        generateJSSource(input) {
-            let source = sourceGenerator(input);
-            if(source.error) {
-                console.error(source.error);
-            }
-            let glsl = source.geoGLSL + source.colorGLSL;
-            this.uniforms = source.uniforms;
-            return glsl;
-        },
         setPose(pose) {
             this.sculpture.mesh.position = this.sculpPosition;
         },
@@ -149,7 +118,6 @@ export default {
     },
     destroyed: function() {
         this.removeSculpture();
-        // console.log(`deleted ${name} from scene`);
     }
 };
 </script>
