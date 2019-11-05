@@ -7,12 +7,12 @@ import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, gls
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
         this.IsGLSL = isGlsl;
-        this.MSDFTexture = msdfTexture;
+        this.payload = { msdfTexture}
         this.source = source;
         if (isGlsl) {
-            this.mesh = glslToThreeJSMesh(source);
+            this.mesh = glslToThreeJSMesh(source, this.payload);
         } else {
-            this.mesh = sculptToThreeJSMesh(source);
+            this.mesh = sculptToThreeJSMesh(source, this.payload);
         }
         this.uniforms = this.mesh.material.uniforms;
         const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
@@ -31,7 +31,8 @@ export class Sculpture {
     }
 
     setMSDFTexture(texture) {
-        this.MSDFTexture = texture;
+        // this.MSDFTexture = texture;
+        this.payload.msdfTexture = texture;
         this.refreshMaterial();
     }
 
@@ -63,9 +64,9 @@ export class Sculpture {
             this.source = newSource;
         }
         if (this.IsGLSL) {
-            this.mesh.material = glslToThreeJSMaterial(this.source);
+            this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
         } else {
-            this.mesh.material = sculptToThreeJSMaterial(this.source);
+            this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
         }
         this.uniforms = this.mesh.material.uniforms;
     }
