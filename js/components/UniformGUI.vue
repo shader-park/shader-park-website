@@ -50,7 +50,7 @@ export default {
             }
         },
 		selectedSculptureUniforms(uniforms) {
-			if(uniforms){
+			if(uniforms && uniforms.length){
 				this.gui.domElement.style.display = 'block';
 				uniforms.forEach(uniform => {
 					if(!(uniform.name in this.guiParams)) {
