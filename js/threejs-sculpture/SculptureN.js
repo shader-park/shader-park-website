@@ -25,7 +25,7 @@ export class Sculpture {
         this.mesh.add(this.pedestal);
         this.pedestalEdges = createPedestalEdges(1.0, 0.5);
         this.pedestalEdges.position.set(0, -.75-this.sepBuffer, 0);
-        this.mesh.add(this.pedestalEdges);
+        // this.mesh.add(this.pedestalEdges);
         this.selected = false;
         this.setOpacity(0.0);
     }
@@ -75,7 +75,7 @@ export class Sculpture {
         this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['stepSize'].value = this.stepSize;
-        this.mesh.material.uniforms['msdf'].value = this.MSDFTexture;
+        this.mesh.material.uniforms['msdf'].value = this.payload.msdfTexture;
         uniforms.forEach(uniform => {
             if(uniform && uniform.name) {
                 this.mesh.material.uniforms[uniform.name].value = uniform.value;
