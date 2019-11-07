@@ -100,11 +100,12 @@ export default {
             this.saved = saved;
         },
         setSelectedSculpture(obj) {
+            console.log('Set Selcted sculp', obj, this.sculpture)
             if(obj && obj.name == this.sculpture.mesh.name) {
                 this.$store.state.selectedSculpture = this.$data;
                 this.sculpture.selectedSculpture(true);
             } else {
-                if(this.sculpture.selected) {
+                if(this.sculpture && this.sculpture.selected) {
                     this.sculpture.selectedSculpture(false);
                 }
             }
