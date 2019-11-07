@@ -13,9 +13,9 @@ export class Sculpture {
             this.mesh = glslToThreeJSMesh(source, this.payload);
         } else {
             this.mesh = sculptToThreeJSMesh(source, this.payload);
+            this.uniforms = this.mesh.material.uniformDescriptions;
         }
-        this.uniforms = this.mesh.material.uniforms;
-        const pedestalGeom = new THREE.BoxBufferGeometry(1.0, 0.5, 1.0);
+        const pedestalGeom = new THREE.BoxGeometry(1.0, 0.5, 1.0);
         this.opacity = 0.0;
         this.stepSize = 0.8;
         const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
@@ -67,8 +67,8 @@ export class Sculpture {
             this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
         } else {
             this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
+            this.uniforms = this.mesh.material.uniformDescriptions;
         }
-        this.uniforms = this.mesh.material.uniforms;
     }
 
     update(uniforms) {
