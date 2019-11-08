@@ -100,9 +100,10 @@ export default {
             this.saved = saved;
         },
         setSelectedSculpture(obj) {
-            console.log('Set Selcted sculp', obj, this.sculpture)
-            if(obj && obj.name == this.sculpture.mesh.name) {
+            let uniformsToExclude = {'sculptureCenter': 0,  'msdf': 0, 'opacity': 0, 'time': 0};
+            if(obj && this.sculpture && this.sculpture.mesh && this.sculpture.mesh.name && obj.name == this.sculpture.mesh.name) {
                 this.$store.state.selectedSculpture = this.$data;
+                this.sculpture.uniforms = this.sculpture.uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
                 this.sculpture.selectedSculpture(true);
             } else {
                 if(this.sculpture && this.sculpture.selected) {
