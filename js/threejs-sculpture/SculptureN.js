@@ -6,6 +6,7 @@ import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, gls
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
+        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0 };
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;
@@ -14,6 +15,7 @@ export class Sculpture {
         } else {
             this.mesh = sculptToThreeJSMesh(source, this.payload);
             this.uniforms = this.mesh.material.uniformDescriptions;
+            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
         const pedestalGeom = new THREE.BoxGeometry(1.0, 0.5, 1.0);
         this.opacity = 0.0;
@@ -67,7 +69,9 @@ export class Sculpture {
             this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
         } else {
             this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
+            
             this.uniforms = this.mesh.material.uniformDescriptions;
+            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
     }
 
