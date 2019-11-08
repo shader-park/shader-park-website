@@ -243,11 +243,13 @@ function render(time) {
 			sculpture.setOpacity(fadeOpacity);
 		}
 		let uniforms = [];
-		// console.log(sculpture, store.state.selectedSculpture)
 		uniforms.push({ name: 'time', value: currTime, type: 'float' });
 		if (store.state.selectedSculpture && store.state.selectedSculpture.sculpture === sculpture) {
-			window.uniforms = sculpture.uniforms;
-			uniforms = uniforms.concat(sculpture.uniforms);
+			if(sculpture && sculpture.uniforms) {
+				window.uniforms = sculpture.uniforms;
+				uniforms = uniforms.concat(sculpture.uniforms);
+			}
+			
 		}
 		sculpture.update(uniforms);
 	});	

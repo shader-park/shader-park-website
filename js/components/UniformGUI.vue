@@ -50,7 +50,12 @@ export default {
             }
         },
 		selectedSculptureUniforms(uniforms) {
-			if(uniforms){
+			const uniformsToSkip = {'time':0, 'opacity': 0, "stepSize": 0, 'mouse':0, 'sculptureCenter':0};
+			if(uniforms) {
+				uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToSkip));
+			}
+			
+			if(uniforms && uniforms.length){
 				this.gui.domElement.style.display = 'block';
 				uniforms.forEach(uniform => {
 					if(!(uniform.name in this.guiParams)) {
