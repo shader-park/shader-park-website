@@ -6,7 +6,7 @@ import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, gls
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
-        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0 };
+        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, 'mouse': 0 };
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;
