@@ -8,7 +8,7 @@
   },
   "gcloud": {
     "id": "shader-park",
-    "version": "0-0-6",
+    "version": "0-0-7",
     "devPort": 3000,
     "devAdminPort": 8000
   },
