@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
+		<!-- <room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room> -->
+		<sculpture-feed :sculptures="sculptures" v-if="sculptures.length > 0"></sculpture-feed>
 		<modal name="profile-modal" class="modal-popup" height="auto" width="500px">
 			{{modalText}}
 		</modal>
@@ -12,21 +13,18 @@
 </template>
 
 <script>
-import Sculpture from './Sculpture.vue';
-import Room from './Room.vue';
+import SculptureFeed from './SculptureFeed.vue';
 import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 
 export default {
 	data: function() {
-        return {
+	return {
 			sculptures: [],
 			modalText: "¯\_(ツ)_/¯ couldn't find the profile you were looking for"
         }
 	},
 	components : {
-		sculpture: Sculpture,
-		room : Room,
-		roomName: ''
+		SculptureFeed
 	},
 	computed: {
 		currUser () {
@@ -91,7 +89,9 @@ export default {
 				temp.reverse();
 				this.sculptures = [];
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+				
 			}
+			this.$store.commit('sculpturesLoaded', true);  
 			this.$store.commit('joinRoom', this.roomName);
 		},
 		showModal() {
