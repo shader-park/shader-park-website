@@ -1,37 +1,39 @@
 <template>
-
-    <div v-if="!embedded" class="nav-bar">
-        <div class="nav-left">
-            <h2 v-if="!isMobile" class="logo-text">SP</h2>
-            <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
-            <!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
-        </div>
-        <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
-        <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
-              
-            <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Gallery</router-link>
-            <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
-            <a class="link" href="/references-js" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
-            <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>
-            <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
-            
-            <!-- <router-link to="/sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link> -->
-            <div class="dropDownContainer" v-on:mouseover="setProfileDropDown(true)" v-on:mouseleave="setProfileDropDown(flase)"> 
-                <router-link 
-                    ref="profile" 
-                    v-bind:data-badge="profileBadgeCount" to="/profile" 
-                    v-bind:class="{ dynamicBadge: profileBadgeCount > 0, mobile: isMobile }" 
-                    class="link" v-if="user" 
-                    active-class="active">
-                    My Sculptures
-                    <span class="arrow"></span>
-                </router-link>
-                                        
-                <div v-show="showProfileDropDown" class="dropDown">
-                    <a class="link" v-on:click="signOut" v-bind:class="{ mobile: isMobile }"  v-if="user" active-class="active">Sign Out</a>
-                </div>
+    <div>
+        <div class="nav-spacer"></div>
+        <div v-if="!embedded" class="nav-bar">
+            <div class="nav-left">
+                <h2 v-if="!isMobile" class="logo-text">SP</h2>
+                <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
+                <!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
             </div>
-            
+            <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
+            <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
+                
+                <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Gallery</router-link>
+                <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
+                <a class="link" href="/references-js" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
+                <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>
+                <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
+                
+                <!-- <router-link to="/sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link> -->
+                <div class="dropDownContainer" v-on:mouseover="setProfileDropDown(true)" v-on:mouseleave="setProfileDropDown(flase)"> 
+                    <router-link 
+                        ref="profile" 
+                        v-bind:data-badge="profileBadgeCount" to="/profile" 
+                        v-bind:class="{ dynamicBadge: profileBadgeCount > 0, mobile: isMobile }" 
+                        class="link" v-if="user" 
+                        active-class="active">
+                        My Sculptures
+                        <span class="arrow"></span>
+                    </router-link>
+                                            
+                    <div v-show="showProfileDropDown" class="dropDown">
+                        <a class="link" v-on:click="signOut" v-bind:class="{ mobile: isMobile }"  v-if="user" active-class="active">Sign Out</a>
+                    </div>
+                </div>
+                
+            </div>
         </div>
     </div>
 </template>
@@ -141,12 +143,17 @@ export default {
 
 }
 
+.nav-spacer {
+    height: 10vh;
+    width: 100vw;
+}
+
 .nav-bar {
-    position: relative;
+    position: fixed;
     // position: fixed;
-    // left: 0px;
-    // top: 0px;
-    // right: 0px;
+    left: 0px;
+    top: 0px;
+    right: 0px;
     height: 10vh;
     min-height: 45px;
     padding: 0px 60px 25px;
