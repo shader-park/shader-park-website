@@ -19,8 +19,10 @@ export default {
 	},
 	props: ['example', 'embed', 'hideEditor', 'hidePedestal', 'clickEnabled'],
 	mounted() {
+		
 		this.$nextTick(function () {
-			this.$store.commit('setInitialCameraPose', [0, 0, 2]);
+			this.$store.commit('setDisplayCanvas', true);
+			this.$store.commit('setInitialCameraPose', [0, 0, .9]);
 			this.$store.commit('sculpturesLoaded', false);
 			if(this.clickEnabled != null) {
 				this.$store.commit('setClickEnabled', this.clickEnabled === 'true');
