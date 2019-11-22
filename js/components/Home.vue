@@ -1,22 +1,19 @@
 <template>
-	<room ref="room" v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room>
+  <sculpture-feed :sculptures="sculptures" v-if="sculptures"></sculpture-feed>
 </template>
 
 <script>
-import Sculpture from './Sculpture.vue';
-import Room from './Room.vue';
-import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
+import SculptureFeed from './SculptureFeed.vue';
 
 export default {
 	data: function() {
 		return {
-			sculptures: [],
+			sculptures: null,
 			roomName: "Global Room"
 		}
 	},
 	components : {
-		sculpture: Sculpture,
-		room : Room	
+		SculptureFeed
 	},
 	mounted() {
 		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
@@ -27,17 +24,21 @@ export default {
 					temp.push(sculptures[key]);
 				})
 				temp.reverse();
+				// temp = temp.filter(sculp => 'thumbnail' in sculp)
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
 			}
+			this.$store.commit('sculpturesLoaded', true);    
 			this.$store.commit('joinRoom', this.roomName);
 		})
 	},
 	destroyed() {
 		this.$store.commit('leaveRoom', this.roomName);
 	},
-	beforeRouteLeave (to, from, next) {
-		handelUnsavedChanges(next, this);
-	}
-	
 };
 </script>
+
+
+
+<style scoped>
+
+</style>

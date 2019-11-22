@@ -23,6 +23,7 @@ Vue.use(Vuelidate);
 Vue.config.devtools = true;
 // Vue.config.productionTip = false;
 window.db = firebase.database();
+let storageRef = firebase.storage().ref();
 
 const router = new VueRouter({routes: routes, mode: 'history'});
 let animationPaused = false;
@@ -57,8 +58,10 @@ router.beforeEach((to, from, next) => {
 			this.$store.commit('displayLogin', true);
 			// next('/sign-in');
 		} else if (requiresAuth && currentUser) {
+			store.state.displayCanvas = false;
 			next();
 		} else {
+			store.state.displayCanvas = false;
 			next();
 		}
 		animationPaused = false;
@@ -71,23 +74,51 @@ router.beforeEach((to, from, next) => {
 				store.state.selectedSculpture = null;
 			}
 			setTimeout(() => { //wait for the editor to close
-				nextRoute();	
+				store.state.displayCanvas = false;
+				nextRoute();
 			}, 300);
 		});
 	} else if (store.state.sculpturesLoaded) {
 		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
+			store.state.displayCanvas = false;
 			nextRoute();
 		});
 	} else {
+		store.state.displayCanvas = false;
 		nextRoute();
 	}	
 });
 
 let firstInit = true;
+let vueApp;
 firebase.auth().onAuthStateChanged(function(user) {
 	if(firstInit) {
-		const vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
+		vueApp = new Vue({el: '#app', store: store, router: router, render: h => h(App)});
 		init();
+
+		//Detect when sculpture is saved
+		vueApp.$store.subscribeAction((action, state) => {
+			let {payload, type} = action;
+			if (type === 'saveSculpture') {
+				if (payload.uid === firebase.auth().currentUser.uid) {
+					//hide pedestal during image capture
+					let pedestalVisible = payload.sculpture.pedestal.visible;
+					payload.sculpture.pedestal.visible = false;
+					setTimeout(() => { //make sure pedestal is hidden
+						captureCanvasImage((blob) => {
+							payload.sculpture.pedestal.visible = pedestalVisible;
+							storageRef.child(`sculptureThumbnails/${payload.id}.jpeg`).put(blob).then(fileData => {
+								fileData.ref.getDownloadURL().then(thumbnail => {
+									if (thumbnail) {
+										firebase.database().ref('sculptures').child(payload.id).update({ thumbnail })
+									}
+								});
+							});
+						}, false);
+					}, 1);
+				}
+			}
+		});
 		firstInit = false;
 	} else {
 		store.dispatch('setUser');
@@ -122,7 +153,7 @@ loader.load('/images/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new THREE.WebGLRenderer({ antialias: true});
+	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
@@ -135,6 +166,8 @@ function init() {
 		event.target.focus();
 	});
 	canvas.addEventListener('mousemove', onMouseMove, false);
+
+	mediaCap = piCreateMediaRecorder(() => console.log("capturing render"), canvas); 
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = true;
 	controls.dampingFactor = 0.25;
@@ -308,43 +341,70 @@ function piCreateMediaRecorder(isRecordingCallback, canvas)
     */
 
     let options = {
-    	videoBitsPerSecond: 10000000, 
-    	type: "video/webm"
+		videoBitsPerSecond: 2500000,
+		mimeType: 'video/webm;'
     };
     
     var mediaRecorder = new MediaRecorder(canvas.captureStream(), options);
     console.log("videoBitsPerSecond: ", mediaRecorder.videoBitsPerSecond);
     var chunks = [];
     
-    mediaRecorder.ondataavailable = function(e) 
-    {
-        if (e.data.size > 0) 
-        {
+    mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
             chunks.push(e.data);
         }
     };
  
-    mediaRecorder.onstart = function(){ 
+    mediaRecorder.onstart = () => { 
         isRecordingCallback( true );
     };
     
-    mediaRecorder.onstop = function()
-    {
-         isRecordingCallback( false );
-         let blob     = new Blob(chunks, options);
-         chunks       = [];
-         let videoURL = window.URL.createObjectURL(blob);
-         let url      = window.URL.createObjectURL(blob);
-         let a        = document.createElement("a");
-         document.body.appendChild(a);
-         a.style      = "display: none";
-         a.href       = url;
-         a.download   = "capture.webm";
-         a.click();
-         window.URL.revokeObjectURL(url);
-     };
+	mediaRecorder.onstop = (download) => {
+		isRecordingCallback(false);
+		let blob = new Blob(chunks, options);
+
+		chunks = [];
+		if (download) {
+			let videoURL = window.URL.createObjectURL(blob);
+			let url = window.URL.createObjectURL(blob);
+			let a = document.createElement("a");
+			document.body.appendChild(a);
+			a.style = "display: none";
+			a.href = url;
+			a.download = "capture.webm";
+			a.click();
+			window.URL.revokeObjectURL(url);
+		}
+		return blob;
+	};
     
     return mediaRecorder;
+}
+
+function captureCanvasImage(callback, download) {
+	return canvas.toBlob((blob) => {
+		if(download) {
+			let url = window.URL.createObjectURL(blob);
+			let a = document.createElement("a");
+			document.body.appendChild(a);
+			a.style = "display: none";
+			a.href = url;
+			a.download = "capture.jpeg";
+			a.click();
+			window.URL.revokeObjectURL(url);
+		}
+		callback(blob);
+	}, 'image/jpeg', 1.0);
+}
+
+function toggleScreenCapture(download) {
+	if (!isCapturing) {
+		mediaCap.start();
+		isCapturing = true;
+	} else {
+		isCapturing = false;
+		return mediaCap.stop(download);
+	}
 }
 
 function keyPress(down, e) {
@@ -353,16 +413,7 @@ function keyPress(down, e) {
 	}
 	if (e.altKey && down) {
 		if (e.key === 'r' || e.key === '®') {
-			if (mediaCap === null) {
-				mediaCap = piCreateMediaRecorder( () => console.log("capturing render"), canvas); 
-			}
-			if (!isCapturing) {
-				mediaCap.start();
-				isCapturing = true;
-			} else {
-				mediaCap.stop();
-				isCapturing = false;
-			}
+			toggleScreenCapture(true);
 		}
 	}
 
