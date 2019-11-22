@@ -28,11 +28,15 @@ export const store = new Vuex.Store({
     canvasSize: {width: 0, height: 0},
     displayLogin: false,
     displaySignUp: false,
+    displayCanvas: false,
     routeTitle: null,
     unsavedChanges: {},
     MSDFTexture: {}
   },
   getters: {
+    displayCanvas: state => {
+      return state.displayCanvas;
+    },
     getMSDFTexture: state => {
       console.log('getting msdf texture', state.MSDFTexture);
       return state.MSDFTexture;
@@ -69,6 +73,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setDisplayCanvas(state, payload) {
+      state.displayCanvas = payload;
+    },
     setMSDFTexture(state, payload) {
       console.log('setting MSDF texture mutation', payload)
       state.MSDFTexture = payload;
