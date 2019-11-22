@@ -24,6 +24,7 @@ export default {
         
         let index = 0;
         let col = 0;
+        this.$store.commit('setDisplayCanvas', true);
         this.$store.commit('sculpturesLoaded', false);
         while (index < this.sculptures.length) {
             let row = 0;
