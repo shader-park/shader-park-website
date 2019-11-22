@@ -265,9 +265,9 @@ export default {
             document.body.removeChild(el);
         },
         download() {
-            console.log(this.code);
-            console.log(this.$store.state.selectedSculpture.type, 'type');
             let output = sculptToThreeJSShaderSource(this.code);
+            let spExport = output.geoGLSL + '\n' + output.colorGLSL;
+            output['spExport'] = spExport;
             console.log(output);
         },
         exportSculpture() {
