@@ -6,7 +6,7 @@
 			<router-view :key="$route.fullPath"></router-view>
 			<signIn v-if="displayLogin"></signIn>
 			<signUp v-if="displaySignUp"></signUp>
-			<main-container></main-container>
+			<main-container v-show="displayCanvas"></main-container>
 		</div>
 		<uniformGUI></uniformGUI>
 	</main>
@@ -34,6 +34,9 @@ export default {
 		}
 	},
 	computed: {
+		displayCanvas() {
+			return this.$store.getters.displayCanvas;
+		},
 		sculpturesLoaded() {
 			return this.$store.state.sculpturesLoaded;
 		},
@@ -52,6 +55,9 @@ export default {
 			if(value && !this.hasBeenLoaded) {
 				this.hasBeenLoaded = true;
 			}
+		},
+		displayCanvas(val) {
+			console.log('display canvas changed', val)
 		}
 	},
 	methods: {
@@ -89,6 +95,7 @@ export default {
 	margin-top: 0px;
 	margin-bottom: 0px;
 	letter-spacing: 2px;
+	line-height: 89px;
 	-webkit-transform: translate(0px, -50%);
 	-ms-transform: translate(0px, -50%);
 	transform: translate(0px, -50%);
