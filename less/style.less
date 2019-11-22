@@ -100,7 +100,7 @@
 body {
     background: white;
     font-family: @font-family;
-    overflow: hidden;
+    // overflow: hidden;
     letter-spacing: 0.1px;
     margin: 0;
 }
@@ -159,6 +159,18 @@ h1 {
 //     bottom: 20px;
     
 // }
+
+.w-layout-grid {
+  display: -ms-grid;
+  display: grid;
+  grid-auto-columns: 1fr;
+  -ms-grid-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  -ms-grid-rows: auto auto;
+  grid-template-rows: auto auto;
+  grid-row-gap: 16px;
+  grid-column-gap: 16px;
+}
 
 input:focus,
 select:focus,
