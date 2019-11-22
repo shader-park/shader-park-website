@@ -16,6 +16,7 @@ function defaultMap(obj, id, def) {
         return def;
     }
 }
+
 export default {
     props: ['sculpData', 'sculpPosition'],
     data: function() {
@@ -41,6 +42,7 @@ export default {
             shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: 'sphere(0.2);'),
             type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
+            thumbnail: this.sculpData.thumbnail || null,
             //sculpture is not saved to the db
             sculpture: null
         };
