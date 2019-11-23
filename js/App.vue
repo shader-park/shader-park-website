@@ -92,6 +92,7 @@ export default {
 	right: 0px;
 	bottom: 0px;
 	z-index: 10;
+	height: 47px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	line-height: 89px;
