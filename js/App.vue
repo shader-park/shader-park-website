@@ -84,6 +84,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .loading-logo {
 	position: absolute;
 	left: 0px;
@@ -91,10 +92,8 @@ export default {
 	right: 0px;
 	bottom: 0px;
 	z-index: 10;
-	height: 47px;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	letter-spacing: 2px;
 	line-height: 89px;
 	-webkit-transform: translate(0px, -50%);
 	-ms-transform: translate(0px, -50%);
@@ -116,6 +115,14 @@ export default {
 		visibility:hidden;
 		transition:visibility 0s ease-in-out 300ms,opacity 300ms ease-in-out;
 	}
+}
 
+
+@media (max-width: 479px) {
+	.loading-logo {
+		font-size: 67px;
+		line-height: 62px;
+		letter-spacing: 10.06px;
+	}
 }
 </style>
