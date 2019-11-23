@@ -404,6 +404,9 @@ export const store = new Vuex.Store({
     },
     fetchExampleSculptures({dispatch}) {
       return dispatch('fetchSculptures', 'examples');
+    },
+    fetchForks() {
+      return firebase.database().ref('/forks').once('value').then(data => data.val());
     }
   }
 });
