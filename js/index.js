@@ -79,10 +79,14 @@ router.beforeEach((to, from, next) => {
 			}, 300);
 		});
 	} else if (store.state.sculpturesLoaded) {
-		transitionAllSculpturesOpacity(0.0, 1000).then(() => {
-			store.state.displayCanvas = false;
+		if (store.state.displayCanvas) {
+			transitionAllSculpturesOpacity(0.0, 1000).then(() => {
+				store.state.displayCanvas = false;
+				nextRoute();
+			});
+		} else {
 			nextRoute();
-		});
+		}
 	} else {
 		store.state.displayCanvas = false;
 		nextRoute();
