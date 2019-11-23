@@ -105,8 +105,8 @@ img[lazy=loaded] {
   margin-left: 30px;
   grid-column-gap: 30px;
   grid-row-gap: 50px;
-  -ms-grid-columns: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+  -ms-grid-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .sculpture-description {
