@@ -1,7 +1,28 @@
-### cylinder
+### cylinder()
 
-```glsl
-float cylinder(vec3 p, vec2 size);
+### Example
+
+<iframe width="100%" height="450px" src="/sculpture/-LuQncmwpLuxRI-5EAca?example=true&embed=true" frameborder="0"></iframe>
+
+### Description
+Draw a cylinder with the given radius, and height
+
+### Syntax
+```js
+cylinder(radius, height);
 ```
-#### Example
-<iframe width="100%" height="450px" src="/sculpture/-LM0t3ZICdtWkNLFkO1q?example=true&embed=true" frameborder="0"></iframe>
+
+### Parameters
+**radius** Number: radius of the box
+
+**height** Number: height of the box
+
+---
+
+### Syntax
+```js
+cylinder(size)
+```
+
+### Parameters
+**size** vec3: radius, and height
