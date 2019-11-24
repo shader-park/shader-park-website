@@ -26,7 +26,6 @@
 <script>
 import Sculpture from './Sculpture.vue';
 import Room from './Room.vue';
-import LazyImage from './LazyImage.vue';
 import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 import VLazyImage from "v-lazy-image";
 
@@ -37,7 +36,6 @@ export default {
     },
 	components : {
 		sculpture: Sculpture,
-		LazyImage,
 		room : Room	,
 		VLazyImage
 	},
