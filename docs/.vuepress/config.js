@@ -11,7 +11,7 @@ module.exports = {
   },
   themeConfig: {
     nav: [
-      {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
+      // {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
       { text: 'References GLSL', link: '/references/' },
       { text: 'References JS', link: '/references-js/' },
       {text: 'Home', link: 'http://shader-park.appspot.com'}
@@ -20,35 +20,44 @@ module.exports = {
     sidebar: {
       '/references-js/': [
         {
-          title: 'Geometries',
-          collapsable: false,
+          title: 'Geometry',
+          sidebarDepth: 3,
+          collapsable: true,
           children: [
-            '/references-js/geometries/sphere',
-            '/references-js/geometries/box',
-            '/references-js/geometries/torus',
-            '/references-js/geometries/line',
+            {
+              title: 'Primitives',
+              children: [
+                '/references-js/geometries/sphere',
+                '/references-js/geometries/box',
+                '/references-js/geometries/torus',
+                '/references-js/geometries/line',
+                '/references-js/geometries/cylinder',
+              ]
+            },
+            {
+              title: 'Construction Modes',
+              children: [
+                '/references-js/operations/union',
+                '/references-js/operations/difference',
+                '/references-js/operations/intersect',
+                '/references-js/operations/blend',
+                '/references-js/operations/mixGeo',
+              ]
+            },
+            {
+              title: 'Modifiers',
+              children: [
+                '/references-js/operations/shell',
+                '/references-js/operations/expand',
+              ]
+            },
           ]
         },
         {
-          title: 'Color',
-          collapsable: false,
-          children: [
-            '/references-js/color/color',
-          ]
-        },
-        {
-          title: 'Operations',
-          collapsable: false,
+          collapsable: true,
+          title: 'Coordinate Space Modifiers',
           children: [
             '/references-js/operations/displace',
-            '/references-js/operations/reset',
-            '/references-js/operations/union',
-            '/references-js/operations/blend',
-            '/references-js/operations/difference',
-            '/references-js/operations/intersect',
-            '/references-js/operations/shell',
-            '/references-js/operations/expand',
-            '/references-js/operations/mixGeo',
             '/references-js/operations/mirrorX',
             '/references-js/operations/mirrorY',
             '/references-js/operations/mirrorZ',
@@ -56,9 +65,50 @@ module.exports = {
             '/references-js/operations/rotateX',
             '/references-js/operations/rotateY',
             '/references-js/operations/rotateZ',
-            
+            '/references-js/operations/reset',
           ]
         },
+        {
+          title: 'Material',
+          collapsable: true,
+          children: [
+            '/references-js/color/color',
+            {
+              title: 'Lighting',
+              children: []
+            }
+          ]
+        },
+        {
+          title: 'Input',
+          collapsable: true,
+          children: [
+            {
+              title: 'Space & Time',
+              children: []
+            },
+            {
+              title: 'Interactive',
+              children: []
+            },
+
+          ]
+        },
+        {
+          title: 'Math',
+          collapsable: true,
+          children: []
+        },
+        {
+          title: 'Noise',
+          collapsable: true,
+          children: []
+        },
+        {
+          title: 'Constants',
+          collapsable: true,
+          children: []
+        }
       ],
       '/references/' : 
       [
