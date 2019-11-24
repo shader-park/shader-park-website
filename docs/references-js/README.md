@@ -5,21 +5,21 @@ sidebar: false
 Shader Park provides a set of built in functions to help you create your sculptures.
 
 ### Geometry
-[sphere()](/references-js/geometries/sphere.html), [box()](/references-js/geometries/box.html), [torus()](/references-js/geometries/torus.html), [line()](/references-js/geometries/line.html), roundedBox(), cylinder(), cone(), roundedCone(), plane()
+#### Primitives
+[sphere()](/references-js/geometries/sphere.html), [box()](/references-js/geometries/box.html), [torus()](/references-js/geometries/torus.html), [line()](/references-js/geometries/line.html), [cylinder()](/references-js/geometries/cylinder.html)
 
-### Color
-[color()](/references-js/color/color.html), hsv2rgb(), rgb2hsv()
-### Operations
-
-#### Geometry Construction Modes
+#### Construction Modes
 [union()](/references-js/operations/union.html), [difference()](/references-js/operations/difference.html), [blend()](/references-js/operations/blend.html), [intersect()](/references-js/operations/intersect.html), [mixGeo()](/references-js/operations/mixGeo.html)
 
+#### Modifiers
+[shell()](/references-js/operations/shell.html), [expand()](/references-js/operations/expand.html), applyDistance()
 
-#### Geometry Modifiers
-[shell()](/references-js/operations/shell.html), [expand()](/references-js/operations/expand.html)
+------
 
-#### Coordinate Space Modifiers 
+### Coordinate Space Modifiers 
 [displace()](/references-js/operations/displace.html)
+
+setSpace()
 
 [mirrorX()](/references-js/operations/mirrorX.html), [mirrorY()](/references-js/operations/mirrorY.html), [mirrorZ()](/references-js/operations/mirrorX.html), [mirrorXYZ()](/references-js/operations/mirrorXYZ.html)
 
@@ -28,11 +28,47 @@ Shader Park provides a set of built in functions to help you create your sculptu
 
 [reset()](/references-js/operations/reset.html)
 
-### Interactions
-mouse, mouseIntersection(), worldPosition, getRayDirection()
 
-### Lighting
-lightDirection(), basicLighting(), occlusion(), specularLighting()
+
+------
+
+### Material
+
+[color()](/references-js/color/color.html), 
+
+hsv2rgb(), rgb2hsv(), 
+
+occlusion() 
+
+#### Lighting
+basicLighting(), noMaterial(), lightDirection()
+
+------
+
+
+### Input
+
+#### Space and Time
+
+getSpace(), 
+
+getRayDirection(),
+
+getSpherical()
+
+time,
+
+normal
+
+
+#### Interactive
+
+input()
+
+mouse, mouseIntersection()
+
+
+------
 
 ### Math
 sin(), cos(), tan(), asin(), acos(), exp(), log(), exp2(), log2(), sqrt(), inversesqrt(), abs(), sign(), floor(), ceil(), fract()
@@ -41,13 +77,14 @@ pow(), mod(), min(), max(), clamp(), mix(), smoothstep(), length(), distance(), 
 
 toSpherical(), fromSpherical(), sphericalDistribution()
 
+------
+
 ### Noise
 
 noise(), fractalNoise()
 
-### Globals
-x, y, z
+------
 
-normal, 
+### Constants
 
 PI, TWO_PI, TAU
