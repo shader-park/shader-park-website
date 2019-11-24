@@ -1,7 +1,7 @@
 ---
 home: true
 actionText: Get Started →
-actionLink: /references/
+actionLink: /references-js/
 features:
 - title: Creative Coding Community
   details: Focuses on real time generative graphics and teaches new developers techniques in 3D graphics.
