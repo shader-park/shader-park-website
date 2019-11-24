@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import * as OrbitControls from './THREE_Helpers/OrbitControls.js'
 import * as MapControls from './THREE_Helpers/MapControls'
+import * as IntersectionObserver from 'intersection-observer';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';

@@ -59,6 +59,7 @@
     "express": "^4.16.3",
     "express-dynamic-static": "^1.0.5",
     "firebase": "^7.4.0",
+    "intersection-observer": "^0.7.0",
     "lozad": "^1.14.0",
     "node-cleanup": "^2.1.2",
     "node-fetch": "^2.1.2",
