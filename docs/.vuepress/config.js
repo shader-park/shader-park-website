@@ -14,7 +14,7 @@ module.exports = {
       // {text: 'About', link: '/'}, {text: 'Getting Started', link: '/tutorials/'},
       { text: 'References GLSL', link: '/references/' },
       { text: 'References JS', link: '/references-js/' },
-      {text: 'Home', link: 'http://shader-park.appspot.com'}
+      {text: 'Home', link: 'https://shader-park.appspot.com'}
     ],
     // sidebar: 'auto'
     sidebar: {
