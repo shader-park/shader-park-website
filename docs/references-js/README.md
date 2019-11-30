@@ -49,9 +49,9 @@ basicLighting, noMaterial, lightDirection
 
 getSpace, 
 
-getRayDirection,
-
 getSpherical,
+
+getRayDirection,
 
 time,
 
@@ -68,12 +68,13 @@ mouse, mouseIntersection
 ------
 
 ### Math
-sin, cos, tan, asin, acos, exp, log, exp2, log2, sqrt, inversesqrt, abs, sign, floor, ceil, fract, pow, mod
 
+sin, cos, tan, asin, acos 
+exp, log, exp2, log2
+pow, sqrt, inversesqrt
+mod, fract, abs, sign, floor, ceil
 min, max, clamp, mix, smoothstep
-
 length, distance, dot, cross, normalize, reflect, refract
-
 toSpherical, fromSpherical
 
 ------
@@ -92,7 +93,7 @@ PI, TWO_PI, TAU
 
 ------
 
-# Global Settings
+### Global Settings
 
 lightDirection
 noLighting
