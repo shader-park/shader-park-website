@@ -102,26 +102,40 @@ firebase.auth().onAuthStateChanged(function(user) {
 		init();
 
 		//Detect when sculpture is saved
-		vueApp.$store.subscribeAction((action, state) => {
+		vueApp.$store.subscribeAction(async (action, state) => {
 			let {payload, type} = action;
-			if (type === 'saveSculpture') {
-				if (payload.uid === firebase.auth().currentUser.uid) {
-					//hide pedestal during image capture
-					let pedestalVisible = payload.sculpture.pedestal.visible;
-					payload.sculpture.pedestal.visible = false;
-					setTimeout(() => { //make sure pedestal is hidden
-						captureCanvasImage((blob) => {
-							payload.sculpture.pedestal.visible = pedestalVisible;
-							storageRef.child(`sculptureThumbnails/${payload.id}.jpeg`).put(blob).then(fileData => {
-								fileData.ref.getDownloadURL().then(thumbnail => {
-									if (thumbnail) {
-										firebase.database().ref('sculptures').child(payload.id).update({ thumbnail })
-									}
-								});
-							});
-						}, false);
-					}, 1);
+			await payload;
+			if ((type === 'saveNewSculpture' || type === 'saveSculpture') 
+				&& payload.uid === firebase.auth().currentUser.uid) {
+				console.log('payload', payload);
+				//hide pedestal during image capture
+				let pedestal = null;
+				let pedestalWasVisible = false;
+				if (state.selectedSculpture && state.selectedSculpture.sculpture && state.selectedSculpture.sculpture.pedestal) {
+					pedestal = state.selectedSculpture.sculpture.pedestal;
+					pedestalWasVisible = pedestal.visible;
+					pedestal.visible = false;
 				}
+				
+				setTimeout(() => { //make sure pedestal is hidden
+					captureCanvasImage(async (blob) => {
+						try {
+							if (pedestal && pedestalWasVisible) {
+								pedestal.visible = true;
+							}
+							console.log('captured image', 'uploading to id', payload.id)
+							let fileData = await storageRef.child(`sculptureThumbnails/${payload.id}.jpeg`).put(blob);
+							console.log('uploaded')
+							let thumbnail = await fileData.ref.getDownloadURL();
+							if (thumbnail) {
+								console.log('thumbnail url', thumbnail)
+								firebase.database().ref('sculptures').child(payload.id).update({ thumbnail })	
+							}
+						} catch(e) {
+							console.error(e);
+						}
+					}, false);
+				}, 1);
 			}
 		});
 		firstInit = false;

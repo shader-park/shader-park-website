@@ -201,7 +201,7 @@ export const store = new Vuex.Store({
       firebase.database().ref('users/' + uid).set(dbUser);
       firebase.database().ref('usernames/' + dbUser.username).set(uid);
     },
-    saveNewSculpture({commit, getters}, sculpture) {
+    async saveNewSculpture({commit, getters}, sculpture) {
       const user = getters.getUser;
       // sculpture.author = { uid: user.uid, username: user.displayName };
       sculpture.uid = user.uid;
@@ -212,14 +212,14 @@ export const store = new Vuex.Store({
         newId: ''
       };
       delete sculpture.vueId;  // remove the vueId when saving to db
-      const sculpID = firebase.database().ref(`sculptures`).push().key;
+      const sculpID = await firebase.database().ref(`sculptures`).push().key;
       sculpture.id = sculpID;
       let route = sculpture.isExample && getters.isAdmin  ? 'examples' : 'sculptures';
-      firebase.database().ref(`${route}/${sculpID}`).update(sculpture)
+      await firebase.database().ref(`${route}/${sculpID}`).update(sculpture)
         .catch(error => console.error(error));
 
       //update list of sculptures in user's profile
-      firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
+      await firebase.database().ref(`users/${user.uid}/sculptures`).child(sculpID).set(sculpID)
         .catch(error => console.error(error));
 
       idHistory.newId = sculpID;
@@ -230,66 +230,71 @@ export const store = new Vuex.Store({
       return sculpID;
     },
     saveSculpture({commit, dispatch, getters}, sculptureObj) {
-      commit('setLoading', true);
-      let sculpture = Object.assign({}, sculptureObj);
-      delete sculpture.sculpture; //remove the three.js 3d object
-      
-      console.log('saving sculpture');
-      const user = getters.getUser;
-      if(!user) {
-        console.error('Tried to Save Sculpture when a User is not logged in');
-        return;
-      }
-
-      if (!sculpture.id || sculpture.id === sculpture.vueId) {
-        console.log('saving new sculpture');
-        dispatch('saveNewSculpture', sculpture);
-      } else {
-        if (sculpture.uid === user.uid) {  // update existing sculpture
-          let route = sculpture.isExample && getters.isAdmin ? 'examples' : 'sculptures'; //must be admin to update example
-          delete sculpture.vueId;  // remove the three.js 3d object
-          firebase.database().ref(`${route}/${sculpture.id}`).update(sculpture).then(() => {
-            commit('setLoading', false);
-          });
-        } else {  // Save as a fork
-          console.log('save as fork');
-          const newForkCount = sculpture.forks += 1;
-          //update existing sculpture fork count
-          let route = sculpture.isExample? 'examples' : 'sculptures'; //they don't have to be an admin to fork
-          firebase.database().ref(`${route}/${sculpture.id}/forks`).set(newForkCount);
-          sculpture.isExample = false; //fork isn't an example
-          Object.assign(sculpture, {
-            forks: 0,
-            uid: user.uid,
-            username: user.displayName,
-            fork: sculpture.id,
-            forkedSculptureTitle: sculpture.title,
-            featured: false,
-            isExample: false,
-            views: 0,
-            favorites: 0,
-            comments: 0
-          });
-          // sculpture.forks = 0;
-          // sculpture.uid = user.uid;
-          // sculpture.author = {uid: user.uid, username: user.displayName}; //new author
-          // sculpture.fork = sculpture.id; //save the id of the original sculpture
-          const fork = {
-            uid: user.uid,
-            username: user.displayName,
-            timestamp: Date.now(),
-            shaderSourceHistory: sculpture.shaderSource,
-            rootId: sculpture.id
+      return new Promise(async (resolve, reject) => {
+        try {
+          commit('setLoading', true);
+          let sculpture = Object.assign({}, sculptureObj);
+          delete sculpture.sculpture; //remove the three.js 3d object
+          
+          console.log('saving sculpture');
+          const user = getters.getUser;
+          if(!user) {
+            console.error('Tried to Save Sculpture when a User is not logged in');
+            reject('Tried to Save Sculpture when a User is not logged in');
           }
 
-          dispatch('saveNewSculpture', sculpture).then(newId => {
-            fork['newSculptureId'] = newId;
-            firebase.database().ref(`forks`).push(fork).then(() => {
-              commit('setLoading', false);
-            });
-          })
+          if (!sculpture.id || sculpture.id === sculpture.vueId) {
+            console.log('saving new sculpture');
+            resolve(dispatch('saveNewSculpture', sculpture));
+          } else {
+            if (sculpture.uid === user.uid) {  // update existing sculpture
+              let route = sculpture.isExample && getters.isAdmin ? 'examples' : 'sculptures'; //must be admin to update example
+              delete sculpture.vueId;  // remove the three.js 3d object
+              resolve(firebase.database().ref(`${route}/${sculpture.id}`).update(sculpture).then(() => {
+                commit('setLoading', false);
+              }));
+            } else {  // Save as a fork
+              console.log('save as fork');
+              const newForkCount = sculpture.forks += 1;
+              //update existing sculpture fork count
+              let route = sculpture.isExample? 'examples' : 'sculptures'; //they don't have to be an admin to fork
+              await firebase.database().ref(`${route}/${sculpture.id}/forks`).set(newForkCount);
+              sculpture.isExample = false; //fork isn't an example
+              Object.assign(sculpture, {
+                forks: 0,
+                uid: user.uid,
+                username: user.displayName,
+                fork: sculpture.id,
+                forkedSculptureTitle: sculpture.title,
+                featured: false,
+                isExample: false,
+                views: 0,
+                favorites: 0,
+                comments: 0
+              });
+              // sculpture.forks = 0;
+              // sculpture.uid = user.uid;
+              // sculpture.author = {uid: user.uid, username: user.displayName}; //new author
+              // sculpture.fork = sculpture.id; //save the id of the original sculpture
+              const fork = {
+                uid: user.uid,
+                username: user.displayName,
+                timestamp: Date.now(),
+                shaderSourceHistory: sculpture.shaderSource,
+                rootId: sculpture.id
+              }
+              let newId = await dispatch('saveNewSculpture', sculpture);
+              fork['newSculptureId'] = newId;
+              resolve(firebase.database().ref(`forks`).push(fork).then(() => {
+                commit('setLoading', false);
+              }));
+            }
+          }
+        } catch(e) {
+          console.error(e);
+          reject(e);
         }
-      }
+      });
     },
     removeSelectedSculptureFromScene({commit, getters}) {
       let selectedSculpture = getters.selectedSculpture;

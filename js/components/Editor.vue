@@ -234,7 +234,11 @@ export default {
                         this.selectedSculpture.saved = true;
                         this.$store.commit('setUnsavedChanges', {[id] : true});
                         resolve();
-                    });
+                    }).catch(e => {
+                        console.error(e);
+                        alert(e);
+                        reject(e);
+                    })
                 } else {
                     // this.$router.push('sign-in');
                     this.$store.commit('displayLogin', true);
