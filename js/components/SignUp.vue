@@ -78,7 +78,7 @@ export default {
 <style lang="less">
 
 .auth-container {
-    z-index: 101;
+    z-index: 102;
     background: white;
     position: absolute;
     top: 0px;
