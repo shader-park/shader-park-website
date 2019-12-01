@@ -106,8 +106,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 			let {payload, type} = action;
 			await payload;
 			if ((type === 'saveNewSculpture' || type === 'saveSculpture') 
-				&& payload.uid === firebase.auth().currentUser.uid) {
-				console.log('payload', payload);
+				&& (payload.uid === firebase.auth().currentUser.uid )) {
 				//hide pedestal during image capture
 				let pedestal = null;
 				let pedestalWasVisible = false;
@@ -363,7 +362,10 @@ function piCreateMediaRecorder(isRecordingCallback, canvas)
 		videoBitsPerSecond: 2500000,
 		mimeType: 'video/webm;'
     };
-    
+	if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
+		console.error('recorder unsupported');
+		return
+	}
     var mediaRecorder = new MediaRecorder(canvas.captureStream(), options);
     console.log("videoBitsPerSecond: ", mediaRecorder.videoBitsPerSecond);
     var chunks = [];
