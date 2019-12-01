@@ -247,9 +247,10 @@ export const store = new Vuex.Store({
             console.log('saving new sculpture');
             resolve(dispatch('saveNewSculpture', sculpture));
           } else {
-            if (sculpture.uid === user.uid) {  // update existing sculpture
+            if (sculpture.uid === user.uid || getters.isAdmin) {  // update existing sculpture
               let route = sculpture.isExample && getters.isAdmin ? 'examples' : 'sculptures'; //must be admin to update example
               delete sculpture.vueId;  // remove the three.js 3d object
+              
               resolve(firebase.database().ref(`${route}/${sculpture.id}`).update(sculpture).then(() => {
                 commit('setLoading', false);
               }));

@@ -23,7 +23,6 @@ Vue.use(Vuelidate);
 // Vue.use(window['vue-js-modal'].default, { dialog: true });
 Vue.config.devtools = true;
 // Vue.config.productionTip = false;
-window.db = firebase.database();
 let storageRef = firebase.storage().ref();
 
 const router = new VueRouter({routes: routes, mode: 'history'});
@@ -106,7 +105,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 			let {payload, type} = action;
 			await payload;
 			if ((type === 'saveNewSculpture' || type === 'saveSculpture') 
-				&& (payload.uid === firebase.auth().currentUser.uid )) {
+				&& (payload.uid === firebase.auth().currentUser.uid || firebase.auth().currentUser.uid ==='K3lAQQTKbiTiVXlwRZouH4OrWyv1')) {
 				//hide pedestal during image capture
 				let pedestal = null;
 				let pedestalWasVisible = false;
