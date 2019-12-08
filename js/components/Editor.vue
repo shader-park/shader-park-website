@@ -23,6 +23,8 @@
 
             <label class="autoUpdate-label centerY" v-if="isAdmin" for="Example">Is Example</label>
             <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Example" v-model="isExample">
+            <label class="autoUpdate-label centerY" v-if="isAdmin" for="Featured">Featured</label>
+            <input class="checkbox centerY" v-if="isAdmin" type="checkbox"  value="Featured" v-model="isFeatured">
             
             
 
@@ -56,7 +58,7 @@
 
 <script>
 import { codemirror } from 'vue-codemirror'
-import {sculptToThreeJSShaderSource} from 'sculpture-park-core';
+import {sculptToThreeJSShaderSource, sculptToTouchDesignerShaderSource} from 'sculpture-park-core';
 
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';
@@ -82,6 +84,7 @@ export default {
             },
             initialized: false,
             isExample: false,
+            isFeatured: false,
             autoUpdate: true,
             closed: false,
             editorContainsErrors: false,
@@ -183,19 +186,24 @@ export default {
         isExample(value) {
             this.selectedSculpture.isExample = value;
         },
+        isFeatured(value) {
+            this.selectedSculpture.featured = value;
+        },
         selectedSculpture(obj) {
             if(obj) {
                 if(obj.title) {
                     this.titleInput.width = obj.title.length + 'ch';
                 }
                 this.currWidth = this.cachedWidth;
+                this.isExample = obj.isExample;
+                this.isFeatured = obj.featured;
                 if(!this.initialized) {
                     this.code = obj.shaderSource;
                     this.initialized = true;
                 } else {
                     this.closed = false;
                     this.code = obj.shaderSource;
-                    this.isExample = obj.isExample;
+                    
                 }
                 let interval = setInterval(() => this.codemirror.refresh(), 10);
                 setTimeout(() => {
@@ -270,8 +278,11 @@ export default {
         },
         download() {
             let output = sculptToThreeJSShaderSource(this.code);
+            let out2 = sculptToTouchDesignerShaderSource(this.code);
+            
             let spExport = output.geoGLSL + '\n' + output.colorGLSL;
             output['spExport'] = spExport;
+            output['touchDesignerExport'] = out2.frag;
             console.log(output);
         },
         exportSculpture() {
