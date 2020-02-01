@@ -28,6 +28,27 @@ let storageRef = firebase.storage().ref();
 const router = new VueRouter({routes: routes, mode: 'history'});
 let animationPaused = false;
 
+// console.defaultLog = console.log.bind(console);
+// console.logs = [];
+// console.log = function () {
+// 	// default &  console.log()
+// 	console.defaultLog.apply(console, arguments);
+// 	// new & array data
+// 	console.logs.push(Array.from(arguments));
+// }
+
+
+//TRY TO CAPTURE ERRORS
+/*
+console.defaultError = console.error.bind(console);
+console.errors = [];
+console.error = function () {
+	// default &  console.error()
+	console.defaultError.apply(console, arguments);
+	// new & array data
+	console.errors.push(Array.from(arguments));
+}
+*/
 
 let sculptureHasBeenSelected = false;
 let sculptureHasBeenDeselected = false;
@@ -52,8 +73,7 @@ router.beforeEach((to, from, next) => {
 		cachedSelectedSculptureId = null;
 		cachedCameraPose = null;
 		firstTimeAtRoute = true;
-		const requiresAuth =
-				to.matched.some(record => record.meta.requiresAuth);
+		const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 		if (requiresAuth && !currentUser) {
 			this.$store.commit('displayLogin', true);
 			// next('/sign-in');
