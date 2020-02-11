@@ -17,16 +17,16 @@ export class Sculpture {
             this.uniforms = this.mesh.material.uniformDescriptions;
             this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
-        const pedestalGeom = new THREE.BoxGeometry(1.0, 0.5, 1.0);
+        const pedestalGeom = new THREE.BoxGeometry(2, 1, 2);
         this.opacity = 0.0;
         this.stepSize = 0.8;
         const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
         this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
         this.sepBuffer = 0.05; // Small gap between sculpture and pedestal prevents z-fighting
-        this.pedestal.position.set(0, -.75-this.sepBuffer, 0);
+        this.pedestal.position.set(0, -1.5-this.sepBuffer, 0);
         this.mesh.add(this.pedestal);
-        this.pedestalEdges = createPedestalEdges(1.0, 0.5);
-        this.pedestalEdges.position.set(0, -.75-this.sepBuffer, 0);
+        this.pedestalEdges = createPedestalEdges(2, 1);
+        this.pedestalEdges.position.set(0, -1.5-this.sepBuffer, 0);
         // this.mesh.add(this.pedestalEdges);
         this.selected = false;
         this.setOpacity(0.0);
@@ -44,12 +44,12 @@ export class Sculpture {
         }
         this.mesh.remove(this.pedestalEdges);
         if (selected) {
-            this.pedestalEdges = createPedestalEdges(1.0, 0.5, 0.015);
-            this.pedestalEdges.position.set(0, -.75-this.sepBuffer, 0);
+            this.pedestalEdges = createPedestalEdges(2, 1, 0.015);
+            this.pedestalEdges.position.set(0, -1.5-this.sepBuffer, 0);
             this.mesh.add(this.pedestalEdges);
         } else {
-            this.pedestalEdges = createPedestalEdges(1.0, 0.5);
-			this.pedestalEdges.position.set(0, -.75-this.sepBuffer, 0);
+            this.pedestalEdges = createPedestalEdges(2, 1);
+			this.pedestalEdges.position.set(0, -1.5-this.sepBuffer, 0);
             this.mesh.add(this.pedestalEdges);
         }
         this.selected = selected;
