@@ -70,6 +70,12 @@ export const routes = [
     meta: {title: 'Profile', requiresAuth: true}
   },
   {
+    path: '/featured',
+    name: 'featured',
+    component: Home,
+    meta: { title: 'Featured', requiresAuth: false }
+  },
+  {
     path: '/sculpture/:id',
     name: 'sculpture',
     component: New,

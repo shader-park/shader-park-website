@@ -92,7 +92,7 @@
     "browserify": "^14.5.0",
     "concurrently": "^3.5.0",
     "less": "^2.7.3",
-    "nodemon": "^1.17.3",
+    "nodemon": "^2.0.2",
     "vueify": "^9.4.1",
     "vuepress": "^1.0.0-alpha.44",
     "watchify": "^3.9.0"

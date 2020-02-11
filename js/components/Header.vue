@@ -3,7 +3,7 @@
         <div class="nav-spacer"></div>
         <div v-if="!embedded" class="nav-bar">
             <div class="nav-left">
-                <h2 v-if="!isMobile" class="logo-text">SP</h2>
+                <router-link to="/"><h2 v-if="!isMobile" class="logo-text">SP</h2></router-link>
                 <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
                 <!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
             </div>
