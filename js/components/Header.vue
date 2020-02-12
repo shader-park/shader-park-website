@@ -10,10 +10,11 @@
             <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
             <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
                 
-                <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Gallery</router-link>
+                <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Home</router-link>
                 <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
                 <a class="link" href="/references-js" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
                 <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>
+                <router-link to="/about" class="link" active-class="active">About</router-link>
                 <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
                 
                 <!-- <router-link to="/sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link> -->

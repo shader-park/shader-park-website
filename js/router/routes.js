@@ -5,6 +5,7 @@ import New from '../components/New.vue';
 import Profile from '../components/Profile.vue';
 import SignIn from '../components/SignIn.vue';
 import SignUp from '../components/SignUp.vue';
+import About from '../components/About.vue';
 
 // This is where you add all your site routes
 // Each route is set as an obect in the array
@@ -98,6 +99,12 @@ export const routes = [
     meta: {
       title: 'user',
     }
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About,
+    meta: { title: 'About'}
   },
   {path: '/404', name: '404', component: Error404},
   {path: '*', redirect: '/404'}
