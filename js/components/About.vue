@@ -12,7 +12,7 @@
 
         <p>
 
-        <em> Acknowladgements </em>
+        <em> Acknowledgments </em>
             Huge thanks to the following for guidance on Shader Park:
             Inigo Quilez, Ricardo Cabello, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
             
