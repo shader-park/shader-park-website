@@ -7,14 +7,20 @@
             experimentation and live-coding.<br/>
             The platform was developed by Torin Blankensmith and Peter Whidden.
             This platform is meant to be an entry-point into graphics programming, as well a tool for experienced 
-            graphics programmers
+            graphics programmers.
+
+            <br/>
+            <em> Acknowledgments </em><br/><br/>
+            Huge thanks to the following for guidance on Shader Park:<br/>
+            Inigo Quilez, Ricardo Cabello, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
+
+            Thanks to __- for his inspiration for the design of the editor based on <a  target="_blank" href="http://www.anitype.com/">Anitype</a>
         </p>
 
         <p>
 
-        <em> Acknowledgments </em>
-            Huge thanks to the following for guidance on Shader Park:
-            Inigo Quilez, Ricardo Cabello, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
+        
+            
             
         </p>
     </div>
