@@ -5,7 +5,8 @@ import * as IntersectionObserver from 'intersection-observer';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
-import VModal from 'vue-js-modal'
+
+import VModal from 'vue-js-modal';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 import anime from 'animejs';
@@ -16,9 +17,11 @@ import {store} from './store/store';
 
 window.anime = anime;
 firebase.initializeApp(dbConfig);
+
 Vue.use(VueRouter);
 
-Vue.use(VModal, {dialog: true});
+
+Vue.use(VModal, { dialog: true });
 Vue.use(Vuelidate);
 // Vue.use(window['vue-js-modal'].default, { dialog: true });
 Vue.config.devtools = true;
@@ -175,18 +178,18 @@ const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
-let prevCanvasSize;
+let prevCanvasSize = window.innerWidth/2; 
 let tweeningSculpturesOpacity = false;
 let fogDistance = 8.0;
 window.fogDistance = fogDistance;
 
 let loader = new THREE.TextureLoader();
-loader.load('/images/msdf-left-align.png', (texture) => {
-	store.commit('setMSDFTexture', texture)
-}, undefined,
-(err) => {
-	console.error('An error happened.', err);
-});
+// loader.load('/msdf-left-align.png', (texture) => {
+// 	store.commit('setMSDFTexture', texture)
+// }, undefined,
+// (err) => {
+// 	console.error('An error happened.', err);
+// });
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');

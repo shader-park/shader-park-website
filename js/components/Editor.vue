@@ -2,7 +2,7 @@
 
 <div :class="{embeded : isEmbeded}" :style="{width: currWidth}" class="editor">
     <div class="editor-container" :style="{minWidth: cachedWidth}">
-        <v-dialog/>
+        <!-- <v-dialog/> -->
         <div class="controls">
             <input @keyup="()=>{}" 
                 @keydown.stop="() => {}" 
@@ -63,6 +63,7 @@ import {sculptToThreeJSShaderSource, sculptToTouchDesignerShaderSource} from 'sc
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';
 
+
 export default {
     props: {
         cachedWidth: { type: String, default: '49vw' }
@@ -101,7 +102,8 @@ export default {
             },
             shareText : '',
             currWidth: '0px',
-            editorHasDisplayedModal: false
+            editorHasDisplayedModal: false,
+            dialog: false
         }
     },
     components: {
@@ -109,13 +111,11 @@ export default {
     },
     mounted() {
         document.addEventListener('keydown', this.keypress.bind(null, true));
-        // document.addEventListener('keyup', this.keypress.bind(null, false));
     },
     computed : {
         codemirror() {
             return this.$refs.myCm.codemirror;
         },
-
         saveText() {
             if(this.selectedSculpture) {
                 if(!this.selectedSculpture.uid || this.$store.getters.getUser && this.$store.getters.getUser.uid == this.selectedSculpture.uid) {
@@ -298,6 +298,10 @@ export default {
             if(this.selectedSculpture.saved) {
                 close();
             } else {
+                console.log('about to show modal');
+                this.dialog = true;
+
+                /*
                 this.$modal.show('dialog', {
                     title: 'Unsaved Changes',
                     text: 'Do you want to save before closing the editor?',
@@ -323,6 +327,7 @@ export default {
                         }
                     }]
                 })
+                */
             }
         },
         deleteSculpture() {
@@ -373,10 +378,20 @@ export default {
 }
 
 </script>
+<style scoped>
+
+/* @import 'codemirror/lib/codemirror.css'; */
+</style>
+
 <style lang="less" scoped>
 
-@import '../codemirror/glslEditor.css';
-@import 'codemirror/lib/codemirror.css';
+@import '/codemirror/glslEditor.css';
+// @import "codemirror/lib/codemirror.css";
+
+// @import '../codemirror/glslEditor.css';
+// @import '~codemirror/lib/codemirror.css';
+// @import '~@codemirror/lib/codemirror.css';
+// @import '~@material/react-button/index.scss';
 
 .editor-button {
     padding: 5px 15px 5px 15px;

@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<sculpture v-if="finishedLoadingSculp" ref="sculpture" :sculpData="emptySculpture"></sculpture>			
-		<modal name="no-sculpture-data-found" class="modal-popup" height="auto" width="500px">
+		<!-- <modal name="no-sculpture-data-found" class="modal-popup" height="auto" width="500px">
 			¯\_(ツ)_/¯ couldn't find the sculpture you were looking for.
-		</modal>
+		</modal> -->
 	</div>
 </template>
 

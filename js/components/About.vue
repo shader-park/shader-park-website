@@ -14,7 +14,7 @@
             Huge thanks to the following for guidance on Shader Park:<br/>
             Inigo Quilez, Ricardo Cabello, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
 
-            Thanks to __- for his inspiration for the design of the editor based on <a  target="_blank" href="http://www.anitype.com/">Anitype</a>
+            Thanks to Jono Brandel for the inspiration for the design of the editor heavily based on <a  target="_blank" href="http://www.anitype.com/">Anitype</a>
         </p>
 
         <p>

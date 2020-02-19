@@ -2,9 +2,9 @@
   "name": "ShaderPark",
   "version": "0.0.1",
   "description": "",
-  "main": "js/index.js",
-  "browser": {
-    "vue": "vue/dist/vue.common.js"
+  "main": "./client/index.html",
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
   },
   "gcloud": {
     "id": "shader-park",
@@ -12,41 +12,13 @@
     "devPort": 3000,
     "devAdminPort": 8000
   },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "plugins": [
-            "transform-async-to-generator",
-            "transform-runtime"
-          ],
-          "presets": [
-            [
-              "env",
-              {
-                "targets": {
-                  "browsers": [
-                    "last 2 versions",
-                    "safari >= 7"
-                  ]
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    ]
-  },
   "scripts": {
     "qDeploy": "gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version --no-promote",
     "deploy": "npm run build && gcloud app deploy --project $npm_package_gcloud_id --version $npm_package_gcloud_version",
     "browse": "gcloud app browse --project $npm_package_gcloud_id",
-    "build": "npm run less && NODE_ENV=production browserify -t vueify -e js/index.js -cm > client/bundle.js",
+    "build": "parcel build ./client/index.html",
     "less": "lessc less/style.less client/style.css",
-    "start": "node server.js",
-    "watch": "npm run less && concurrently \"npm run watchify\" \"autoless less/ client/\" \"nodemon server.js\"",
-    "watchify": "watchify -t vueify -e js/index.js --debug -o client/bundle.js --verbose"
+    "dev": "parcel ./client/index.html"
   },
   "author": "Peter Whidden, Torin Blankensmith, Andrew Palmer",
   "license": "Apache-2.0",
@@ -54,36 +26,28 @@
     "@tweenjs/tween.js": "^17.2.0",
     "animejs": "^3.0.1",
     "dat.gui": "^0.7.6",
-    "express": "^4.16.3",
-    "express-dynamic-static": "^1.0.5",
     "firebase": "^7.4.0",
     "intersection-observer": "^0.7.0",
     "three": "^0.103.0",
     "v-lazy-image": "^1.3.2",
-    "vue": "^2.5.16",
+    "vue": "^2.6.11",
     "vue-codemirror": "^4.0.6",
-    "vue-js-modal": "^1.3.26",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-js-modal": "^1.3.33",
     "vue-router": "^3.0.1",
     "vuelidate": "^0.7.4",
+    "vuetify": "^2.2.12",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "autoless": "^0.1.7",
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-regenerator": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babelify": "^8.0.0",
-    "browserify": "^14.5.0",
-    "concurrently": "^3.5.0",
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-transform-regenerator": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-preset-jsx": "^1.1.2",
+    "@vue/component-compiler-utils": "^3.1.1",
     "less": "^2.7.3",
-    "nodemon": "^2.0.2",
-    "vueify": "^9.4.1",
-    "watchify": "^3.9.0"
-  },
-  "resolutions": {
-    "webpack-dev-middleware": "3.7.2"
+    "parcel-bundler": "^1.12.4",
+    "vue-template-compiler": "^2.6.11"
   }
 }

@@ -9,3 +9,5 @@ docs/.vuepress/dist/
 client/bundle.js
 .vscode/settings.json
 client/bundle.js
+.cache
+dist
