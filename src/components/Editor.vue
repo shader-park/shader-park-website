@@ -59,7 +59,7 @@
 <script>
 
 import { codemirror } from 'vue-codemirror'
-import {sculptToThreeJSShaderSource, sculptToTouchDesignerShaderSource} from 'sculpture-park-core';
+import {sculptToThreeJSShaderSource, sculptToTouchDesignerShaderSource} from 'shader-park-core';
 
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/keymap/sublime.js';

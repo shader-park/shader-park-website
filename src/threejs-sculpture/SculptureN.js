@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import {createPedestalEdges} from './create-pedestal-edges.js'
 
-import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, glslToThreeJSMesh} from 'sculpture-park-core';
+import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, glslToThreeJSMesh} from 'shader-park-core';
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {

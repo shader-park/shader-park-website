@@ -6,7 +6,7 @@
 
 import {Sculpture} from '../threejs-sculpture/SculptureN.js';
 import {mapGetters} from 'vuex';
-import {defaultFragSourceGLSL} from 'sculpture-park-core';
+import {defaultFragSourceGLSL} from 'shader-park-core';
 
 function defaultMap(obj, id, def) {
     if(obj && obj[id]) {
