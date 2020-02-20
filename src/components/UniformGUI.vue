@@ -4,7 +4,6 @@
 
 <script>
 import * as dat from 'dat.gui';
-// import { Object3DIdCount } from 'three';
 
 export default {
 	data: function() {

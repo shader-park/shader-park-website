@@ -9,7 +9,7 @@
 
 
 import Sculpture from './Sculpture.vue';
-import * as THREE from 'three';
+import {Vector3} from 'three';
 
 export default {
     props: ['sculpturesData'],

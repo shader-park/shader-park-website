@@ -5,12 +5,11 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 
-import * as THREE from 'three';
-import * as OrbitControls from './THREE_Helpers/OrbitControls.js'
-import * as MapControls from './THREE_Helpers/MapControls'
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-// import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
-// import * as IntersectionObserver from 'intersection-observer';
+import { Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGLRenderer, FrontSide, BackSide } from 'three';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 import './registerServiceWorker';
 
 import TWEEN from '@tweenjs/tween.js';
@@ -178,26 +177,26 @@ firebase.auth().onAuthStateChanged(function(user) {
 		store.dispatch('setUser');
 	}
 });
-
+Color
 const scene = store.state.scene;
 window.scene = scene;
-scene.background = new THREE.Color(1.0, 1.0, 1.0);
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
+scene.background = new Color(1.0, 1.0, 1.0);
+const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 
 window.camera = camera;
 
 let renderer, controls, mapControls, canvas, canvasContainer;
 
-const mouse = new THREE.Vector2();
-const raycaster = new THREE.Raycaster();
-const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF);
+const mouse = new Vector2();
+const raycaster = new Raycaster();
+const hemisphereLight = new HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
 let prevCanvasSize = window.innerWidth/2; 
 let tweeningSculpturesOpacity = false;
 let fogDistance = 8.0;
 window.fogDistance = fogDistance;
 
-let loader = new THREE.TextureLoader();
+let loader = new TextureLoader();
 loader.load('/img/icons/msdf-left-align.png', (texture) => {
 	store.commit('setMSDFTexture', texture)
 }, undefined,
@@ -207,7 +206,7 @@ loader.load('/img/icons/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance'});
+	renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance'});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
@@ -222,7 +221,7 @@ function init() {
 	canvas.addEventListener('mousemove', onMouseMove, false);
 
 	mediaCap = piCreateMediaRecorder(() => console.log("capturing render"), canvas); 
-	controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls = new OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = true;
 	controls.dampingFactor = 0.25;
 	controls.zoomSpeed = 0.5;
@@ -234,7 +233,7 @@ function init() {
 		BOTTOM: 83
 	};
 
-	mapControls = new THREE.MapControls(camera, renderer.domElement);
+	mapControls = new MapControls(camera, renderer.domElement);
 	mapControls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
 	mapControls.dampingFactor = 0.25;
 	mapControls.screenSpacePanning = false;
@@ -287,7 +286,7 @@ function render(time) {
 			setInitialCameraPose()
 			transitionAllSculpturesOpacity(0.0, 1000, store.state.selectedSculpture.id);
 			transitionSculptureOpacity(store.state.selectedSculpture.id, 1.0, 1000);
-			let selectedSculpturePose = new THREE.Vector3();
+			let selectedSculpturePose = new Vector3();
 
 			selectedSculpturePose.setFromMatrixPosition(store.state.selectedObject.matrixWorld);
 			cachedCameraPose = camera.position;
@@ -347,14 +346,14 @@ function render(time) {
 		const intersects = raycaster.intersectObjects(objectsToRaycast);
 		if(intersects.length > 0) {
 			const firstIntersect = intersects[0].object;
-			firstIntersect.material.side = THREE.FrontSide;
+			firstIntersect.material.side = FrontSide;
 			const frontSideIntersection = raycaster.intersectObjects(objectsToRaycast);
 			if (frontSideIntersection.length > 0) {
 				firstIntersect.material.uniforms.mouse.value = frontSideIntersection[0].point.sub(firstIntersect.position);
 			} else { 
 				firstIntersect.material.uniforms.mouse.value = camera.position.clone().sub(firstIntersect.position);
 			}
-			firstIntersect.material.side = THREE.BackSide;
+			firstIntersect.material.side = BackSide;
 			if (store.state.selectedSculpture === null && store.state.clickEnabled) {
 				canvas.style.cursor = 'pointer';
 				store.state.intersectedObject = firstIntersect;
@@ -517,11 +516,11 @@ window.THREE = THREE;
 function tweenCameraToSculpturePosition(endTargetPos, duration=1000) {
 	let camTarget;
 	if (controls.enabled) {
-		camTarget = new THREE.Vector3().copy(controls.target);
-		mapControls.target = new THREE.Vector3().copy(controls.target);
+		camTarget = new Vector3().copy(controls.target);
+		mapControls.target = new Vector3().copy(controls.target);
 	} else {
-		camTarget = new THREE.Vector3().copy(mapControls.target);
-		controls.target = new THREE.Vector3().copy(mapControls.target);
+		camTarget = new Vector3().copy(mapControls.target);
+		controls.target = new Vector3().copy(mapControls.target);
 	}
 	let tweenControlsTarget = new TWEEN.Tween(camTarget)
 		.to(endTargetPos, duration)
@@ -530,8 +529,8 @@ function tweenCameraToSculpturePosition(endTargetPos, duration=1000) {
 			controls.target.set(camTarget.x, camTarget.y, camTarget.z);
 			mapControls.target.set(camTarget.x, camTarget.y, camTarget.z);
 		});
-	let camPos = new THREE.Vector3().copy(camera.position);
-	let endCamPos = new THREE.Vector3().copy(endTargetPos);
+	let camPos = new Vector3().copy(camera.position);
+	let endCamPos = new Vector3().copy(endTargetPos);
 	endCamPos.z += 2;
 	let tweenCamera = new TWEEN.Tween(camPos)
 		.to(endCamPos, duration)

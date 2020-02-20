@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 
-import * as THREE from 'three';
+import {Scene} from 'three';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
 
   state: {
     user: null,
-    scene: new THREE.Scene(),
+    scene: new Scene(),
     socket: null,
     clickEnabled: true,
     currentRoom: null,

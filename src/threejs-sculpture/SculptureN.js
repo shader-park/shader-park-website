@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { BoxGeometry, MeshBasicMaterial, Color, Mesh, } from 'three';
 
 import {createPedestalEdges} from './create-pedestal-edges.js'
 
@@ -14,15 +14,14 @@ export class Sculpture {
             this.mesh = glslToThreeJSMesh(source, this.payload);
         } else {
             this.mesh = sculptToThreeJSMesh(source, this.payload);
-            console.log(this.mesh)
             this.uniforms = this.mesh.material.uniformDescriptions;
             this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
-        const pedestalGeom = new THREE.BoxGeometry(2, 1, 2);
+        const pedestalGeom = new BoxGeometry(2, 1, 2);
         this.opacity = 0.0;
         this.stepSize = 0.8;
-        const pedestalMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
-        this.pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
+        const pedestalMat = new MeshBasicMaterial({ color: new Color(0.95, 0.95, 0.95), transparent: true, opacity: this.opacity });
+        this.pedestal = new Mesh(pedestalGeom, pedestalMat);
         this.sepBuffer = 0.05; // Small gap between sculpture and pedestal prevents z-fighting
         this.pedestal.position.set(0, -1.5-this.sepBuffer, 0);
         this.mesh.add(this.pedestal);
