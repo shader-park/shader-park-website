@@ -1,7 +1,8 @@
 {
-  "name": "Shader-Park",
+  "name": "ShaderPark",
   "version": "0.1.0",
   "private": true,
+  "author": "Peter Whidden, Torin Blankensmith",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
