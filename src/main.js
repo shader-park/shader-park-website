@@ -11,7 +11,7 @@ import * as MapControls from './THREE_Helpers/MapControls'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import * as IntersectionObserver from 'intersection-observer';
-import './registerServiceWorker'
+import './registerServiceWorker';
 
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
@@ -41,7 +41,8 @@ Vue.config.devtools = true;
 // Vue.config.productionTip = false;
 let storageRef = firebase.storage().ref();
 
-const router = new VueRouter({routes: routes, mode: 'history'});
+const router = new VueRouter({ routes: routes, mode: 'history', base: process.env.BASE_URL});
+
 let animationPaused = false;
 
 // console.defaultLog = console.log.bind(console);

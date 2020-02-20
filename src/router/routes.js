@@ -1,11 +1,5 @@
-import Error404 from '../components/Error404.vue';
-import Home from '../components/Home.vue';
-import Examples from '../components/Examples.vue';
 import New from '../components/New.vue';
-import Profile from '../components/Profile.vue';
-import SignIn from '../components/SignIn.vue';
-import SignUp from '../components/SignUp.vue';
-import About from '../components/About.vue';
+
 
 // This is where you add all your site routes
 // Each route is set as an obect in the array
@@ -16,7 +10,7 @@ export const routes = [
   {
     path: '',
     name: 'home',
-    component: Home,
+    component: () => import(/* webpackChunkName: "home" */ '../components/Home.vue'),
     meta: {
       title: 'All Sculptures',
     }
@@ -24,7 +18,7 @@ export const routes = [
   {
     path: '/examples',
     name: 'examples',
-    component: Examples,
+    component: () => import(/* webpackChunkName: "examples" */ '../components/Examples.vue'),
     props: (route) => ({embed: route.query.embed}),
     meta: {
       title: 'Examples',
@@ -51,7 +45,7 @@ export const routes = [
   {
     path: '/sign-in',
     name: 'signIn',
-    component: SignIn,
+    component: () => import(/* webpackChunkName: "signin" */ '../components/SignIn.vue'),
     meta: {
       title: 'Sign In',
     }
@@ -59,7 +53,7 @@ export const routes = [
   {
     path: '/sign-up',
     name: 'signUp',
-    component: SignUp,
+    component: () => import(/* webpackChunkName: "signup" */ '../components/SignUp.vue'),
     meta: {
       title: 'Sign Up',
     }
@@ -67,13 +61,13 @@ export const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: Profile,
+    component: () => import(/* webpackChunkName: "profile" */ '../components/Profile.vue'),
     meta: {title: 'Profile', requiresAuth: true}
   },
   {
     path: '/featured',
     name: 'featured',
-    component: Home,
+    component: () => import(/* webpackChunkName: "home" */ '../components/Home.vue'),
     meta: { title: 'Featured', requiresAuth: false }
   },
   {
@@ -95,7 +89,7 @@ export const routes = [
   {
     path: '/user/:username',
     name: 'user',
-    component: Profile,
+    component: () => import(/* webpackChunkName: "profile" */ '../components/Profile.vue'),
     meta: {
       title: 'user',
     }
@@ -103,9 +97,13 @@ export const routes = [
   {
     path: '/about',
     name: 'about',
-    component: About,
+    component: () => import(/* webpackChunkName: "about" */ '../components/About.vue'),
     meta: { title: 'About'}
   },
-  {path: '/404', name: '404', component: Error404},
+  {
+    path: '/404', 
+    name: '404', 
+    component: import(/* webpackChunkName: "error" */ '../components/Error404.vue')
+  },
   {path: '*', redirect: '/404'}
 ]
