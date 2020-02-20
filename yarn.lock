@@ -7286,11 +7286,11 @@ sha.js@^2.4.0, sha.js@^2.4.8:
 
 "shader-park-core@https://github.com/bnanner/shader-park-core.git":
   version "0.0.1"
-  resolved "https://github.com/bnanner/shader-park-core.git#eb7ec81bbb3b48acd54e62cd47dde6d43466ebd5"
+  resolved "https://github.com/bnanner/shader-park-core.git#03d0cafbfd57aeadcedbeb074aa0865beb42a3ec"
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
-    three "^0.103.0"
+    three "^0.113.2"
 
 shebang-command@^1.2.0:
   version "1.2.0"
@@ -7849,11 +7849,6 @@ thread-loader@^2.1.3:
     loader-runner "^2.3.1"
     loader-utils "^1.1.0"
     neo-async "^2.6.0"
-
-three@^0.103.0:
-  version "0.103.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.103.0.tgz#63b3dbccc861caad93269618061a73dadebae71b"
-  integrity sha512-4WKRHTMt96sp+lX+Hx/eHtN9CWFyejDqr1ikgxZUJIkKEHVglSE7FY8n81NC6yWXqVSjUIQQppaxsoUe26Zi9g==
 
 three@^0.113.2:
   version "0.113.2"
