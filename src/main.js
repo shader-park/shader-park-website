@@ -207,7 +207,7 @@ loader.load('/img/icons/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true});
+	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance'});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
