@@ -17,3 +17,10 @@ yarn build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Project Deploy
+```
+git checkout staging
+git merge master
+git push
+```
