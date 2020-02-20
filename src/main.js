@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 // These imports load individual services into the firebase namespace.
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
 
 import * as THREE from 'three';
 import * as OrbitControls from './THREE_Helpers/OrbitControls.js'
