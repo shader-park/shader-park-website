@@ -5,7 +5,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 
-import { Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGLRenderer, FrontSide, BackSide } from 'three';
+import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGLRenderer, FrontSide, BackSide } from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -177,8 +177,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 		store.dispatch('setUser');
 	}
 });
-Color
-const scene = store.state.scene;
+// const scene = store.state.scene;
+const scene = new Scene();
 window.scene = scene;
 scene.background = new Color(1.0, 1.0, 1.0);
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
@@ -510,8 +510,6 @@ function onMouseUp(event) {
 	}
 	tempIntersectedObject = null;
 }
-
-window.THREE = THREE;
 
 function tweenCameraToSculpturePosition(endTargetPos, duration=1000) {
 	let camTarget;

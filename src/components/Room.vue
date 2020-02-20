@@ -31,7 +31,7 @@ export default {
             while (row < this.grid.x && index < this.sculptures.length) {
                 let x = row * this.grid.spacing;
                 let z = - col * this.grid.spacing ;
-                let pos = new THREE.Vector3(x, 0, z);
+                let pos = new Vector3(x, 0, z);
                 this.sculpPositions.push(pos);
                 row++;
                 index++;
