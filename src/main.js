@@ -15,7 +15,6 @@ import './registerServiceWorker';
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
 
-
 import VModal from 'vue-js-modal';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
