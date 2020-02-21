@@ -80,7 +80,7 @@ export default {
 .auth-container {
     z-index: 102;
     background: white;
-    position: absolute;
+    position: fixed;
     top: 0px;
     right: 0px;
     display: block;
