@@ -10,12 +10,16 @@ export class Sculpture {
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;
-        if (isGlsl) {
-            this.mesh = glslToThreeJSMesh(source, this.payload);
-        } else {
-            this.mesh = sculptToThreeJSMesh(source, this.payload);
-            this.uniforms = this.mesh.material.uniformDescriptions;
-            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+        try {
+            if (isGlsl) {
+                this.mesh = glslToThreeJSMesh(source, this.payload);
+            } else {
+                this.mesh = sculptToThreeJSMesh(source, this.payload);
+                this.uniforms = this.mesh.material.uniformDescriptions;
+                this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+            }
+        } catch (e) {
+            console.error(e);
         }
         const pedestalGeom = new BoxGeometry(2, 1, 2);
         this.opacity = 0.0;
@@ -65,12 +69,16 @@ export class Sculpture {
         if (newSource) {
             this.source = newSource;
         }
-        if (this.IsGLSL) {
-            this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
-        } else {
-            this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
-            this.uniforms = this.mesh.material.uniformDescriptions;
-            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+        try {
+            if (this.IsGLSL) {
+                this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
+            } else {
+                this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
+                this.uniforms = this.mesh.material.uniformDescriptions;
+                this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+            }
+        }catch (e) {
+            console.error(e);
         }
     }
 

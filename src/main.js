@@ -18,6 +18,7 @@ import Vue from 'vue';
 import VModal from 'vue-js-modal';
 import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
+import VueMeta from 'vue-meta'
 import anime from 'animejs';
 import App from './App.vue';
 import {dbConfig} from './dbConfig.js';
@@ -30,8 +31,7 @@ window.anime = anime;
 firebase.initializeApp(dbConfig);
 
 Vue.use(VueRouter);
-
-
+Vue.use(VueMeta);
 Vue.use(VModal, { dialog: true });
 Vue.use(Vuelidate);
 // Vue.use(window['vue-js-modal'].default, { dialog: true });

@@ -4,7 +4,7 @@
     <div class="w-layout-grid sculpture-grid" v-if="sculptures.length > 0 && !show3D">
 		<div  v-for="(sculpture, index) in sculptures" :key="sculpture.id"> 
 			<router-link  :to="'/sculpture/'+sculpture.id + (sculpture.isExample? '?example=true' : '') + '?hideeditor=true&hidepedestal=true'" tag="a">
-			<v-lazy-image width="500" sizes="520px" :src="sculpture.thumbnail? sculpture.thumbnail: 'https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-Lk_XES0HZ7-EdHhMstK.jpeg?alt=media&token=89087d04-7bcd-4368-bfe4-19281471308b'" src-placeholder="https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-LkafBpRAsQOqxKBP786.jpeg?alt=media&token=378fc6f9-b6d6-4dc3-8b98-fac3a1467d19" />
+			<v-lazy-image :alt="sculpture.title" width="500" sizes="520px" :src="sculpture.thumbnail? sculpture.thumbnail: 'https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-Lk_XES0HZ7-EdHhMstK.jpeg?alt=media&token=89087d04-7bcd-4368-bfe4-19281471308b'" src-placeholder="https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-LkafBpRAsQOqxKBP786.jpeg?alt=media&token=378fc6f9-b6d6-4dc3-8b98-fac3a1467d19" />
 			</router-link>
 			<div class="sculpture-description">
 				{{sculpture.title}}
