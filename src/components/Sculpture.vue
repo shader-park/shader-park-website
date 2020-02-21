@@ -18,6 +18,36 @@ function defaultMap(obj, id, def) {
 
 export default {
     props: ['sculpData', 'sculpPosition'],
+    metaInfo () {
+		return {
+			title: 'ShaderPark',
+			meta: [
+				{property: 'og:title', content: 'ShaderPark'},
+				{property: 'og:site_name', content: 'ShaderPark'},
+				// The list of types is available here: http://ogp.me/#types
+				{property: 'og:type', content: 'website'},
+				// Should the the same as your canonical link, see below.
+				// {property: 'og:url', content: 'https://www.my-site.com/my-special-page'},
+				{property: 'og:image', content: this.thumbnail},
+				// Often the same as your meta description, but not always.
+				{property: 'og:description', content: this.title},
+
+				// Twitter card
+				{name: 'twitter:card', content: 'summary'},
+				// {name: 'twitter:site', content: 'https://www.my-site.com/my-special-page'},
+				{name: 'twitter:title', content: 'ShaderPark'},
+				{name: 'twitter:description', content: this.title},
+				// Your twitter handle, if you have one.
+				// {name: 'twitter:creator', content: '@alligatorio'},
+				{name: 'twitter:image:src', content: this.thumbnail},
+
+				// Google / Schema.org markup:
+				{itemprop: 'name', content: 'ShaderPark'},
+				{itemprop: 'description', content: this.title},
+				{itemprop: 'image', content: this.thumbnail}
+			]
+		}
+	},
     data: function() {
         return {
             //This all gets saved to the Database!!!!
