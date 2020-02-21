@@ -1,15 +1,21 @@
 <template>
-	<main id="app" class="section">
-		<h1 v-if="!isEmbeded" class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
-		<div class="container">
-			<nav-main></nav-main>
+	<div>
+		<main id="app" class="section" v-if="$route.meta.title !== 'embed'">
+			<h1 v-if="!isEmbeded" class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
+			<div class="container">
+				<nav-main></nav-main>
+				<router-view :key="$route.fullPath"></router-view>
+				<signIn v-if="displayLogin"></signIn>
+				<signUp v-if="displaySignUp"></signUp>
+				<main-container v-show="displayCanvas"></main-container>
+			</div>
+			<uniformGUI></uniformGUI>
+		</main>
+		<div class="main embeded" v-if="$route.meta.title === 'embed'">
 			<router-view :key="$route.fullPath"></router-view>
-			<signIn v-if="displayLogin"></signIn>
-			<signUp v-if="displaySignUp"></signUp>
-			<main-container v-show="displayCanvas"></main-container>
+			<div ref="threeCanvas" class="canvas-container" ></div>
 		</div>
-		<uniformGUI></uniformGUI>
-	</main>
+	</div>
 </template>
 
 <script>
@@ -77,6 +83,10 @@ export default {
 	mounted() {
 		this.$nextTick(function () {
 			this.isMounted = true;
+			if (this.$route.meta.title === 'embed') {
+				let canvas = this.$refs.threeCanvas;
+				this.$store.commit('setCanvasSize', {width: window.innerWidth, height: window.innerHeight});
+			}
 		})
 		
 	},

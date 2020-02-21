@@ -87,6 +87,22 @@ export const routes = [
     }
   },
   {
+    path: '/embed/:id',
+    name: 'embed',
+    component: New,
+    props: (route) => ({
+      example: route.query.example,
+      embed: true,
+      hideEditor: true,
+      hidePedestal: true,
+      clickEnabled: false
+    }),
+    meta: {
+      title: 'embed',
+      selectedSculpture: true
+    }
+  },
+  {
     path: '/user/:username',
     name: 'user',
     component: () => import(/* webpackChunkName: "profile" */ '../components/Profile.vue'),
