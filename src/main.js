@@ -163,7 +163,11 @@ firebase.auth().onAuthStateChanged(function(user) {
 							let thumbnail = await fileData.ref.getDownloadURL();
 							if (thumbnail) {
 								console.log('thumbnail url', thumbnail)
-								firebase.database().ref('sculptures').child(payload.id).update({ thumbnail })	
+								let storageLocation = 'sculptures';
+								if (payload.isExample) {
+									storageLocation = 'examples';
+								}
+								firebase.database().ref(storageLocation).child(payload.id).update({ thumbnail })	
 							}
 						} catch(e) {
 							console.error(e);
