@@ -617,7 +617,9 @@ function calcSculptureOpacityForCameraDistance(sculp) {
 
 
 function onCanvasResize() {
-	camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+	if (canvasContainer) {
+		camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+	}
 }
