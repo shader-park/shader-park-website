@@ -93,7 +93,14 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+
+.smallDesktop(@rules) {
+    @media (max-width: 1300px) {
+        @rules();
+    }
+}
+
 .centerY() {
     position: absolute;
     top: 50%;
@@ -163,6 +170,11 @@ export default {
     z-index: 102;
     
     .nav-text {
+
+        .smallDesktop({
+            display: none;
+        });
+
         .centerY();
         left: 0px;
         right: 0px;
