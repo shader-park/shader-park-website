@@ -93,7 +93,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 
 .smallDesktop(@rules) {
     @media (max-width: 1300px) {
@@ -170,7 +170,6 @@ export default {
     z-index: 102;
     
     .nav-text {
-
         .smallDesktop({
             display: none;
         });
