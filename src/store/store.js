@@ -142,9 +142,10 @@ export const store = new Vuex.Store({
       state.selectedSculpture = Object.assign(state.selectedSculpture, payload);
     },
     updateSculptureIdInScene(state, payload) {
+      console.log('payload', payload)
       const oldId = payload.oldId;
       const newId = payload.newId;
-      const obj = state.scene.getObjectByName(oldId);
+      const obj = window.scene.getObjectByName(oldId);
       if(obj) {
         obj.name = newId;
       } else {
@@ -221,6 +222,7 @@ export const store = new Vuex.Store({
         .catch(error => console.error(error));
 
       idHistory.newId = sculpID;
+
       commit('updateSelectedSculpture', sculpture);
       commit('updateSculptureIdInScene', idHistory);
       commit('setLoading', false);
