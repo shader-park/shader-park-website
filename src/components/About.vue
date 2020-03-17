@@ -10,8 +10,7 @@
             graphics programmers.
 
             <br/><br/>
-            <b> Acknowledgments </b><br/><br/>
-            Acknowledgments:
+            <b> Acknowledgments: </b><br/>
             Huge thank you to Inigo Quilez for his guidance and research on raymarching and signed distance fields. This project is heavily inspired by <a  target="_blank" href="https://www.shadertoy.com/">ShaderToy</a> (hence the name) and we encourage anyone on this site to also explore Shadertoy.
 
             Special thanks to the following for guidance on Shader Park:<br/>
