@@ -68,7 +68,7 @@ export default {
             featured : this.sculpData.featured || false,
             visibility : this.sculpData.visibility || 'public', //draft, public, private
             license : this.sculpData.license || null, 
-            shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: 'sphere(0.2);'),
+            shaderSource: this.sculpData.shaderSource || ((this.sculpData.type && this.sculpData.type === 'glsl')? defaultFragSourceGLSL: 'sphere(0.5);'),
             type: this.sculpData.type || 'js',
             saved : this.sculpData.shaderSource? true: false,
             thumbnail: this.sculpData.thumbnail || null,
