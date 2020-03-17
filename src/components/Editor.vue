@@ -271,7 +271,7 @@ export default {
             }
             const el = document.createElement('textarea');
             let example = this.selectedSculpture.isExample? '?example=true' :'';
-            el.value = `https://shader-park.appspot.com/sculpture/${this.selectedSculpture.id}${example}?hideeditor=true&hidepedestal=true`;
+            el.value = `https://shaderpark.netlify.com/sculpture/${this.selectedSculpture.id}${example}?hideeditor=true&hidepedestal=true`;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
