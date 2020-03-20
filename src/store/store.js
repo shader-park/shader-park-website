@@ -36,7 +36,6 @@ export const store = new Vuex.Store({
       return state.displayCanvas;
     },
     getMSDFTexture: state => {
-      console.log('getting msdf texture', state.MSDFTexture);
       return state.MSDFTexture;
     },
     unsavedChanges: state => {
@@ -75,7 +74,6 @@ export const store = new Vuex.Store({
       state.displayCanvas = payload;
     },
     setMSDFTexture(state, payload) {
-      console.log('setting MSDF texture mutation', payload)
       state.MSDFTexture = payload;
     },
     setUnsavedChanges(state, payload) {

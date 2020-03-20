@@ -406,7 +406,7 @@ function piCreateMediaRecorder(isRecordingCallback, canvas)
 		return
 	}
     var mediaRecorder = new MediaRecorder(canvas.captureStream(), options);
-    console.log("videoBitsPerSecond: ", mediaRecorder.videoBitsPerSecond);
+    // console.log("videoBitsPerSecond: ", mediaRecorder.videoBitsPerSecond);
     var chunks = [];
     
     mediaRecorder.ondataavailable = (e) => {
