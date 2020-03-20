@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="nav-spacer"></div>
-        <div v-if="!embedded" class="nav-bar">
+        <div v-if="!embedded" class="nav-bar" @click.stop="">
             <div class="nav-left">
                 <router-link to="/"><h2 v-if="!isMobile" class="logo-text">SP</h2></router-link>
                 <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
@@ -94,12 +94,7 @@ export default {
 </script>
 
 <style lang="less">
-
-.smallDesktop(@rules) {
-    @media (max-width: 1300px) {
-        @rules();
-    }
-}
+@import '../client/mixins.less';
 
 .centerY() {
     position: absolute;
@@ -148,12 +143,17 @@ export default {
     margin: 0px;
     font-size: 27px;
     margin-bottom: 3px;
-
+    .smallDesktop({
+        display:none;
+    });
 }
 
 .nav-spacer {
     height: 10vh;
     width: 100vw;
+    .mobile({
+        max-height: 50px;
+    });
 }
 
 .nav-bar {
@@ -164,6 +164,10 @@ export default {
     right: 0px;
     height: 10vh;
     min-height: 45px;
+    .mobile({
+        max-height: 50px;
+    });
+    // max-height: 80px;
     padding: 0px 60px 25px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
     background-color: white;
@@ -197,9 +201,13 @@ export default {
         position: absolute;
         right: 0px;
         z-index: 1;
-        &.mobile{
+        .mobile({
             font-size: 14px !important;
-        }
+            // left: 50%;
+            text-align: center;
+            width: calc(100vw - 10px);
+            // transform: translate(-50%, 0);
+        });
     }  
     .link.active {
         color: #000;
@@ -258,10 +266,10 @@ export default {
     &:hover {
         color: #000;
     }  
-    &.mobile {
-        margin-right: 20px;
+    .mobile({
+        margin-right: 25px;
         font-size: 14px !important;
-    }      
+    });
 }
 
 .button {
