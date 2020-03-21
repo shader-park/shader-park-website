@@ -388,7 +388,7 @@ export default {
 
 // @import '/codemirror/glslEditor.css';
 // @import "codemirror/lib/codemirror.css";
-
+// @import '../client/codemirror/codemirror.css';
 @import '../client/codemirror/glslEditor.css';
 // @import '~codemirror/lib/codemirror.css';
 // @import '~@codemirror/lib/codemirror.css';

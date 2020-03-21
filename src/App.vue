@@ -63,7 +63,7 @@ export default {
 			}
 		},
 		displayCanvas(val) {
-			console.log('display canvas changed', val)
+			// console.log('display canvas changed', val)
 		}
 	},
 	methods: {

@@ -49,11 +49,41 @@ export default {
 </script>
 
 
+<style lang="less" scoped>
+@import '../client/mixins.less';
 
-<style scoped>
 .container {
+
+    .smallDesktop({
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 30px;
+        padding-right: 30px;
+    });
+
+    .mobile({
+        
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 20px;
+        padding-right: 20px;
+        & p {
+            font-size: 18px;
+            line-height: 28px;
+        }
+    });
+
+    & p { 
+        font-weight: 100!important;
+    }
     margin-left: 30px;
     margin-right: 30px;
+    max-width: 680px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 21px;
+    line-height: 33px;
 
 }
 </style>
