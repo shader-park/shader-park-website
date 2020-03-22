@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="nav-spacer"></div>
+        <div class="nav-spacer" v-if="!embedded" ></div>
         <div v-if="!embedded" class="nav-bar" @click.stop="">
             <div class="nav-left">
                 <router-link to="/"><h2 v-if="!isMobile" class="logo-text">SP</h2></router-link>
