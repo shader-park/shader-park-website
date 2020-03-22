@@ -2,12 +2,17 @@
     <div class="container">
         <h1>About</h1>
         <p>
-            Shader Park is an open source web-based platform for creating real-time 3D graphics and animations using code. 
+            Shader Park is an open source web-based platform and community for creating real-time 3D graphics and animations using code. 
             It integrates diverse computer graphics techniques into a unified programming interface designed for fast 
-            experimentation and live-coding.<br/>
-            The platform was developed by Torin Blankensmith and Peter Whidden.
-            This platform is meant to be an entry-point into graphics programming, as well a tool for experienced 
-            graphics programmers.
+            experimentation and live-coding.<br/><br/>
+
+            Inspired by tools and communities like P5.js, Processing and Shader Toy, <a target="_blank" href="https://torinblankensmith.com">Torin Blankensmith</a> and
+            <a target="_blank" href="http://www.peterwhidden.com/">Peter Whidden</a> developed Shader Park 
+            with the intention of making emerging technology in computer graphics accessible and inclusive for artists, designers, and educators.
+
+            
+            
+            
 
             <br/><br/>
             <b> Acknowledgments: </b><br/>
@@ -67,6 +72,7 @@ export default {
         margin-right: 0px;
         padding-left: 20px;
         padding-right: 20px;
+
         & p {
             font-size: 18px;
             line-height: 28px;
