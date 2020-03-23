@@ -19,7 +19,7 @@ export class Sculpture {
                 this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
             }
         } catch (e) {
-            console.error(e);
+            throw(e);
         }
         const pedestalGeom = new BoxGeometry(2, 1, 2);
         this.opacity = 0.0;
@@ -77,8 +77,8 @@ export class Sculpture {
                 this.uniforms = this.mesh.material.uniformDescriptions;
                 this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
             }
-        }catch (e) {
-            console.error(e);
+        } catch (e) {
+            throw(e);
         }
     }
 
