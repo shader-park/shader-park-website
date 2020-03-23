@@ -48,8 +48,16 @@
             @ready="onCmReady"
             @input="onCmCodeChange" @keydown.stop="()=>{}" @click.stop="()=>{}">
         </codemirror>
-        <div class="bottom-controls">
-            <button  @click.stop="download" class="centerY editor-button">Download Source</button>
+        <div class="bottom-controls-container">
+            <div class="console-controls">
+                <button  @click.stop="errorMessages = []" class="editor-button centerY clear-console">Clear Console</button>
+            </div>
+            <div class="console-container">
+                
+                <div class="error-messages" v-html="consoleErrorMessages"></div>
+                <!-- <button  @click.stop="download" class="centerY editor-button">Download Source</button> -->
+                
+            </div>
         </div>
     </div>
 </div>
@@ -104,7 +112,8 @@ export default {
             shareText : '',
             currWidth: '0px',
             editorHasDisplayedModal: false,
-            dialog: false
+            dialog: false,
+            errorMessages: []
         }
     },
     components: {
@@ -114,8 +123,14 @@ export default {
         document.addEventListener('keydown', this.keypress.bind(null, true));
     },
     computed : {
+        sculptureError() {
+            return this.$store.getters.getSculptureError;
+        },
         codemirror() {
             return this.$refs.myCm.codemirror;
+        },
+        consoleErrorMessages() {
+            return this.errorMessages.join('<br/>');
         },
         saveText() {
             if(this.selectedSculpture) {
@@ -171,6 +186,23 @@ export default {
         }
     },
     watch : {
+        sculptureError(error) {
+            if(error) {
+                let message = error.toString();
+                let lastErrorIndex = this.errorMessages.length - 1;
+                if(!this.errorMessages.length) { // empty, so push new message
+                    this.errorMessages.push(message);
+                } else if(this.errorMessages[lastErrorIndex] !== message) {
+                    this.errorMessages.push(message);
+                }
+                
+                setTimeout(() => { //wait for DOM to refresh to calculate height
+                    let errorConsole = document.querySelector('.console-container');
+                    errorConsole.scrollTop = errorConsole.scrollHeight;    
+                }, 1);
+                
+            }
+        },
         cachedWidth(value) {
             if(this.currWidth != '0px') {
                 this.currWidth = this.cachedWidth;
@@ -425,7 +457,7 @@ export default {
     border-bottom: 2px solid #f5f5f5;
 }
 
-.controls, .bottom-controls {
+.controls{
     min-height: 50px;
     position: relative;
     height: 8vh;
@@ -435,11 +467,41 @@ export default {
     overflow: hidden;
 }
 
-.bottom-controls {
+.bottom-controls-container {
+    width: 100%;
     border-top: 2px solid #f5f5f5;
     position: absolute;
-    width: 100%;
     bottom: 0px;
+
+    .console-controls {
+        height: 4vh;
+        position: absolute;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        //border-bottom: 2px solid #f5f5f5;
+        
+        .clear-console {
+            position: absolute;
+            pointer-events: initial !important;
+            right: 20px;
+            line-height: 20px;
+            margin: 0px;
+            left: auto;
+        }
+    }
+
+    .console-container {
+        overflow: scroll;   
+        height: 8vh;
+        padding-left: 10px;
+
+        .error-messages {
+            
+        }
+        // padding-bottom: 10px;
+        // padding-top: 10px;
+    }
 }
 
 .save {
@@ -570,5 +632,7 @@ label {
 .CodeMirror-hints{
     z-index: 100;
 }
+
+
 
 </style>

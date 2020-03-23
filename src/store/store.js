@@ -29,9 +29,13 @@ export const store = new Vuex.Store({
     displayCanvas: false,
     routeTitle: null,
     unsavedChanges: {},
-    MSDFTexture: {}
+    MSDFTexture: {},
+    sculptureError: null
   },
   getters: {
+    getSculptureError: state => {
+      return state.sculptureError;
+    },
     displayCanvas: state => {
       return state.displayCanvas;
     },
@@ -70,6 +74,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setSculptureError(state, payload) {
+      state.sculptureError = payload;
+    },
     setDisplayCanvas(state, payload) {
       state.displayCanvas = payload;
     },

@@ -102,7 +102,12 @@ export default {
         shaderSource: function (input) {
             if(this.sculpture) {
                 this.shaderSource = input;
-                this.sculpture.refreshMaterial(input);
+                try {
+                    this.sculpture.refreshMaterial(input);
+                } catch (e) {
+                    this.$store.commit('setSculptureError', e);
+                }
+                
             }
         },
         selectedObject: function (obj) {
