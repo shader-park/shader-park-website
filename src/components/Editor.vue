@@ -236,8 +236,8 @@ export default {
                 } else {
                     this.closed = false;
                     this.code = obj.shaderSource;
-                    
                 }
+                this.errorMessages = [];
                 let interval = setInterval(() => this.codemirror.refresh(), 10);
                 setTimeout(() => {
                     this.codemirror.refresh()
