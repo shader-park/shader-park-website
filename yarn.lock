@@ -7290,8 +7290,8 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     safe-buffer "^5.0.1"
 
 "shader-park-core@https://github.com/bnanner/shader-park-core.git":
-  version "0.0.1"
-  resolved "https://github.com/bnanner/shader-park-core.git#03d0cafbfd57aeadcedbeb074aa0865beb42a3ec"
+  version "0.0.11"
+  resolved "https://github.com/bnanner/shader-park-core.git#42485f9aa5a8923eb87956eb4d5285fed88e4206"
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
