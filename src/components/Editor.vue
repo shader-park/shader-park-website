@@ -625,7 +625,7 @@ label {
 }
 
 .vue-codemirror {
-    max-height: 74vh;
+    max-height: calc(74vh - 2px);
     overflow: scroll;
 }
 
