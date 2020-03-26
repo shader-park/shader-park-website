@@ -120,7 +120,7 @@ export default {
         codemirror
     },
     mounted() {
-        document.addEventListener('keydown', this.keypress.bind(null, true));
+        // document.addEventListener('keydown', this.keypress.bind(null, true));
     },
     computed : {
         sculptureError() {
@@ -632,7 +632,5 @@ label {
 .CodeMirror-hints{
     z-index: 100;
 }
-
-
 
 </style>
