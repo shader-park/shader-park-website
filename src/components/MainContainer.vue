@@ -25,6 +25,9 @@ export default {
             showHandel: false
 		}
     },
+    components: {
+        editor: Editor
+    },
     computed : {
         canvasSize() {
             if(this.$refs.threeCanvas) {
@@ -52,19 +55,34 @@ export default {
     mounted() {
         this.$nextTick(function () {
             let handel = this.$refs.handel;
-
-            handel.addEventListener('mousedown', () => this.dragingMouse = true);
+            handel.addEventListener('mousedown', this.mouseDown);
             let appEl =  document.getElementById('app');
-            appEl.addEventListener('mousemove', (event) => {
+            appEl.addEventListener('mousemove', this.mouseMove);
+            window.addEventListener('mouseup', this.mouseDrag);
+		})
+    },
+    methods: {
+        mouseDown() {
+            this.dragingMouse = true;
+        },
+        mouseMove(event) {
+            (event) => {
                 if(this.dragingMouse) {
                     this.editorWidth = ((event.clientX - this.handelWidth) / appEl.clientWidth) * 100 + 'vw';
                 }
-            });
-            window.addEventListener('mouseup', () => this.dragingMouse = false)
-		})
+            }
+        },
+		mouseDrag() {
+			this.dragingMouse = false;
+        },
     },
-    components: {
-        editor: Editor
+
+    destroyed() {
+        let handel = this.$refs.handel;
+        handel.removeEventListener('mousedown', this.mouseDown);
+        let appEl =  document.getElementById('app');
+        appEl.removeEventListener('mousemove', this.mouseMove);
+        window.removeEventListener('mouseup', this.mouseDrag);
     },
 
 };

@@ -22,7 +22,7 @@ export default {
 		
 		this.$nextTick(function () {
 			this.$store.commit('setDisplayCanvas', true);
-			this.$store.commit('setInitialCameraPose', [0, 0, .9]);
+			this.$store.commit('setInitialCameraPose', [0, 0, 4]);
 			this.$store.commit('sculpturesLoaded', false);
 			if(this.clickEnabled != null) {
 				this.$store.commit('setClickEnabled', this.clickEnabled === 'true');

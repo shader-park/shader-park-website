@@ -120,7 +120,7 @@ export default {
         codemirror
     },
     mounted() {
-        document.addEventListener('keydown', this.keypress.bind(null, true));
+        // document.addEventListener('keydown', this.keypress.bind(null, true));
     },
     computed : {
         sculptureError() {
@@ -625,14 +625,12 @@ label {
 }
 
 .vue-codemirror {
-    max-height: 74vh;
+    max-height: calc(74vh - 2px);
     overflow: scroll;
 }
 
 .CodeMirror-hints{
     z-index: 100;
 }
-
-
 
 </style>

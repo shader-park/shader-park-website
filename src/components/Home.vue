@@ -27,7 +27,6 @@ export default {
 		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		this.$store.dispatch('fetchAllSculptures').then(sculptures => {
 			if(sculptures) {
-				console.log(this.$route, 'ROUTE TITLE')
 				let temp = [];
 				let temp2 = [];
 				Object.keys(sculptures).forEach(key => {
