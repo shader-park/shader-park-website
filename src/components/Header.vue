@@ -18,7 +18,7 @@
                 <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
                 
                 <!-- <router-link to="/sign-in" class="link" v-if="!user" active-class="active">Sign In</router-link> -->
-                <div class="dropDownContainer" v-on:mouseover="setProfileDropDown(true)" v-on:mouseleave="setProfileDropDown(flase)"> 
+                <div class="dropDownContainer" v-on:mouseover="setProfileDropDown(true)" v-on:mouseleave="setProfileDropDown(false)"> 
                     <router-link 
                         ref="profile" 
                         v-bind:data-badge="profileBadgeCount" to="/profile" 
