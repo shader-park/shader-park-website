@@ -64,5 +64,7 @@ export default {
 <style scoped>
 .sign-up {
 	margin-left: 10px;
+	height: 40px;
+	background-color: transparent;
 }
 </style>

@@ -112,6 +112,7 @@ export default {
   background-size: 40px;
   background-repeat: no-repeat;
   background-attachment: scroll;
+  background-color: transparent;
   opacity: 0.8;
 }
 </style>
