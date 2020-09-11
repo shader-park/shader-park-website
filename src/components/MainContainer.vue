@@ -9,24 +9,29 @@
             </ul>
         </div>
         <div ref="threeCanvas" class="canvas-container" :class="{dragging: dragingMouse}"></div>
+        <div class="actions-bar"></div>
+        <actionBar :cachedWidth="actionsBarWidth"></actionBar>
     </div>
 </template>
 
 <script>
 import firebase from "firebase/app";
 import Editor from "./Editor.vue";
+import ActionBar from "./ActionBar.vue";
 
 export default {
     data: function() {
 		return {
             dragingMouse: false,
             editorWidth: '49vw',
+            actionsBarWidth: '100vw',
             handelWidth: 30,
             showHandel: false
 		}
     },
     components: {
-        editor: Editor
+        editor: Editor,
+        actionBar: ActionBar
     },
     computed : {
         canvasSize() {
@@ -69,6 +74,7 @@ export default {
             (event) => {
                 if(this.dragingMouse) {
                     this.editorWidth = ((event.clientX - this.handelWidth) / appEl.clientWidth) * 100 + 'vw';
+                    this.actionsBarWidth = 100 - ((event.clientX - this.handelWidth) / appEl.clientWidth) * 100 + 'vw';
                 }
             }
         },
