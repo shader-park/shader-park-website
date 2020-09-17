@@ -10,7 +10,7 @@
         </div>
         <div ref="threeCanvas" class="canvas-container" :class="{dragging: dragingMouse}"></div>
         <div class="actions-bar"></div>
-        <actionBar :cachedWidth="actionsBarWidth"></actionBar>
+        <actionBar :cachedWidth="actionsBarWidth" :class="{dragging: dragingMouse}"></actionBar>
     </div>
 </template>
 
@@ -24,7 +24,9 @@ export default {
 		return {
             dragingMouse: false,
             editorWidth: '49vw',
+            editorWidth: '49vw',
             actionsBarWidth: '100vw',
+            cachedActionsBarWidth: 'calc(51vw - 30px)',
             handelWidth: 30,
             showHandel: false
 		}
@@ -53,8 +55,13 @@ export default {
             let canvas = this.$refs.threeCanvas;
             this.$store.commit('setCanvasSize', {width: canvas.clientWidth, height: canvas.clientHeight});
         },
-        selectedSculpture(value) {
-            this.showHandel = value != null;
+        selectedSculpture(isSelected) {
+            this.showHandel = isSelected != null;
+            if(isSelected) {
+                this.actionsBarWidth = this.cachedActionsBarWidth;
+            } else {
+                this.actionsBarWidth = '100vw';
+            }
         }
     },
     mounted() {
@@ -62,7 +69,7 @@ export default {
             let handel = this.$refs.handel;
             handel.addEventListener('mousedown', this.mouseDown);
             let appEl =  document.getElementById('app');
-            appEl.addEventListener('mousemove', this.mouseMove);
+            window.addEventListener('mousemove', this.mouseMove);
             window.addEventListener('mouseup', this.mouseDrag);
 		})
     },
@@ -71,11 +78,11 @@ export default {
             this.dragingMouse = true;
         },
         mouseMove(event) {
-            (event) => {
-                if(this.dragingMouse) {
-                    this.editorWidth = ((event.clientX - this.handelWidth) / appEl.clientWidth) * 100 + 'vw';
-                    this.actionsBarWidth = 100 - ((event.clientX - this.handelWidth) / appEl.clientWidth) * 100 + 'vw';
-                }
+            if(this.dragingMouse) {
+                let newWidth = ((event.clientX - this.handelWidth) / window.innerWidth) * 100;
+                this.editorWidth = `${newWidth}vw`;
+                this.actionsBarWidth = `calc(${100 - newWidth}vw - ${this.handelWidth}px)`;
+                this.cachedActionsBarWidth = this.actionsBarWidth;
             }
         },
 		mouseDrag() {
@@ -83,11 +90,12 @@ export default {
         },
     },
 
-    destroyed() {
+    beforeDestroy() {
         let handel = this.$refs.handel;
         handel.removeEventListener('mousedown', this.mouseDown);
         let appEl =  document.getElementById('app');
-        appEl.removeEventListener('mousemove', this.mouseMove);
+
+        window.removeEventListener('mousemove', this.mouseMove);
         window.removeEventListener('mouseup', this.mouseDrag);
     },
 

@@ -1,6 +1,6 @@
 <template>
 
-<div :class="{embeded : isEmbeded}" :style="{width: currWidth}" class="action-bar">
+<div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">
     <!-- <div class="action-bar-container" :style="{minWidth: cachedWidth}">
     </div> -->
 </div>
@@ -11,7 +11,8 @@
 
 export default {
     props: {
-        cachedWidth: { type: String, default: '50vw' }
+        cachedWidth: { type: String, default: '50vw' },
+        // dragging: {type: Boolean, default: false}
     },
     data () {
         return {
@@ -67,15 +68,23 @@ export default {
 
 <style lang="less" scoped>
 
+
 .action-bar {
+    &.embeded {
+        display: none;
+    }
+    &.dragging {
+        transition: width 0ms ease-in-out;
+    }
     // width: 100vw;
-    height: 4vh;
+    height: 5vh;
     position: fixed;
     bottom: 0px;
     right: 0px;
     // left: 0px;
-    background: black;
+    background: white;
     z-index: 10;
+    transition: width 300ms ease-in-out;
 }
 
 </style>
