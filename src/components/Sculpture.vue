@@ -20,10 +20,10 @@ export default {
     props: ['sculpData', 'sculpPosition'],
     metaInfo () {
 		return {
-			title: 'ShaderPark',
+			title: 'Shader Park',
 			meta: [
-				{property: 'og:title', content: 'ShaderPark'},
-				{property: 'og:site_name', content: 'ShaderPark'},
+				{property: 'og:title', content: 'Shader Park'},
+				{property: 'og:site_name', content: 'Shader Park'},
 				// The list of types is available here: http://ogp.me/#types
 				{property: 'og:type', content: 'website'},
 				// Should the the same as your canonical link, see below.
@@ -35,14 +35,14 @@ export default {
 				// Twitter card
 				{name: 'twitter:card', content: 'summary'},
 				// {name: 'twitter:site', content: 'https://www.my-site.com/my-special-page'},
-				{name: 'twitter:title', content: 'ShaderPark'},
+				{name: 'twitter:title', content: 'Shader Park'},
 				{name: 'twitter:description', content: this.title},
 				// Your twitter handle, if you have one.
 				// {name: 'twitter:creator', content: '@alligatorio'},
 				{name: 'twitter:image:src', content: this.thumbnail},
 
 				// Google / Schema.org markup:
-				{itemprop: 'name', content: 'ShaderPark'},
+				{itemprop: 'name', content: 'Shader Park'},
 				{itemprop: 'description', content: this.title},
 				{itemprop: 'image', content: this.thumbnail}
 			]
