@@ -13,7 +13,6 @@
                 <router-link  :to="userProfileRoute" tag="a">{{authorUsername}}</router-link>
             </span>
             <button @click.stop="close" class="close centerY editor-button"></button>
-            <button @click.stop="share" v-if="displayShare" class="save centerY editor-button share" ref="share">{{shareText}}</button>
             <button @click.stop="save" class="save centerY editor-button">{{saveText}}</button>
             
             
@@ -109,7 +108,6 @@ export default {
                 top: '50%',
                 transform: 'translateY(-50%)'
             },
-            shareText : '',
             currWidth: '0px',
             editorHasDisplayedModal: false,
             dialog: false,
@@ -145,9 +143,6 @@ export default {
                 }
             }
             return 'Save';
-        },
-        displayShare() {
-            return this.selectedSculpture && this.selectedSculpture.id.length > 3;
         },
         selectedSculpture() {
             return this.$store.state.selectedSculpture;
@@ -292,23 +287,6 @@ export default {
                 this.selectedSculpture.shaderSource = this.code; 
             }
         },
-        share() {
-            let shareEl = this.$refs.share;
-            if(shareEl.classList.contains('selected')) {
-                shareEl.classList.remove('selected');
-                this.shareText = '';
-            } else {
-                shareEl.classList.add('selected');
-                this.shareText = 'Copied URL';
-            }
-            const el = document.createElement('textarea');
-            let example = this.selectedSculpture.isExample? '?example=true' :'';
-            el.value = `https://shaderpark.netlify.com/sculpture/${this.selectedSculpture.id}${example}?hideeditor=true&hidepedestal=true`;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-        },
         download() {
             let output = sculptToThreeJSShaderSource(this.code);
             let out2 = sculptToTouchDesignerShaderSource(this.code);
@@ -324,7 +302,6 @@ export default {
         close() {
             let close = () => {
                 this.closed = true;
-                this.shareText = '';
                 this.$store.state.selectedSculpture = null;
                 this.$store.state.selectedObject = null;
             };
@@ -548,20 +525,6 @@ export default {
     background-position: 65% 50%;
     background-size: 16px;
     background-image: url('../client/images/play.svg');
-}
-
-.share {
-    width: 38px;
-    height: 30px;
-    border-style: none;
-    background-image: url('../client/images/share.svg');
-    background-position: 60% 50%;
-    background-size: 22px;
-    .control-button();
-    &.selected{
-        background-size: 0 0;
-        width: auto;
-    }
 }
 
 .delete, .close, .save, .autoUpdate-label, .checkbox, .play {
