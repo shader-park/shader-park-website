@@ -3,7 +3,7 @@
 <div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">
     <button class="editor-button" @click="showCodeEditor">Edit Code</button>
     <!-- <button class="editor-button action-button fade-opacity"></button> -->
-    <button @click.stop="share" class="editor-button share fade-opacity" ref="share">{{shareText}}</button>
+    <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">{{shareText}}</button>
     <!-- <div class="action-bar-container" :style="{minWidth: cachedWidth}">
     </div> -->
 </div>
@@ -27,6 +27,7 @@ export default {
         
     },
     mounted() {
+        this.shareText = 'shareText';
         // document.addEventListener('keydown', this.keypress.bind(null, true));
     },
     computed : {
@@ -54,9 +55,17 @@ export default {
         },
         currSculpture() {
             return this.$store.state.currSculpture;
+        },
+        displayShareButton() {
+            return this.currSculpture && this.currSculpture.id && this.currSculpture.id.length > 3
         }
     },
     watch : {
+        displayShareButton(display) {
+            if(display) {
+                this.shareText = '';
+            }
+        },
         cachedWidth(value) {
             if(this.currWidth != '0px') {
                 this.currWidth = this.cachedWidth;
