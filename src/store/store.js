@@ -14,6 +14,7 @@ export const store = new Vuex.Store({
     currentRoom: null,
     initialCameraPose: null,
     selectedSculpture: null,  // vue sculpture data
+    currSculpture: null,  // vue sculpture data for currently loaded sculpure
     selectedObject: null,     // three.js mesh
     objectsToUpdate: [],
     objectsToRaycast: [],
