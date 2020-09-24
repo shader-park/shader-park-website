@@ -268,6 +268,7 @@ export default {
                     let id = this.selectedSculpture.id;
                     this.$store.dispatch('saveSculpture', this.selectedSculpture).then(() => {
                         this.selectedSculpture.saved = true;
+                        this.$store.currSculpture = this.selectedSculpture;
                         this.$store.commit('setUnsavedChanges', {[id] : true});
                         resolve();
                     }).catch(e => {
