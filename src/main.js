@@ -504,9 +504,13 @@ function onMouseUp(event) {
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		mouseDownTime = Date.now() - mouseDownTime;
 		if(mouseDownTime < 400) {
-			store.state.selectedObject = store.state.intersectedObject;
-			selectedSculptureOpacity.opacity = 1.0;
-			canvas.style.cursor = 'auto';
+			if(router.currentRoute.name === 'examples') {
+				store.state.selectedObject = store.state.intersectedObject;
+				selectedSculptureOpacity.opacity = 1.0;
+				canvas.style.cursor = 'auto';
+			}
+			
+			
 		}
 	} else {
 		store.state.selectedObject = null;

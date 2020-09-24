@@ -9,3 +9,32 @@
         @rules();
     }
 }
+
+.editor-button {
+    padding: 5px 15px 5px 15px;
+    border-radius: 50px;
+    /* border: 1px solid lightgrey; */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    margin-bottom: 5px;
+    transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
+        color: #777;
+    -webkit-transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
+    background-repeat: no-repeat, no-repeat;
+    &:hover {
+        color: #000;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+    }
+}
+
+
+.control-button {
+    opacity: 0.6;
+    background-repeat: no-repeat;
+    // box-shadow: none;
+    transition: opacity 300ms ease-in-out;
+    -webkit-transition: opacity 300ms ease-in-out;
+    &:hover {
+        // box-shadow: none;
+        opacity: 1.0;
+    }
+}
