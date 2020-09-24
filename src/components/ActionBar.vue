@@ -57,16 +57,12 @@ export default {
         }
     },
     watch : {
-        currSculpture(sculp) {
-            console.log('curr sculp', sculp);
-        },
         cachedWidth(value) {
             if(this.currWidth != '0px') {
                 this.currWidth = this.cachedWidth;
             }
         },
         selectedSculpture(sculp) {
-            console.log('Selectd sculp', sculp)
             if(sculp) {
                 this.editorActionText = 'Edit Code';
             } else {
