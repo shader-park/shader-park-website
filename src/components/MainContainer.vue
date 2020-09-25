@@ -80,8 +80,8 @@ export default {
         mouseMove(event) {
             if(this.dragingMouse) {
                 let newWidth = ((event.clientX - this.handelWidth) / window.innerWidth) * 100;
-                this.editorWidth = `${newWidth}vw`;
-                this.actionsBarWidth = `calc(${100 - newWidth}vw - ${this.handelWidth}px)`;
+                this.editorWidth = `calc(${newWidth}vw + ${this.handelWidth/2}px)`;
+                this.actionsBarWidth = `calc(${100 - newWidth}vw - ${this.handelWidth * 1.5}px)`;
                 this.cachedActionsBarWidth = this.actionsBarWidth;
             }
         },
@@ -137,7 +137,7 @@ export default {
 }
 
 .dragging {
-    cursor: pointer;
+    cursor: ew-resize !important;
     transition: width 0ms ease-in-out !important;
 }
 
@@ -180,6 +180,7 @@ canvas {
     flex: 0 auto;
     border-right: 2px solid #f5f5f5;
     border-left: 2px solid #f5f5f5;
+    cursor:ew-resize;
 }
 
 .dot-container {
@@ -187,13 +188,13 @@ canvas {
     padding-left: 28px;
     -webkit-transition: opacity 300ms ease-in-out;
     transition: opacity 300ms ease-in-out;
-    cursor: pointer;
     &:hover {
         opacity: 1;
     }
     .dot {
         height: 20px;
         opacity: 0.8;
+        user-select: none;
     }
 }
 
