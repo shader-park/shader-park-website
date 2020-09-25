@@ -233,18 +233,25 @@ export default {
                     this.code = obj.shaderSource;
                 }
                 this.errorMessages = [];
-                let interval = setInterval(() => this.codemirror.refresh(), 10);
-                setTimeout(() => {
-                    this.codemirror.refresh()
-                    clearInterval(interval);
-                //     this.saved = tempSaved;
-                }, 1000);
+                this.cycleResizeWindows();
             } else {
                 this.currWidth = '0px';
+                this.cycleResizeWindows();
             }
         }
     },
     methods: {
+        cycleResizeWindows() {
+            let interval = setInterval(() => {
+                this.codemirror.refresh();
+                window.onCanvasResize();
+            }, 10);
+            setTimeout(() => {
+                this.codemirror.refresh()
+                window.onCanvasResize()
+                clearInterval(interval);
+            }, 1000);
+        },
         onCmReady(cm) {
             window.cm = cm;
         },
