@@ -180,12 +180,12 @@ canvas {
     flex: 0 auto;
     border-right: 2px solid #f5f5f5;
     border-left: 2px solid #f5f5f5;
-    cursor:ew-resize;
+    cursor: ew-resize;
 }
 
 .dot-container {
     width: 100%;
-    padding-left: 28px;
+    padding-left: 27px;
     -webkit-transition: opacity 300ms ease-in-out;
     transition: opacity 300ms ease-in-out;
     &:hover {
