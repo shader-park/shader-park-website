@@ -275,7 +275,7 @@ function render(time) {
 
 	const t = (Date.now() - startTime) % 600000.0;
 
-	if (store.state.canvasSize !== prevCanvasSize) {
+	if (store.state.canvasSize.width !== prevCanvasSize.width || store.state.canvasSize.height !== prevCanvasSize.height) {
 		Object.assign(prevCanvasSize, store.state.canvasSize);
 		onCanvasResize();
 	}
@@ -627,3 +627,4 @@ function onCanvasResize() {
 		renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	}
 }
+window.onCanvasResize = onCanvasResize;

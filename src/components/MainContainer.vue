@@ -28,7 +28,8 @@ export default {
             actionsBarWidth: '100vw',
             cachedActionsBarWidth: 'calc(51vw - 30px)',
             handelWidth: 30,
-            showHandel: false
+            showHandel: false,
+            mounted: false
 		}
     },
     components: {
@@ -37,10 +38,10 @@ export default {
     },
     computed : {
         canvasSize() {
-            if(this.$refs.threeCanvas) {
-                return this.$refs.threeCanvas.clientWidth;
+            if(!this.mounted) {
+                return 0
             } else {
-                return 0;
+                return this.$refs.threeCanvas.clientWidth;
             }
         },
         selectedSculpture() {
@@ -53,7 +54,10 @@ export default {
     watch : {
         canvasSize(value) {
             let canvas = this.$refs.threeCanvas;
-            this.$store.commit('setCanvasSize', {width: canvas.clientWidth, height: canvas.clientHeight});
+            if(canvas && canvas.clientWidth) {
+                this.$store.commit('setCanvasSize', {width: canvas.clientWidth, height: canvas.clientHeight});
+            }
+            
         },
         selectedSculpture(isSelected) {
             this.showHandel = isSelected != null;
@@ -71,6 +75,7 @@ export default {
             let appEl =  document.getElementById('app');
             window.addEventListener('mousemove', this.mouseMove);
             window.addEventListener('mouseup', this.mouseDrag);
+            this.mounted = true;
 		})
     },
     methods: {
@@ -82,6 +87,11 @@ export default {
                 let newWidth = ((event.clientX - this.handelWidth) / window.innerWidth) * 100;
                 this.editorWidth = `calc(${newWidth}vw + ${this.handelWidth/2}px)`;
                 this.actionsBarWidth = `calc(${100 - newWidth}vw - ${this.handelWidth * 1.5}px)`;
+                let canvas = this.$refs.threeCanvas;
+                if(canvas) {
+                    canvas.style.width = this.actionsBarWidth;
+                    this.$store.commit('setCanvasSize', {width: canvas.clientWidth, height: canvas.clientHeight});
+                }
                 this.cachedActionsBarWidth = this.actionsBarWidth;
             }
         },
