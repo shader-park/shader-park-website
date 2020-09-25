@@ -58,6 +58,7 @@ export default {
 					this.emptySculpture.type = sculptureType;
 				}
 				this.setSelectedSculpture();
+				
 			}
 		});
 		
@@ -83,6 +84,7 @@ export default {
 					}
 				}
 				this.$store.commit('sculpturesLoaded', true);
+				window.onCanvasResize();
 			});
 		}
 	},
