@@ -143,7 +143,6 @@ export default {
 
 .share {
     width: 94px;
-    height: 30px;
     text-align: left;
     color: black;
     border-style: none;
@@ -156,6 +155,5 @@ export default {
         width: auto;
     }
 }
-
 
 </style>
