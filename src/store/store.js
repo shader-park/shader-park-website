@@ -31,9 +31,13 @@ export const store = new Vuex.Store({
     routeTitle: null,
     unsavedChanges: {},
     MSDFTexture: {},
-    sculptureError: null
+    sculptureError: null,
+    displayShareModal: false
   },
   getters: {
+    displayShareModal: state => {
+      return state.displayShareModal;
+    },
     getSculptureError: state => {
       return state.sculptureError;
     },
@@ -75,6 +79,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    displayShareModal(state, payload) {
+      state.displayShareModal = payload;
+    },
     setSculptureError(state, payload) {
       state.sculptureError = payload;
     },

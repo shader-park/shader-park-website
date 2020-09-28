@@ -1,13 +1,10 @@
 <template>
-
-<div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">
-    <button class="editor-button" @click="showCodeEditor">Edit Code</button>
-    <!-- <button class="editor-button action-button fade-opacity"></button> -->
-    <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">{{shareText}}</button>
-    <!-- <div class="action-bar-container" :style="{minWidth: cachedWidth}">
-    </div> -->
+<div>
+    <div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">   
+        <button class="editor-button" @click="showCodeEditor">Edit Code</button>
+        <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">Share</button>
+    </div>
 </div>
-
 </template>
 
 <script>
@@ -20,36 +17,13 @@ export default {
     data () {
         return {
             currWidth: '100vw',
-            shareText: ''
         }
     },
     components: {
         
     },
-    mounted() {
-        this.shareText = 'shareText';
-        // document.addEventListener('keydown', this.keypress.bind(null, true));
-    },
-    computed : {
-        isUserSculpture() {
-            return this.$store.getters.getUser.uid == this.selectedSculpture.uid;
-        },
 
-        selectedSculpture() {
-            return this.$store.state.selectedSculpture;
-        },
-        currUser () {
-			return this.$store.getters.getUser;
-        },
-        authorUsername() {
-            return this.selectedSculpture? this.selectedSculpture.username: null;
-        },
-        authorId() {
-            return this.selectedSculpture? this.selectedSculpture.uid: null;
-        },
-        userProfileRoute() {
-            return this.selectedSculpture? `/user/${this.selectedSculpture.username}`: $router.currentRoute.path;
-        },
+    computed : {
         isEmbeded() {
             return this.$store.state.embedded;
         },
@@ -61,23 +35,11 @@ export default {
         }
     },
     watch : {
-        displayShareButton(display) {
-            if(display) {
-                this.shareText = '';
-            }
-        },
         cachedWidth(value) {
             if(this.currWidth != '0px') {
                 this.currWidth = this.cachedWidth;
             }
         },
-        selectedSculpture(sculp) {
-            if(sculp) {
-                this.editorActionText = 'Edit Code';
-            } else {
-                this.editorActionText = 'Close Editor';
-            }
-        }
     },
     methods: {
         showCodeEditor() {
@@ -92,24 +54,7 @@ export default {
             }
         },
         share() {
-            let sculp = this.currSculpture;
-            console.log(sculp)
-            let shareEl = this.$refs.share;
-            if(shareEl.classList.contains('selected')) {
-                shareEl.classList.remove('selected');
-                this.shareText = '';
-            } else {
-                shareEl.classList.add('selected');
-                this.shareText = 'Copied URL';
-            }
-            const el = document.createElement('textarea');
-            let example = sculp.isExample? '?example=true' :'';
-
-            el.value = `https://shaderpark.netlify.com/sculpture/${sculp.id}${example}`;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+            this.$store.commit('displayShareModal', true);
         },
     }
 }
@@ -197,11 +142,13 @@ export default {
 }
 
 .share {
-    width: 38px;
+    width: 94px;
     height: 30px;
+    text-align: left;
+    color: black;
     border-style: none;
     background-image: url('../client/images/share.svg');
-    background-position: 60% 50%;
+    background-position: 85% 50%;
     background-size: 22px;
     background-repeat: no-repeat, no-repeat;
     &.selected{
