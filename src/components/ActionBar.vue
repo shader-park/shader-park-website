@@ -70,7 +70,7 @@ export default {
         display: none;
     }
     &.dragging {
-        transition: width 0ms ease-in-out;
+        transition: width 0ms ease-in-out !important;
     }
     // border-top: 1px solid rgba(0, 0, 0, 0.15);
     border-top: 2px solid #f5f5f5;

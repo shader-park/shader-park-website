@@ -10,7 +10,7 @@
         </div>
         <div ref="threeCanvas" class="canvas-container" :class="{dragging: dragingMouse}"></div>
         <div class="actions-bar"></div>
-        <actionBar :cachedWidth="actionsBarWidth" :class="{dragging: dragingMouse}"></actionBar>
+        <actionBar :cachedWidth="actionsBarWidth" :dragging="dragingMouse" :class="{dragging: dragingMouse}"></actionBar>
     </div>
 </template>
 
