@@ -115,6 +115,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../client/mixins.less';
+
 // .fade {
 //     opacity: 1!important;
 //     transition: opacity 300ms ease-in-out;;
@@ -124,6 +126,12 @@ export default {
 }
 
 .share-container {
+
+    .mobile({
+        width: 100vw;
+        height: 100vh;
+        min-width: auto;
+    });
     &.fade {
         opacity: 1
     }

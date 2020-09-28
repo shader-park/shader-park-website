@@ -11,13 +11,17 @@
 }
 
 .editor-button {
+    .mobile({
+        font-size: 14 !important;
+        padding: 3px 13px 3px 13px;
+    });
     padding: 5px 15px 5px 15px;
     border-radius: 50px;
     /* border: 1px solid lightgrey; */
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
     transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
-        color: #777;
+    color: #777;
     -webkit-transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
     background-repeat: no-repeat, no-repeat;
     &:hover {
@@ -28,6 +32,10 @@
 
 
 .control-button {
+    .mobile({
+        font-size: 14 !important;
+        padding: 3px 13px 3px 13px;
+    });
     opacity: 0.6;
     background-repeat: no-repeat;
     // box-shadow: none;
