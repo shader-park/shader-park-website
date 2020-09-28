@@ -18,7 +18,7 @@
             <br/>
             
             <span><a href="https://glitch.com/~shader-park-template" target="_blank">
-                Embed in Glitch.me<div class="glitch-button"></div>
+                Embed in Glitch.com<div class="glitch-button"></div>
             </a></span>
             
         </form>
