@@ -31,6 +31,10 @@ export default {
 				})
 				temp.reverse();
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+				setTimeout(() => {
+				window.onCanvasResize();	
+				}, 10);
+				
 			}
 			this.$store.commit('joinRoom', this.roomName);
 		})

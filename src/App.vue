@@ -7,6 +7,7 @@
 				<router-view :key="$route.fullPath"></router-view>
 				<signIn v-if="displayLogin"></signIn>
 				<signUp v-if="displaySignUp"></signUp>
+				<share-modal v-if="displayShareModal"></share-modal>
 				<main-container v-show="displayCanvas"></main-container>
 			</div>
 			<uniformGUI></uniformGUI>
@@ -24,6 +25,7 @@ import MainContainer from './components/MainContainer.vue';
 import SignIn from './components/SignIn.vue';
 import SignUp from './components/SignUp.vue';
 import UniformGUI from './components/UniformGUI.vue';
+import ShareModal from './components/ShareModal.vue';
 
 export default {
 	components: {
@@ -31,7 +33,8 @@ export default {
 		mainContainer: MainContainer,
 		signIn: SignIn,
 		signUp: SignUp,
-		uniformGUI: UniformGUI
+		uniformGUI: UniformGUI,
+		shareModal: ShareModal
 	},
 	data: function() {
 		return {
@@ -40,6 +43,9 @@ export default {
 		}
 	},
 	computed: {
+		displayShareModal() {
+			return this.$store.getters.displayShareModal;
+		},
 		displayCanvas() {
 			return this.$store.getters.displayCanvas;
 		},
