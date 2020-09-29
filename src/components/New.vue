@@ -75,7 +75,8 @@ export default {
 			this.$nextTick(function() {
 				const sculp = this.$refs.sculpture;
 				if(sculp) {
-					if(!this.hideEditor) {
+					if(!this.hideEditor && window.width > 500) {
+						
 						this.$store.state.selectedObject = sculp.sculpture.mesh;
 					}
 					if(this.hidePedestal) {

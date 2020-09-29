@@ -1,7 +1,7 @@
 <template>
 <div>
     <div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">   
-        <button class="editor-button" @click="showCodeEditor">Edit Code</button>
+        <button v-if="!isMobile" class="editor-button" @click="showCodeEditor">Edit Code</button>
         <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">Share</button>
     </div>
 </div>
@@ -32,6 +32,9 @@ export default {
         },
         displayShareButton() {
             return this.currSculpture && this.currSculpture.id && this.currSculpture.id.length > 3
+        },
+        isMobile() {
+            return window.innerWidth < 500;
         }
     },
     watch : {
@@ -75,6 +78,7 @@ export default {
     // border-top: 1px solid rgba(0, 0, 0, 0.15);
     border-top: 2px solid #f5f5f5;
     height: 5vh;
+    min-height: 44px;
     position: fixed;
     bottom: 0px;
     right: 0px;
