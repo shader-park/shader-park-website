@@ -227,6 +227,7 @@ function init() {
 	mediaCap = piCreateMediaRecorder(() => console.log("capturing render"), canvas); 
 	controls = new OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = true;
+	controls.enablePan = false;
 	controls.dampingFactor = 0.25;
 	controls.zoomSpeed = 0.5;
 	controls.rotateSpeed = 0.5;
