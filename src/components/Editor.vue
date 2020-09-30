@@ -316,7 +316,6 @@ export default {
             if(this.selectedSculpture.saved) {
                 close();
             } else {
-                console.log('about to show modal');
                 this.dialog = true;
 
 
