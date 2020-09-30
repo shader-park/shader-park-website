@@ -18,7 +18,11 @@
             <br/>
             
             <span><a href="https://glitch.com/~shader-park-template" target="_blank">
-                Embed in Glitch.com<div class="glitch-button"></div>
+                Embed in Glitch.com <div class=".img-button glitch-button"></div>
+            </a></span>
+            <br/><br/>
+            <span><a href="https://github.com/shader-park/shader-park-touchdesigner" target="_blank">
+                Render in TouchDesigner <div class=".img-button touchdesigner-button"></div>
             </a></span>
             
         </form>
@@ -152,19 +156,34 @@ export default {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
 }
 
-.glitch-button {
-    display: inline-block;
-    background-image: url('../client/images/glitch_logo.svg') !important;
-    // position: relative;
-    // display: inline;
+.img-button {
     background-position: 50% 50%;
     width: 38px;
     height: 17px;
     background-size: 21px;
     border-style: none;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat !important;
     background-attachment: scroll;
     background-color: transparent;
+    display: inline-block !important;
+}
+
+.touchdesigner-button {
+    display: inline-block !important;
+    background-image: url('../client/images/touchdesigner_logo.jpg') !important;
+    width: 19px;
+    height: 19px;
+    background-repeat: no-repeat !important;
+    background-size: 19px;
+}
+
+.glitch-button {
+    display: inline-block !important;
+    background-image: url('../client/images/glitch_logo.svg') !important;
+    width: 38px;
+    height: 17px;
+    background-repeat: no-repeat !important;
+    background-size: 21px;
 }
 
 .close-auth {
