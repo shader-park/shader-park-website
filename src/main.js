@@ -149,6 +149,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 					pedestal = state.selectedSculpture.sculpture.pedestal;
 					pedestalWasVisible = pedestal.visible;
 					pedestal.visible = false;
+
 				}
 				
 				setTimeout(() => { //make sure pedestal is hidden
@@ -158,7 +159,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 								pedestal.visible = true;
 							}
 							console.log('captured image', 'uploading to id', payload.id)
-							let fileData = await storageRef.child(`sculptureThumbnails/${payload.id}.jpeg`).put(blob);
+							let fileData = await storageRef.child(`sculptureThumbnails/${payload.id}.png`).put(blob);
 							console.log('uploaded')
 							let thumbnail = await fileData.ref.getDownloadURL();
 							if (thumbnail) {
@@ -450,12 +451,12 @@ function captureCanvasImage(callback, download) {
 			document.body.appendChild(a);
 			a.style = "display: none";
 			a.href = url;
-			a.download = "capture.jpeg";
+			a.download = "capture.png";
 			a.click();
 			window.URL.revokeObjectURL(url);
 		}
 		callback(blob);
-	}, 'image/jpeg', 1.0);
+	}, 'image/png', 1.0);
 }
 
 function toggleScreenCapture(download) {
