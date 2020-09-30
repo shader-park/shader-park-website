@@ -82,6 +82,12 @@ export default {
         // this is just to make a copy??
         let shaderSourceCopy = this.shaderSource.slice();
         this.sculpture = new Sculpture(this.type !== 'js', shaderSourceCopy, this.MSDFTexture);
+        if(this.sculpture.compileError) {
+            //wait until the editor opens to log the error
+            setTimeout(() => {
+                this.$store.commit('setSculptureError', this.sculpture.compileError);
+            }, 300);
+        }
         
         if(this.sculpPosition) {
             this.setPose(this.sculpPosition);
@@ -141,7 +147,9 @@ export default {
             if(obj && this.sculpture && this.sculpture.mesh && this.sculpture.mesh.name && obj.name == this.sculpture.mesh.name) {
                 this.$store.state.selectedSculpture = this.$data;
                 this.$store.state.currSculpture = this.$data;
-                this.sculpture.uniforms = this.sculpture.uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
+                if(this.sculpture.uniforms) {
+                    this.sculpture.uniforms = this.sculpture.uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
+                }
                 this.sculpture.selectedSculpture(true);
             } else {
                 if(this.sculpture && this.sculpture.selected) {

@@ -3,6 +3,7 @@ import { BoxGeometry, MeshBasicMaterial, Color, Mesh, } from 'three';
 import {createPedestalEdges} from './create-pedestal-edges.js'
 
 import {sculptToThreeJSMaterial, sculptToThreeJSMesh, glslToThreeJSMaterial, glslToThreeJSMesh} from 'shader-park-core';
+import {defaultFragSourceGLSL} from 'shader-park-core';
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
@@ -10,16 +11,25 @@ export class Sculpture {
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;
-        try {
-            if (isGlsl) {
+        this.compileError = null;
+        if (isGlsl) {
+            try {
                 this.mesh = glslToThreeJSMesh(source, this.payload);
-            } else {
-                this.mesh = sculptToThreeJSMesh(source, this.payload);
-                this.uniforms = this.mesh.material.uniformDescriptions;
-                this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+            } catch(error) {
+                this.mesh = glslToThreeJSMesh(defaultFragSourceGLSL, this.payload);
+                this.compileError = error;
+                // throw(e);
             }
-        } catch (e) {
-            throw(e);
+            
+        } else {
+            try {
+                this.mesh = sculptToThreeJSMesh(source, this.payload);
+            } catch (error) {
+                this.mesh = sculptToThreeJSMesh('sphere(0.5);', this.payload);
+                this.compileError = error;
+            }
+            this.uniforms = this.mesh.material.uniformDescriptions;
+            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
         const pedestalGeom = new BoxGeometry(2, 1, 2);
         this.opacity = 0.0;
@@ -69,16 +79,23 @@ export class Sculpture {
         if (newSource) {
             this.source = newSource;
         }
-        try {
-            if (this.IsGLSL) {
+        if (this.IsGLSL) {
+            try {
                 this.mesh.material = glslToThreeJSMaterial(this.source, this.payload);
-            } else {
-                this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
-                this.uniforms = this.mesh.material.uniformDescriptions;
-                this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
+            } catch(e) {
+                console.error(e);
+                throw(e)
             }
-        } catch (e) {
-            throw(e);
+            
+        } else {
+            try {
+                this.mesh.material = sculptToThreeJSMaterial(this.source, this.payload);
+            } catch(e) {
+                throw(e);
+                
+            }
+            this.uniforms = this.mesh.material.uniformDescriptions;
+            this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
         }
     }
 

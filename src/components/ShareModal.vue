@@ -57,7 +57,7 @@ export default {
             return this.$store.state.currSculpture;
         },
         embedUrl() {
-            return `<iframe src="https://shaderpark.netlify.com/embed/${this.currSculpture.id}${this.isExample}"></iframe>`;
+            return `<iframe src="https://shaderpark.netlify.com/embed/${this.currSculpture.id}${this.isExample}" frameborder="0"></iframe>`;
         },
         fullScreenUrl() {
             return `https://shaderpark.netlify.com/embed/${this.currSculpture.id}${this.isExample}`;
