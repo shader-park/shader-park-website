@@ -89,6 +89,10 @@ export default {
 	mounted() {
 		this.$nextTick(function () {
 			this.isMounted = true;
+			console.log('mounted', this.isEmbeded)
+			if(this.isEmbeded || this.$route.meta.title === 'embed') {
+				document.body.classList.add('embeded');
+			}
 			if (this.$route.meta.title === 'embed') {
 				let canvas = this.$refs.threeCanvas;
 				this.$store.commit('setCanvasSize', {width: window.innerWidth, height: window.innerHeight});
@@ -246,7 +250,11 @@ export default {
 	color: white;
 }
 
+
 body {
+	&.embeded {
+		background: none !important;
+	}
     background: white;
     font-family: @font-family;
     // overflow: hidden;
