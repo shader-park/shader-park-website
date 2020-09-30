@@ -184,7 +184,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 // const scene = store.state.scene;
 const scene = new Scene();
 window.scene = scene;
-scene.background = new Color(1.0, 1.0, 1.0);
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.0001, 180);
 
 window.camera = camera;
@@ -210,11 +209,12 @@ loader.load('/img/icons/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance'});
+	renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance', alpha: true});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
-    renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setClearColor( 0x000000, 0 );
 	canvasContainer.appendChild(renderer.domElement);
 
 	canvas = document.querySelector('canvas');
