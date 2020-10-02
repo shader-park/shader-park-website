@@ -62,6 +62,7 @@ export default {
                 firebase.database().ref("users").child(uid).set(dbUser);
                 this.$store.dispatch('setDBUser', {user: dbUser, uid: uid});
                 // this.$router.replace('profile');
+                this.$store.dispatch('fetchUserFavorites');
                 this.$store.commit('displaySignUp', false);
             },
             error => {
