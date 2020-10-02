@@ -48,6 +48,7 @@ export default {
 			.then(
 				user => {
 					// this.$router.replace('profile');
+					this.$store.dispatch('fetchUserFavorites');
 					this.$store.commit('displayLogin', false);
 				},
 				error => {
