@@ -14,6 +14,7 @@
     "dat.gui": "^0.7.6",
     "firebase": "^7.8.1",
     "intersection-observer": "^0.7.0",
+    "lodash.throttle": "^4.1.1",
     "register-service-worker": "^1.6.2",
     "shader-park-core": "https://github.com/shader-park/shader-park-core.git",
     "three": "^0.113.2",

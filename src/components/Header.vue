@@ -293,5 +293,9 @@ export default {
         color: white;
         opacity: 0.5;
     }
+    
+    .mobile({
+        font-size: 14px !important;
+    });
 }
 </style>

@@ -2,12 +2,16 @@
 <div>
     <div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">   
         <button v-if="!isMobile" class="editor-button" @click="showCodeEditor">Edit Code</button>
+        <button :class="{activated : favorited}" @click="throttleFavorite" class="editor-button action-button"> </button>
+        <span>{{favoriteCount}}</span>
         <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">Share</button>
     </div>
 </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import throttle from 'lodash.throttle'
 
 export default {
     props: {
@@ -17,13 +21,14 @@ export default {
     data () {
         return {
             currWidth: '100vw',
+            favorited: false,
+            favoriteCount: 0
         }
     },
-    components: {
-        
-    },
-
     computed : {
+        ...mapGetters({
+            userFavorites: 'userFavorites'
+        }),
         isEmbeded() {
             return this.$store.state.embedded;
         },
@@ -35,7 +40,10 @@ export default {
         },
         isMobile() {
             return window.innerWidth < 500;
-        }
+        },
+        currUser () {
+			return this.$store.getters.getUser;
+        },
     },
     watch : {
         cachedWidth(value) {
@@ -43,8 +51,40 @@ export default {
                 this.currWidth = this.cachedWidth;
             }
         },
+        currSculpture(value) {
+            this.updateFavoritedButton();
+        },
+        userFavorites(value) {
+            this.updateFavoritedButton();
+        }
+    },
+    created() {
+        this.throttleFavorite = throttle(this.favorite, 850);
     },
     methods: {
+        updateFavoritedButton() {
+            this.favorited = (this.userFavorites && this.currSculpture && 'id' in this.currSculpture && this.currSculpture.id in this.userFavorites);
+            if(this.$store.state.currSculpture) {
+                this.favoriteCount = this.currSculpture.favorites;
+            }
+        },
+        favorite() {
+            return new Promise((resolve, reject) => {
+                if(this.currUser != null) {
+                    let id = this.currSculpture.id;
+                    this.$store.dispatch('favorite', {sculpture: this.currSculpture, favorited: !this.favorited}).then(() => {
+                        resolve();
+                    }).catch(e => {
+                        console.error(e);
+                        alert(e);
+                        reject(e);
+                    })
+                } else {
+                    this.$store.commit('displayLogin', true);
+                    resolve();
+                }
+            });
+        },
         showCodeEditor() {
             this.$store.state.selectedObject = this.getCurrSculpture();
         },
@@ -104,31 +144,42 @@ export default {
 
 }
 
+
 .action-button {
-    width: 30px !important;
+    width: 45px !important;
     height: 30px !important;
     // margin-right: 20px;
     // margin-left: 20px;
-    padding-right: 30px;
+    // padding-right: 30px;
     // padding-left: 30px;
+    margin-left: 20px;
     border-top: 1px none #000;
     background-image: url('../client/images/Heart.svg');
     background-position: 50% 50%;
     background-size: 25px 25px;
+    // background-color: white;
     background-repeat: no-repeat, no-repeat;
-    // opacity: 0.6;
-    // -webkit-transition: opacity 300ms ease-in-ou;
-    // transition: opacity 300ms ease-in-ou;
+    border-radius: 100px;
+    opacity: 0.6;
+    -webkit-transition: opacity 300ms ease-in-out;
+    transition: 300ms ease-in-out 0s;
     &:hover {
         opacity: 1;
     }
 
     &:active {
+        box-shadow: none;
+    }
+
+    &.activated {
         background-image: url('../client/images/Heart.svg'), url('../client/images/Heart_filled.svg');
         background-position: 50% 50%, 50% 50%;
         background-size: 25px 25px, 25px 25px;
         background-repeat: no-repeat, no-repeat;
         opacity: 1;
+        box-shadow: none;
+        background-color: white;
+
     }
 }
 

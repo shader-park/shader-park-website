@@ -87,6 +87,7 @@ export default {
     margin-top: 80px;
     padding: 60px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
+    min-width: 400px;
 }
 
 .input {

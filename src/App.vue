@@ -75,6 +75,7 @@ export default {
 	methods: {
 		setUser: function() {
 			this.$store.dispatch('setUser');
+			this.$store.dispatch('fetchUserFavorites');
 		},
 		didMount: function(callback) {
 			callback();
@@ -89,7 +90,6 @@ export default {
 	mounted() {
 		this.$nextTick(function () {
 			this.isMounted = true;
-			console.log('mounted', this.isEmbeded)
 			if(this.isEmbeded || this.$route.meta.title === 'embed') {
 				document.body.classList.add('embeded');
 			}
@@ -186,12 +186,12 @@ export default {
   font-weight: 700;
   font-style: normal;
 }
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-ExtraBold.woff') format('woff');
-  font-weight: 800;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: 'Inter ui';
+//   src: url('./client/fonts/Inter-UI-ExtraBold.woff') format('woff');
+//   font-weight: 800;
+//   font-style: normal;
+// }
 @font-face {
   font-family: 'Regolapro';
   src: url('./client/fonts/RegolaPro-Bold.otf') format('opentype');
@@ -204,18 +204,30 @@ export default {
   font-weight: 400;
   font-style: normal;
 }
+// @font-face {
+//   font-family: 'Regolapro';
+//   src: url('./client/fonts/RegolaPro-Regular.otf') format('opentype');
+//   font-weight: 100;
+//   font-style: normal;
+// }
+@font-face {
+  font-family: 'Regolapro';
+  src: url('./client/fonts/RegolaPro-Book.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
 @font-face {
   font-family: 'Regolapro';
   src: url('./client/fonts/RegolaPro-Book.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
 }
-@font-face {
-  font-family: 'Regolapro';
-  src: url('./client/fonts/RegolaPro-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: 'Regolapro';
+//   src: url('./client/fonts/RegolaPro-Medium.otf') format('opentype');
+//   font-weight: 500;
+//   font-style: normal;
+// }
 
 @font-family: 'Regolapro', 'Poppins', sans-serif;
 

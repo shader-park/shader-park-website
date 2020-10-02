@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
 
   state: {
     user: null,
+    userFavorites: {},
     socket: null,
     clickEnabled: true,
     currentRoom: null,
@@ -35,6 +36,9 @@ export const store = new Vuex.Store({
     displayShareModal: false
   },
   getters: {
+    userFavorites: state => {
+      return state.userFavorites;
+    },
     displayShareModal: state => {
       return state.displayShareModal;
     },
@@ -79,6 +83,14 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setCurrSculpture(state, payload) {
+      state.currSculpture = {};
+      state.currSculpture = payload;
+    },
+    setUserFavorites(state, payload) {
+      state.userFavorites = {};
+      Object.assign(state.userFavorites, payload);
+    },
     displayShareModal(state, payload) {
       state.displayShareModal = payload;
     },
@@ -426,6 +438,76 @@ export const store = new Vuex.Store({
     },
     fetchForks() {
       return firebase.database().ref('/forks').once('value').then(data => data.val());
+    },
+    favorite({commit, getters}, {sculpture, favorited}) {
+      return new Promise(async (resolve, reject) => {
+        commit('setLoading', true);
+        
+        let vueXUserFavorites = getters.userFavorites;
+        const user = getters.getUser;
+        if(!user) {
+          console.error('Tried to favorite Sculpture when a User is not logged in');
+          reject('Tried to favorite Sculpture when a User is not logged in');
+        }
+        let route = sculpture.isExample? 'examples' : 'sculptures';
+        
+        // Update Favorite Count
+        await firebase.database().ref(`${route}/${sculpture.id}/favorites`).transaction((currValue) => {
+          let newFavCount;
+          if(favorited) {
+            newFavCount = (currValue || 0) + 1;
+          } else {
+            newFavCount = Math.max((currValue || 0) - 1, 0);
+          }
+          sculpture.favorites = newFavCount;
+          commit('setCurrSculpture', sculpture);
+          return newFavCount;
+        }).catch(error => console.error(error));
+        
+
+        // Save, or Remove favorite
+        let time = Date.now();
+        let userPath = `users/${user.uid}/favorites/${sculpture.id}`;
+        if(favorited) {
+          let favorite = {
+            uid: user.uid,
+            timestamp: time,
+            sculptureId: sculpture.id,
+          }
+          const favoriteId = await firebase.database().ref(`favorites/`).push(favorite).key;
+          await firebase.database().ref(userPath).set(favoriteId).catch(error => console.error(error));
+          //make sure userFavorites is a dictionary
+          if(!(vueXUserFavorites && vueXUserFavorites.constructor === Object)) {
+            vueXUserFavorites = {};
+          } 
+          vueXUserFavorites[sculpture.id] = favoriteId;
+          
+          store.commit('setUserFavorites', vueXUserFavorites);
+        } else {
+          let favoriteObj = await firebase.database().ref(userPath).once('value');
+          let favoriteId = favoriteObj.val();
+          delete vueXUserFavorites[sculpture.id];
+          store.commit('setUserFavorites', vueXUserFavorites);
+          await firebase.database().ref(userPath).remove().catch(error => console.error(error));
+          await firebase.database().ref(`favorites/${favoriteId}`).remove().catch(error => console.error(error));
+        }
+        
+        commit('setLoading', false);
+        resolve();
+      });
+    },
+    fetchUserFavorites({commit, getters}) {
+      return new Promise(async (resolve, reject) => {
+        const user = getters.getUser;
+        try {
+          let favoritesObj = await firebase.database().ref(`users/${user.uid}/favorites`).once('value');
+          commit('setUserFavorites', favoritesObj.val());
+          resolve();
+        } catch(e) {
+          console.error(e);
+          reject(e);
+        }
+      })
     }
   }
 });

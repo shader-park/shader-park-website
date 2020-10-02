@@ -7,7 +7,7 @@
             <span v-show="$v.password.$error">password must be 6 or more characters</span>
             <input class="input w-input" type="password" @blur="$v.password.$touch()"  placeholder="password:" v-model="password">
             <button type="submit" class="button"  :disabled="$v.$invalid" v-on:click="signIn">Sign In</button>
-			<button class="link sign-up" v-on:click="signUp" v-if="!user" active-class="active">Sign Up</button>
+			<button class="link sign-up" v-on:click="signUp" v-if="!currUser" active-class="active">Sign Up</button>
         </form>
     </div>
 </template>
@@ -26,7 +26,10 @@ export default {
 	computed: {
 		isDisabled : function () {
 			return !(this.email.length > 0 && this.password.length > 0);
-		}
+		},
+		currUser () {
+			return this.$store.getters.getUser;
+        },
 	},
 	validations: {
         email: {
