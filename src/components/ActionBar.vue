@@ -2,9 +2,9 @@
 <div>
     <div :class="{embeded : isEmbeded, dragging: dragging}" :style="{width: currWidth}" class="action-bar">   
         <button v-if="!isMobile" class="editor-button" @click="showCodeEditor">Edit Code</button>
-        <button :class="{activated : favorited}" @click="throttleFavorite" class="editor-button action-button"> </button>
-        <span>{{favoriteCount}}</span>
-        <button @click.stop="share" v-if="displayShareButton" class="editor-button share fade-opacity" ref="share">Share</button>
+        <button v-if="displayActionButton" :class="{activated : favorited}" @click="throttleFavorite" class="editor-button action-button"> </button>
+        <span v-if="displayActionButton">{{favoriteCount}}</span>
+        <button @click.stop="share" v-if="displayActionButton" class="editor-button share fade-opacity" ref="share">Share</button>
     </div>
 </div>
 </template>
@@ -35,7 +35,7 @@ export default {
         currSculpture() {
             return this.$store.state.currSculpture;
         },
-        displayShareButton() {
+        displayActionButton() {
             return this.currSculpture && this.currSculpture.id && this.currSculpture.id.length > 3
         },
         isMobile() {
