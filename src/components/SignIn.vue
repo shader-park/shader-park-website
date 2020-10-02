@@ -48,8 +48,12 @@ export default {
 			.then(
 				user => {
 					// this.$router.replace('profile');
-					this.$store.dispatch('fetchUserFavorites');
+					
 					this.$store.commit('displayLogin', false);
+					setTimeout(() => {
+					this.$store.dispatch('fetchUserFavorites');	
+					}, 1);
+					
 				},
 				error => {
 					alert(error.message);

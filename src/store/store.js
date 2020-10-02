@@ -496,11 +496,17 @@ export const store = new Vuex.Store({
         resolve();
       });
     },
-    fetchUserFavorites({commit, getters}) {
+    fetchUserFavorites({commit, getters}, uid) {
       return new Promise(async (resolve, reject) => {
         const user = getters.getUser;
+        if(!user && !uid) {
+          return;
+        }
+        if(user) {
+          uid = user.uid
+        }
         try {
-          let favoritesObj = await firebase.database().ref(`users/${user.uid}/favorites`).once('value');
+          let favoritesObj = await firebase.database().ref(`users/${uid}/favorites`).once('value');
           commit('setUserFavorites', favoritesObj.val());
           resolve();
         } catch(e) {
