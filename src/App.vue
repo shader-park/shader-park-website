@@ -125,7 +125,7 @@ export default {
 	font-size: 88px;
 	font-weight: 400;
 	text-align: center;
-	letter-spacing: 10.06px;
+	letter-spacing: 5.06px;
 	text-transform: uppercase;
 	-moz-animation-duration: 300ms;
 	-webkit-animation-duration: 300ms;
@@ -155,52 +155,15 @@ export default {
 
 @font-size: 40px;
 
-
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-SemiBold.woff') format('woff');
-  font-weight: 600;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-Black.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Inter ui';
-  src: url('./client/fonts/Inter-UI-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-}
-// @font-face {
-//   font-family: 'Inter ui';
-//   src: url('./client/fonts/Inter-UI-ExtraBold.woff') format('woff');
-//   font-weight: 800;
-//   font-style: normal;
-// }
 @font-face {
   font-family: 'Regolapro';
-  src: url('./client/fonts/RegolaPro-Bold.otf') format('opentype');
+  src: url('./client/fonts/RegolaPro-Bold.woff2') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'Regolapro';
-  src: url('./client/fonts/RegolaPro-Regular.otf') format('opentype');
+  src: url('./client/fonts/RegolaPro-Book.woff2') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
@@ -212,13 +175,13 @@ export default {
 // }
 @font-face {
   font-family: 'Regolapro';
-  src: url('./client/fonts/RegolaPro-Book.otf') format('opentype');
+  src: url('./client/fonts/RegolaPro-Book.woff2') format('opentype');
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: 'Regolapro';
-  src: url('./client/fonts/RegolaPro-Book.otf') format('opentype');
+  src: url('./client/fonts/RegolaPro-Book.woff2') format('opentype');
   font-weight: 300;
   font-style: normal;
 }
