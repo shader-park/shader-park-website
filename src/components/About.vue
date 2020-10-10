@@ -9,9 +9,11 @@
             Inspired by tools and communities like P5.js, Processing and Shader Toy, <a target="_blank" href="https://torinblankensmith.com">Torin Blankensmith</a> and
             <a target="_blank" href="http://www.peterwhidden.com/">Peter Whidden</a> developed Shader Park 
             with the intention of making emerging technology in computer graphics accessible and inclusive for artists, designers, and educators.
-
-            
-            
+            <br/>
+            <br/>
+            If you enjoy using Shader Park please consider giving us a star.<br/>
+            Website: <github-button href="https://github.com/shader-park/shader-park-website" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-website on GitHub">Star</github-button><br/>
+            Core Framework: <github-button href="https://github.com/shader-park/shader-park-core" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-core on GitHub">Star</github-button>
             
 
             <br/><br/>
@@ -34,6 +36,7 @@
 </template>
 
 <script>
+import GithubButton from 'vue-github-button'
 
 export default {
 	data: function() {
@@ -42,7 +45,7 @@ export default {
 		}
 	},
 	components : {
-		
+		GithubButton
 	},
 	mounted() {
 		this.$store.commit('sculpturesLoaded', true);    
