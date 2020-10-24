@@ -16,6 +16,7 @@ export class Sculpture {
             try {
                 this.mesh = glslToThreeJSMesh(source, this.payload);
             } catch(error) {
+                console.error(error);
                 this.mesh = glslToThreeJSMesh(defaultFragSourceGLSL, this.payload);
                 this.compileError = error;
                 // throw(e);
@@ -25,8 +26,10 @@ export class Sculpture {
             try {
                 this.mesh = sculptToThreeJSMesh(source, this.payload);
             } catch (error) {
+                console.error(error);
                 this.mesh = sculptToThreeJSMesh('sphere(0.5);', this.payload);
                 this.compileError = error;
+
             }
             this.uniforms = this.mesh.material.uniformDescriptions;
             this.uniforms = this.uniforms.filter(uniform => !(uniform.name in this.uniformsToExclude))
