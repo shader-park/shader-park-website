@@ -7299,7 +7299,7 @@ sha.js@^2.4.0, sha.js@^2.4.8:
 
 "shader-park-core@https://github.com/shader-park/shader-park-core.git":
   version "0.0.12"
-  resolved "https://github.com/shader-park/shader-park-core.git#b2e7969f429295aa52830daa1661e6a28289be56"
+  resolved "https://github.com/shader-park/shader-park-core.git#626bb9f1890e47ceb8a3c3de8e8d0b3fa67f5459"
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
