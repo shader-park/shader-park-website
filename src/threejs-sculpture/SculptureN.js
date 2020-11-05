@@ -103,7 +103,6 @@ export class Sculpture {
     }
 
     update(uniforms) {
-        this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['msdf'].value = this.payload.msdfTexture;
         uniforms.forEach(uniform => {
