@@ -7,7 +7,7 @@ import {defaultFragSourceGLSL} from 'shader-park-core';
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
-        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0};
+        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1};
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;
@@ -103,7 +103,6 @@ export class Sculpture {
     }
 
     update(uniforms) {
-        this.mesh.material.uniforms['sculptureCenter'].value = this.mesh.position;
         this.mesh.material.uniforms['opacity'].value = this.opacity;
         this.mesh.material.uniforms['msdf'].value = this.payload.msdfTexture;
         uniforms.forEach(uniform => {
@@ -112,6 +111,5 @@ export class Sculpture {
             }
         });
     }
-
 }
 
