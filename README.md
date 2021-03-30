@@ -1,5 +1,7 @@
 # Shader Park
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/62b5ba66-28fd-4829-9394-b175ad113a6b/deploy-status)](https://app.netlify.com/sites/shaderpark/deploys)
+
 ## Project setup
 ```
 yarn install
