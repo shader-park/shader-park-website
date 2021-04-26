@@ -7,7 +7,7 @@ import {defaultFragSourceGLSL} from 'shader-park-core';
 
 export class Sculpture {
     constructor(isGlsl, source, msdfTexture) {
-        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1};
+        this.uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};
         this.IsGLSL = isGlsl;
         this.payload = { msdfTexture}
         this.source = source;

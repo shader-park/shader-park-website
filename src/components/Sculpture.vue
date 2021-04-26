@@ -143,7 +143,7 @@ export default {
             this.saved = saved;
         },
         setSelectedSculpture(obj) {
-            let uniformsToExclude = {'sculptureCenter': 0,  'msdf': 0, 'opacity': 0, 'time': 0};
+            let uniformsToExclude = {'sculptureCenter': 0,  'msdf': 0, 'opacity': 0, 'time': 0, 'resolution': 0};
             if(obj && this.sculpture && this.sculpture.mesh && this.sculpture.mesh.name && obj.name == this.sculpture.mesh.name) {
                 this.$store.state.selectedSculpture = this.$data;
                 this.$store.state.currSculpture = this.$data;

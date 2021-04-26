@@ -334,7 +334,8 @@ function render(time) {
 			sculpture.setOpacity(fadeOpacity);
 		}
 		let uniforms = [];
-		uniforms.push({ name: 'time', value: currTime, type: 'float' });
+		uniforms.push({ name: 'time', value: currTime, type: 'float' }, 
+		{ name: 'resolution', value: new Vector2(canvasContainer.clientWidth, canvasContainer.clientHeight), type: 'vec2' });
 		if (store.state.selectedSculpture && store.state.selectedSculpture.sculpture === sculpture) {
 			if(sculpture && sculpture.uniforms) {
 				window.uniforms = sculpture.uniforms;
@@ -486,7 +487,6 @@ function onMouseMove(event) {
 		mouse.x = ((event.clientX - canvasContainer.offsetLeft)  / canvasContainer.clientWidth) * 2 - 1;
 		mouse.y = -((event.clientY - canvasContainer.offsetTop) / canvasContainer.clientHeight ) * 2 + 1;
 	}
-	
 }
 
 let tempIntersectedObject;
@@ -619,7 +619,6 @@ function calcSculptureOpacityForCameraDistance(sculp) {
   let dist = sculp.mesh.position.distanceTo(camera.position);
   return Math.min(Math.max(0.0, window.fogDistance - dist * 0.5), 1.0);
 }
-
 
 function onCanvasResize() {
 	if (canvasContainer) {
