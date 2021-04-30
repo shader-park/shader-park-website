@@ -7338,10 +7338,10 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.0.23:
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.23.tgz#c2fbddf16838a1a7e49fb1c3284085e5655f5e79"
-  integrity sha512-8+F0h2bobtDmygabX6EYJ0lq0fEvHq8HtnhvaMhS5Vt424LqKGYGENDJdl9WfK6PsOkta5r97UuoqkQfQ4WqzQ==
+shader-park-core@^0.0.25:
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.25.tgz#0d0c77ce7baf5be03f64e978a508ada886a04238"
+  integrity sha512-0HI2Nd4OmGLgvhWAX2a/IVc9mhU9IgGZDQlE0bjeoD5HP1L6kDIvNGZRUxPE2cb1SSLSO3ETMlT0e2w2Puvlxw==
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
