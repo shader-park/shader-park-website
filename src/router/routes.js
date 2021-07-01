@@ -8,11 +8,19 @@ import New from '../components/New.vue';
 
 export const routes = [
   {
+    path: '/explore',
+    name: 'explore',
+    component: () => import(/* webpackChunkName: "explore" */ '../components/Explore.vue'),
+    meta: {
+      title: 'Explore',
+    }
+  },  
+  {
     path: '',
     name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '../components/Home.vue'),
     meta: {
-      title: 'All Sculptures',
+      title: '',
     }
   },
   {
@@ -67,7 +75,7 @@ export const routes = [
   {
     path: '/featured',
     name: 'featured',
-    component: () => import(/* webpackChunkName: "home" */ '../components/Home.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '../components/Explore.vue'),
     meta: { title: 'Featured', requiresAuth: false }
   },
   {

@@ -10,7 +10,7 @@
             <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
             <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
                 
-                <router-link to="/" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Home</router-link>
+                <router-link to="/explore" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Explore</router-link>
                 <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
                 <a class="link"  target="_blank" href="https://shader-park-docs.netlify.com/references-js/" v-bind:class="{ mobile: isMobile }"  active-class="active">References</a>
                 <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>

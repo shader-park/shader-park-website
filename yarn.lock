@@ -7338,14 +7338,14 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.0.25:
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.25.tgz#0d0c77ce7baf5be03f64e978a508ada886a04238"
-  integrity sha512-0HI2Nd4OmGLgvhWAX2a/IVc9mhU9IgGZDQlE0bjeoD5HP1L6kDIvNGZRUxPE2cb1SSLSO3ETMlT0e2w2Puvlxw==
+shader-park-core@^0.0.271:
+  version "0.0.271"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.271.tgz#d557ac24a01b1e4ec472253e401b05c75fd55463"
+  integrity sha512-Y3e6gjYDHNevbv9Zktibi/KTWmZDG0zeZxL4MFmNsrB/GR3F01NqvlbrdpPOsGqAvdJBx3rW2IJNzr3IwztS0w==
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
-    three "^0.126.1"
+    three "^0.129.0"
 
 shebang-command@^1.2.0:
   version "1.2.0"
@@ -7882,6 +7882,11 @@ three@^0.126.1:
   version "0.126.1"
   resolved "https://registry.yarnpkg.com/three/-/three-0.126.1.tgz#cf4e4e52060fd952f6f0d5440cbd422c66bc4be7"
   integrity sha512-eOEXnZeE1FDV0XgL1u08auIP13jxdN9LQBAEmlErYzMxtIIfuGIAZbijOyookALUhqVzVOx0Tywj6n192VM+nQ==
+
+three@^0.129.0:
+  version "0.129.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.129.0.tgz#f5e530bbc96eac5d5b4749cb5da886ef0d42f554"
+  integrity sha512-wiWio1yVRg2Oj6WEWsTHQo5eSzYpEwSBtPSi3OofNpvFbf26HFfb9kw4FZJNjII4qxzp0b1xLB11+tKkBGB1ZA==
 
 through2@^2.0.0:
   version "2.0.5"

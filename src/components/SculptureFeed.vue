@@ -104,8 +104,8 @@ img[lazy=loaded] {
 }
 
 .sculpture-grid {
-  margin-right: 30px;
-  margin-left: 30px;
+  /* margin-right: 30px;
+  margin-left: 30px; */
   grid-column-gap: 30px;
   grid-row-gap: 50px;
   min-height: 0;
