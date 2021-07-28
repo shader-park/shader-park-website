@@ -203,6 +203,7 @@ export default {
 }
 
 .canvas1 {
+    cursor: pointer;
     margin-top: calc(50vh - 10vh);
     width: 50vw;
     height: 50vh;
