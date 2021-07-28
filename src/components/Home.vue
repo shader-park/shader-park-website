@@ -37,6 +37,21 @@
         <router-link to="/featured" class="link"><h1 v-show="!loading">Featured Sculptures ›</h1></router-link>
         <sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
         <h1 v-show="!loading && $route.name !== 'featured'">Featured Projects</h1>
+        <a class="active-button w-button" target="_blank" href="https://forms.gle/7zsSQYpcD4JtEP3E6">Submit A Project</a>
+        <br/>
+        <div class="row">
+            <div class="column">
+                <a target="_blank" href="https://quantumsummer.world/"><img class="featured-project-img left" alt="Quantum Summer Website" src="/img/featured_projects/Quantum Summer Site.jpg" /></a>
+                <a target="_blank" href="https://lightartspace.org/"><img class="featured-project-img right" alt="Light Art Space Website" src="/img/featured_projects/LAS Site.jpg" /></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <a target="_blank" href="http://wcma-experiments.appspot.com/"><img class="featured-project-img left" alt="Williams College of Art Experimental Museum Exploration Website" src="/img/featured_projects/WCMA Site.jpg" /></a>
+            </div>
+        </div>
+        
+
         <br/><br/><br/><br/><br/>
     </section>
     
@@ -82,10 +97,9 @@ export default {
 					}
 				})
 				temp.reverse();
-				if(this.$route.name !== 'featured') {
-					temp2.slice(0,8);
-				}
 				temp2.reverse();
+                temp2 = temp2.slice(0,8);
+                // temp.slice(0,8);
 				// temp = temp.filter(sculp => 'thumbnail' in sculp)
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
 				this.featuredSculptures = temp2; //array.push isn't tracked by state, resetting is
@@ -141,6 +155,64 @@ export default {
 
 <style lang="less" scoped>
 @import '../client/mixins.less';
+
+.row {
+    margin-top: 20px;
+    .mobile({
+        margin-top: 0px;
+    });
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+    .mobile({
+        flex: 100%;
+    });
+}
+
+.featured-project-img {
+    width: calc(50vw - 45px);
+    &.right {
+        margin-left: 15px;
+    }
+    &.left {
+        margin-right: 15px;
+    }
+
+    opacity: .85;
+    transition: opacity 300ms ease-in-out;
+
+    &:hover {
+        opacity: 1;
+    }
+    .mobile({
+        flex: 100%;
+        margin-top: 20px;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        width: calc(100vw - 60px);
+    });
+}
+
+.active-button {
+    padding: 11px 35px;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    background-color: #50e3c2;
+    font-family: 'Inter ui', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1.1px;
+    text-indent: 0px;
+    opacity: .8 !important;
+    transition: opacity 300ms ease-in-out, color 300ms ease-in-out ;
+
+    &:hover {
+        color: white;
+        opacity: 1 !important;
+    }
+}
 
 .container {
     padding: 30px;
