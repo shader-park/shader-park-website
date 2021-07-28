@@ -207,6 +207,13 @@ export default {
     width: 50vw;
     height: 50vh;
     transform: translateY(-50%-10vh);
+    .mobile({
+        margin-top: 30px;
+        margin-left: -30px;
+        width: calc(100vw);
+        height: auto;
+        transform: translateY(0px);
+    });
 }
 
 .split-container {
