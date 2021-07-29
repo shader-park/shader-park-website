@@ -37,7 +37,7 @@
         <router-link to="/featured" class="link"><h1 v-show="!loading">Featured Sculptures ›</h1></router-link>
         <sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
         <h1 v-show="!loading && $route.name !== 'featured'">Featured Projects</h1>
-        <a class="active-button w-button" target="_blank" href="https://forms.gle/7zsSQYpcD4JtEP3E6">Submit A Project</a>
+        <a class="active-button w-button" target="_blank" href="https://forms.gle/7zsSQYpcD4JtEP3E6">Submit a Project</a>
         <br/>
         <div class="row">
             <div class="column">
