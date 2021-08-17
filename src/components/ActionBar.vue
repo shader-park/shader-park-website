@@ -27,7 +27,8 @@ export default {
     },
     computed : {
         ...mapGetters({
-            userFavorites: 'userFavorites'
+            userFavorites: 'userFavorites',
+            userComments: 'userComments',
         }),
         isEmbeded() {
             return this.$store.state.embedded;
@@ -36,6 +37,7 @@ export default {
             return this.$store.state.currSculpture;
         },
         displayActionButton() {
+            
             return this.currSculpture && this.currSculpture.id && this.currSculpture.id.length > 3
         },
         isMobile() {
@@ -56,7 +58,7 @@ export default {
         },
         userFavorites(value) {
             this.updateFavoritedButton();
-        }
+        },
     },
     created() {
         this.throttleFavorite = throttle(this.favorite, 850);
@@ -105,7 +107,7 @@ export default {
 </script>
 
 
-<style lang="less" scoped>
+<style lang="less">
 
 
 .action-bar {

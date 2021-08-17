@@ -53,6 +53,9 @@ export default {
 					setTimeout(() => {
 					this.$store.dispatch('fetchUserFavorites');	
 					}, 1);
+					setTimeout(() => {
+					this.$store.dispatch('fetchUserComments');	
+					}, 1);
 					
 				},
 				error => {

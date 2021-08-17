@@ -18773,7 +18773,7 @@ function getDevicePixelRatio(ctx) {
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-exports.isCommented = isCommented;
+exports.iscomment = iscomment;
 exports.isLineAfterMain = isLineAfterMain;
 exports.getVariableType = getVariableType;
 exports.getShaderForTypeVarInLine = getShaderForTypeVarInLine;
@@ -18782,7 +18782,7 @@ exports.getMedian = getMedian;
 exports.getDeltaSum = getDeltaSum;
 exports.getHits = getHits;
 
-function isCommented(cm, nLine, match) {
+function iscomment(cm, nLine, match) {
     var token = cm.getTokenAt({ line: nLine, ch: match.index });
     if (token && token.type) {
         return token.type === 'comment';
@@ -18819,13 +18819,13 @@ function getVariableType(cm, sVariable) {
                 voidIN = true;
             } else {
                 var uniformMatch = uniformRE.exec(cm.getLine(i));
-                if (uniformMatch && !isCommented(cm, i, uniformMatch)) {
+                if (uniformMatch && !iscomment(cm, i, uniformMatch)) {
                     return uniformMatch[1];
                 }
             }
         } else {
             var constructMatch = constructRE.exec(cm.getLine(i));
-            if (constructMatch && constructMatch[1] && !isCommented(cm, i, constructMatch)) {
+            if (constructMatch && constructMatch[1] && !iscomment(cm, i, constructMatch)) {
                 return constructMatch[1];
             }
         }

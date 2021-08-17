@@ -11,6 +11,7 @@
         <div ref="threeCanvas" class="canvas-container" :class="{dragging: dragingMouse}"></div>
         <div class="actions-bar"></div>
         <actionBar :cachedWidth="actionsBarWidth" :dragging="dragingMouse" :class="{dragging: dragingMouse}"></actionBar>
+        <sculptureFeed :cachedWidth="actionsBarWidth" :dragging="dragingMouse" :class="{dragging: dragingMouse}"></sculptureFeed>
     </div>
 </template>
 
@@ -18,6 +19,8 @@
 import firebase from "firebase/app";
 import Editor from "./Editor.vue";
 import ActionBar from "./ActionBar.vue";
+import SculptureFeed from "./SculptureFeed.vue";
+import Sculpture from './Sculpture.vue';
 
 export default {
     data: function() {
@@ -34,7 +37,9 @@ export default {
     },
     components: {
         editor: Editor,
-        actionBar: ActionBar
+        actionBar: ActionBar,
+        sculptureFeed: SculptureFeed,
+        Sculpture
     },
     computed : {
         canvasSize() {

@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
   state: {
     user: null,
     userFavorites: {},
+    userComments: {},
     socket: null,
     clickEnabled: true,
     currentRoom: null,
@@ -38,6 +39,9 @@ export const store = new Vuex.Store({
   getters: {
     userFavorites: state => {
       return state.userFavorites;
+    },
+    userComments: state => {
+      return state.userComments;
     },
     displayShareModal: state => {
       return state.displayShareModal;
@@ -90,6 +94,10 @@ export const store = new Vuex.Store({
     setUserFavorites(state, payload) {
       state.userFavorites = {};
       Object.assign(state.userFavorites, payload);
+    },
+    setUserComments(state, payload) {
+      state.userComments = {};
+      Object.assign(state.userComments, payload);
     },
     displayShareModal(state, payload) {
       state.displayShareModal = payload;
@@ -236,7 +244,7 @@ export const store = new Vuex.Store({
         newId: ''
       };
       delete sculpture.vueId;  // remove the vueId when saving to db
-      const sculpID = await firebase.database().ref(`sculptures`).push().key;
+      const sculpID = firebase.database().ref(`sculptures`).push().key;
       sculpture.id = sculpID;
       let route = sculpture.isExample && getters.isAdmin  ? 'examples' : 'sculptures';
       await firebase.database().ref(`${route}/${sculpID}`).update(sculpture)
@@ -296,7 +304,8 @@ export const store = new Vuex.Store({
                 isExample: false,
                 views: 0,
                 favorites: 0,
-                comments: 0
+                comments: [],
+                commentCount: 0
               });
               // sculpture.forks = 0;
               // sculpture.uid = user.uid;
@@ -439,6 +448,70 @@ export const store = new Vuex.Store({
     fetchForks() {
       return firebase.database().ref('/forks').once('value').then(data => data.val());
     },
+
+    addComment({commit, getters}, {sculpture, comment}) {
+      commit('setLoading', true);
+      let correctDate = (date) =>{
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let year = date.getFullYear();
+        let time = `${month}/${day}/${year}`
+        return(time);
+        }
+      let date = correctDate(new Date());
+      const user = getters.getUser;
+      firebase.database().ref(`sculptures/${sculpture.id}/comments`).push({
+        id : user.uid + '_' + Date.now(),
+        username: user.displayName,
+        comment: comment,
+        avi : "https://firebasestorage.googleapis.com/v0/b/shader-park-test.appspot.com/o/images%2Favi.52c765c7.png?alt=media&token=90fc07ec-e837-4bd3-815d-d968c1dc2653",
+        date: date,
+        uid: user.uid,
+        sculptureid: sculpture.id
+      }).then(() => {
+        commit('setLoading', false);
+      }).catch(error => console.error(error));
+    },
+
+    fetchUserComments({commit, getters}, uid) {
+      return new Promise(async (resolve, reject) => {
+        const user = getters.getUser;
+        if(!user && !uid) {
+          return;
+        }
+        if(user) {
+          uid = user.uid
+        }
+        try {
+          let commentsObj = await firebase.database().ref(`users/${uid}/comments`).once('value');
+          commit('setUserComments', commentsObj.val());
+          resolve();
+        } catch(e) {
+          console.error(e);
+          reject(e);
+        }
+      });
+    },
+
+    deleteComment({commit, getters}, comment) {
+      commit('setLoading', true);
+      const user = getters.getUser;
+      if(!user) {
+        console.error('Tried to delete a comment without a user');
+        return;
+      }
+      const userId = user.uid;
+
+      //`sculptures/${sculpture.id}/comments`
+     // const reference = `users/${userId}/comments/${commentId}`;
+      const reference = `sculptures/${comment.sculptureid}/comments/${comment.id}`;
+      return firebase.database().ref(reference).remove().then(() => {
+        commit('setLoading', false);
+      }).catch(error => console.error(error));
+    },
+
+  
+
     favorite({commit, getters}, {sculpture, favorited}) {
       return new Promise(async (resolve, reject) => {
         commit('setLoading', true);
@@ -464,24 +537,23 @@ export const store = new Vuex.Store({
           return newFavCount;
         }).catch(error => console.error(error));
         
-
         // Save, or Remove favorite
         let time = Date.now();
         let userPath = `users/${user.uid}/favorites/${sculpture.id}`;
         if(favorited) {
           let favorite = {
+            id: user.uid + '_' + time,
             uid: user.uid,
             timestamp: time,
             sculptureId: sculpture.id,
           }
-          const favoriteId = await firebase.database().ref(`favorites/`).push(favorite).key;
+          const favoriteId = firebase.database().ref(`favorites/`).push(favorite).key;
           await firebase.database().ref(userPath).set(favoriteId).catch(error => console.error(error));
           //make sure userFavorites is a dictionary
           if(!(vueXUserFavorites && vueXUserFavorites.constructor === Object)) {
             vueXUserFavorites = {};
-          } 
+          }   
           vueXUserFavorites[sculpture.id] = favoriteId;
-          
           store.commit('setUserFavorites', vueXUserFavorites);
         } else {
           let favoriteObj = await firebase.database().ref(userPath).once('value');
@@ -491,11 +563,11 @@ export const store = new Vuex.Store({
           await firebase.database().ref(userPath).remove().catch(error => console.error(error));
           await firebase.database().ref(`favorites/${favoriteId}`).remove().catch(error => console.error(error));
         }
-        
         commit('setLoading', false);
         resolve();
       });
     },
+
     fetchUserFavorites({commit, getters}, uid) {
       return new Promise(async (resolve, reject) => {
         const user = getters.getUser;
@@ -514,6 +586,7 @@ export const store = new Vuex.Store({
           reject(e);
         }
       })
-    }
+    },
+
   }
 });
