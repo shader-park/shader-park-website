@@ -5,7 +5,7 @@
         <div v-if="!embedded" class="nav-bar" @click.stop="">
         <!-----------CENTER ---------->
             <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
-            <!--------NAVIGATION LEFT--------->
+            <!----------NAVIGATION LEFT--------->
             <div class="nav-left">
                 <router-link to="/" v-if="!isMobile" class="logo-text"  active-class="active"> SP</router-link> 
                 <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> --><!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
