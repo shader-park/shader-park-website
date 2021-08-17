@@ -3,13 +3,23 @@
         @rules();
     }
 }
-
-.mobile(@rules) {
-    @media (max-width: 580px) {
+.tablet(@rules) {
+    @media (max-width: 1000px) {
         @rules();
     }
 }
 
+.mobile(@rules) {
+    @media (max-width: 650px) {
+        @rules();
+    }
+}
+
+:root {
+    --sp-aquamarine: #50E3C2;
+    --sp-gray: #777777;
+    --sp-silver: #CCCCCC;
+}
 .editor-button {
     .mobile({
         font-size: 14 !important;
@@ -18,7 +28,7 @@
     padding: 5px 15px 5px 15px;
     border-radius: 50px;
     /* border: 1px solid lightgrey; */
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0.1px 1px 3px 0.1px rgba(0, 0, 0, 0.15);
     margin-bottom: 5px;
     transition: color 300ms ease-in-out, box-shadow 300ms ease-in-out ;
     color: #777;
@@ -26,7 +36,7 @@
     background-repeat: no-repeat, no-repeat;
     &:hover {
         color: #000;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0.1px 1px 4px 0.1px rgba(0, 0, 0, 0.2);
     }
 }
 
