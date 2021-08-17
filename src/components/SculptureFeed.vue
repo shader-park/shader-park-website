@@ -4,7 +4,7 @@
   <room ref="room" v-if=" show3D" v-bind:sculpturesData="sculptures" ></room><!--sculptures.length > 0 &&-->
     <div class="w-layout-grid sculpture-grid" v-if="!show3D" ><!--sculptures.length > 0 && -->
       <!-----SCULPTURE ITEM---->
-      <div v-for="(sculpture) in sculptures" :key="sculpture.id" class="sculpture-item" >
+      <div v-for="(sculpture, index) in sculptures" :key="sculpture.id" class="sculpture-item" >
         <router-link :to="'/sculpture/'+sculpture.id + (sculpture.isExample? '?example=true' : '') + '?hideeditor=true&hidepedestal=true'" tag="a" > <v-lazy-image :alt="sculpture.title" width="500" sizes="520px" :src="sculpture.thumbnail? sculpture.thumbnail: 'https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-Lk_XES0HZ7-EdHhMstK.jpeg?alt=media&token=89087d04-7bcd-4368-bfe4-19281471308b'" src-placeholder="https://firebasestorage.googleapis.com/v0/b/shader-park-core.appspot.com/o/sculptureThumbnails%2F-LkafBpRAsQOqxKBP786.jpeg?alt=media&token=378fc6f9-b6d6-4dc3-8b98-fac3a1467d19" /> </router-link>
                 <div class="sculpture-description">{{sculpture.title}}<br /> by
                     <router-link :to="'/user/'+sculpture.username" tag="a">{{sculpture.username}}</router-link>
@@ -13,37 +13,49 @@
                         <div class="sculpture-button-bar">
                             <!------COMMENT COUNT TOGGLE BUTTON---->
                             <div class="sculpture-comment-span-button">
-                              <button v-on:click="show = !show" class=" editor-button sculpture-comment-count fade-opacity " style="margin-left: none" ></button>
+                              <button @click="toggleItem(index)" class=" editor-button sculpture-comment-count fade-opacity " style="margin-left: none" ></button>
                               <span >{{commentCount}} </span>
                             </div>
                             <!----------LIKE BUTTON----------->
                             <div class="sculpture-comment-span-button">
-                              <button v-on:click="favorite(sculpture)"  :class="{activated : favorited}" @click="throttleFavorite" class="editor-button action-button"> </button>
+                              <button v-on:click="favorite(sculpture), throttleFavorite"  :class="{activated : favorited}"  class="editor-button action-button"> </button>
                               <span class="sculpture-comment-span" >{{sculpture.favorites}}</span >
                             </div>
                           <!----------SHARE BUTTON---------->
                           <button @click.stop="share" class="editor-button share fade-opacity" ref="share" style='background-position: 50% 50%;'></button>
                           </div>
                           <!----------TOGGLE SCULPTURE COMMENT INPUT FEED---------->
-                          <div v-if="show">
-                          </div>
-                          <div v-else>
+              
+                          <div v-if="isActive === index">
                                     <div class="sculpture-comment-input">
                               <textarea class="sculpture-comment-textarea" v-model="newComment" rows="1" name="commentInput"></textarea>
                               <!----------ADD COMMENT BUTTON---------->
                                   <button v-on:click="addComment(sculpture)" style=" font-size: 12px; width: 100px; margin-right: 5px; " class="editor-button" > Comment </button>
                                   </div>
-                                    <ul v-for="(comment) in sculpture.comments" :key="comment.id" class="sculpture-item" id="sculpture-comment">
+                                    <ul v-for="(comment, cIndex) in sculpture.comments" :key="comment.id" class="sculpture-item" id="sculpture-comment">
                                     <li class="sculpture-comment-post"> 
                                       <!----------COMMENT DATE---------->
                                           <small style='display:flex; justify-content: flex-end; margin-right: 5px;' class='scultpure-comment--post-date'>{{comment.date}}  
                                             <!----------DELETE COMMENT BUTTON---------->
-                                          <button v-on:click="deleteComment(comment)"  style="margin-left: 5px; border-radius: 5px" ><img alt='closebutton' width="20px" height="20px" src='../client/images/close.svg'/></button></small>  
+                                          <button    v-on:click="deleteComment(comment)"  style="margin-left: 5px; border-radius: 5px" ><img alt='closebutton' width="20px" height="20px" src='../client/images/close.svg'/></button></small>  
                                           <img class='scultpure-comment--post-avi' height='40px' width='40px' src='../client/images/avi.png' /> <!--:src="comment.avi"-->
                                           <!----------COMMENT USERNAME---------->
                                           <i class='sculpture-comment-post-username'>{{comment.username}}</i>
                                           <!----------COMMENT TEXT---------->
-                                          <div class='sculpture-comment-post-text'> {{comment.comment}}  </div></li>
+                                          <div class='sculpture-comment-post-text'> {{comment.comment}} </div></li>            
+  
+                                    </ul>
+                                      <ul class="sculpture-item" id="sculpture-comment">
+                                    <li class="sculpture-comment-post"> 
+                                      <!----------COMMENT DATE---------->
+                                          <small style='display:flex; justify-content: flex-end; margin-right: 5px;' class='scultpure-comment--post-date'>{{commentTemp.date}}  
+                                            <!----------DELETE COMMENT BUTTON---------->
+                                          <button   v-on:click="deleteComment(commentTemp, cIndex)" style="margin-left: 5px; border-radius: 5px" ><img alt='closebutton' width="20px" height="20px" src='../client/images/close.svg'/></button></small>  
+                                          <img class='scultpure-comment--post-avi' height='40px' width='40px' src='../client/images/avi.png' /> <!--:src="comment.avi"-->
+                                          <!----------COMMENT USERNAME---------->
+                                          <i class='sculpture-comment-post-username'>{{commentTemp.username}}</i>
+                                          <!----------COMMENT TEXT---------->
+                                          <div class='sculpture-comment-post-text'> {{commentTemp.comment}} </div></li> 
                                     </ul>
                               </div>
                           </div>
@@ -62,17 +74,19 @@ import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 import VLazyImage from "v-lazy-image";
 import { mapGetters } from 'vuex';
 import throttle from 'lodash.throttle';
-
+          
 export default {
-
   data () {
+
         return {
             currWidth: '100vw',
             favorited: false,
             favoriteCount: 0,
-            commentCount: '',
+            commentCount: 0,
             show: true,
             newComment: '',
+            commentTemp :0,
+            isActive: null
         }
     },
   props: {
@@ -111,16 +125,14 @@ export default {
         currSculpture(value) {
             this.updateFavoritedButton();
             this.updateComments();
+
         },
         userFavorites(value) {
             this.updateFavoritedButton();
         },
         userComments(value) {
             this.updateComments();
-        },
-        userCommentCount(value) {
-            this.updateCommentCount();
-        },
+        }
     },
 
     created() {
@@ -136,8 +148,8 @@ export default {
         updateComments() {
             this.comment = (this.userComments && this.currSculpture && 'id' in this.currSculpture && this.currSculpture.id in this.userComments);
           if(this.$store.state.currSculpture) {
-                this.comments= this.currSculpture.comments;
-                this.commentCount = this.currSculpture.commentCount;
+                this.commentTemp= this.currSculpture.comments;
+            
 
             }
         },
@@ -145,9 +157,29 @@ export default {
             return new Promise((resolve, reject) => {
                 if(this.currUser != null) {
                   let comment = this.newComment;
-                  this.updateComments();
+                  this.commentCount++;
+                  let correctDate = (date) =>{
+                      let month = date.getMonth() + 1;
+                      let day = date.getDate();
+                      let year = date.getFullYear();
+                      let time = `${month}/${day}/${year}`
+                      return(time);
+                  }
+                  let date = correctDate(new Date());
+                  this.commentCount++;
+                      this.commentTemp={
+                      id : this.currUser.uid + '_' + Date.now(),
+                      username: this.currUser.displayName,
+                      comment: comment,
+                      avi : "https://firebasestorage.googleapis.com/v0/b/shader-park-test.appspot.com/o/images%2Favi.52c765c7.png?alt=media&token=90fc07ec-e837-4bd3-815d-d968c1dc2653",
+                      date: date,
+                      uid: this.currUser.uid,
+                      sculptureid: sculpture.id
+                  };
+
                   this.$store.dispatch('addComment', {sculpture, comment}).then(() => {
                         resolve();
+
                     }).catch(e => {
                         console.error(e);
                         alert(e);
@@ -159,6 +191,7 @@ export default {
                 }
             });
         },
+
       deleteComment(comment) {
             return new Promise((resolve, reject) => {
                 if(this.currUser === null) {
@@ -171,6 +204,8 @@ export default {
                 else {
                     this.$store.dispatch('deleteComment', {comment}).then(() => {
                         alert('delete comment?');
+                        this.commentTemp=null;
+                        this.commentCount--;
                         resolve();
                     }).catch(e => {
                         console.error(e);
@@ -179,6 +214,9 @@ export default {
                     })
                 }
             });
+        },
+          toggleItem(index) {
+            this.isActive = (this.isActive === index) ? null : index;
         },
       
       favorite(sculpture) {
