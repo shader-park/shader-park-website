@@ -481,7 +481,7 @@ export default {
         padding-left: 10px;
 
         .error-messages {
-            
+        padding: 0;
         }
         // padding-bottom: 10px;
         // padding-top: 10px;

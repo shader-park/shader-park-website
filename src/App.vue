@@ -76,6 +76,7 @@ export default {
 		setUser: function() {
 			this.$store.dispatch('setUser');
 			this.$store.dispatch('fetchUserFavorites');
+			this.$store.dispatch('fetchUserComments');
 		},
 		didMount: function(callback) {
 			callback();
