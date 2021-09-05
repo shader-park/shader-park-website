@@ -5,21 +5,22 @@
         <h4>shader-park-core</h4>
         <br/>
         <h1>
-                A JavaScript library for creating interactive procedural 2D and 3D shaders.<br/>
+            A JavaScript library for creating interactive procedural 2D and 3D shaders.<br/>
         </h1>
         <p>
             Explore shader programming through a JavaScript interface without the complexity of GLSL. Quickly script shaders using a P5.js style language.
         </p>
         <br/><br/>
-        <p class="quote">
+        <!-- <p class="quote">
             “In computational design, the real challenge is to discover the intrinsic properties of the new medium and to find out how the stroke you draw via computation is one you could never draw, or even imagine without computation.”
             <br/>
             John Maeda, Design by Numbers
-        </p>
-
-        <canvas class="canvas1" ref="canvas1"/>
+        </p> -->
+        <sp-three-vue class="canvas1" :shaderParkCode="spCode" :sculptureParams="sculptureParams" />
+        <br/><br/>
+        <!-- <canvas class="canvas1" powerPreference=“high-performance” ref="canvas1"/> -->
     </section>
-    <section class="container">
+    <!-- <section class="container">
         <br/>
         <h4>Shader Park</h4>
         <br/>
@@ -32,7 +33,17 @@
     </section>      
     <section class="container">
         <iframe width="100%" height="450px" src="https://shaderpark.netlify.com/sculpture/-LhBKYiVaq9-d-LmnImX?example=true&embed=true" frameborder="0"></iframe>
+    </section> -->
+
+    <section class="container">
+        <h1 class="center">
+            Export to other Platforms<br/>
+        </h1>
+        <br/>
+        <a class="active-button w-button center" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore Starter Templates</a>
+
     </section>
+
     <section class="container"> 
         <router-link to="/featured" class="link"><h1 v-show="!loading">Featured Sculptures ›</h1></router-link>
         <sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
@@ -60,27 +71,37 @@
 
 <script>
 import SculptureFeed from './SculptureFeed.vue';
+import SpThreeVue from './SpThreeVue.vue';
 import {sculptToMinimalRenderer} from 'shader-park-core'
 import {spCode} from '../helpers/front-page-sculp1.js';
 
 export default {
 	data: function() {
 		return {
+            spCode: spCode,
 			featuredSculptures: null,
 			roomName: "Explore",
 			loading: true,
             state: {
-                buttonHover: 0.0,
-                currButtonHover: 0.0,
+                hovering: false,
+                buttonHover: 0,
+                currButtonHover: 0,
                 click: 0.0,
                 currClick: 0.0
+            },
+            sculptureParams :{
+                click: 0.0,
+                buttonHover: 0.0,
+                time: 0.0
             }
 		}
 	},
 	components : {
-		SculptureFeed
+		SculptureFeed,
+        SpThreeVue
 	},
 	mounted() {
+
 		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		this.$store.dispatch('fetchFeaturedSculptures').then(sculptures => {
 			if(sculptures) {
@@ -95,7 +116,9 @@ export default {
 
         this.$nextTick(function () {
             let canvas1 = this.$refs.canvas1;
-            console.log('made it to nexttick', canvas1);
+            if(canvas1) {
+                console.log('found canvas1', canvas1)
+            }
 
             function resizeCanvasToDisplaySize(canvas) {
                 // look up the size the canvas is being displayed
@@ -113,21 +136,25 @@ export default {
             }
             // let canvas = document.querySelector('.my-canvas');
 
-            canvas1.addEventListener('mouseover', () => this.state.buttonHover = .8, false);
-            canvas1.addEventListener('mouseout', () => this.state.buttonHover = 0.0, false);
-            canvas1.addEventListener('mousedown', () => this.state.click = 1.0, false);
-            canvas1.addEventListener('mouseup', () => this.state.click = 0.0, false);
-            window.addEventListener('resize', () => resizeCanvasToDisplaySize(canvas1), false);
-            resizeCanvasToDisplaySize(canvas1);
+            // canvas1.addEventListener('mouseover', () => this.state.buttonHover = 1, false);
+            // canvas1.addEventListener('mouseout', () => this.state.buttonHover = 0, false);
+            // canvas1.addEventListener('mousedown', () => this.state.click = 1.0, false);
+            // canvas1.addEventListener('mouseup', () => this.state.click = 0.0, false);
+
+            // window.addEventListener('resize', () => resizeCanvasToDisplaySize(canvas1), false);
+            // resizeCanvasToDisplaySize(canvas1);
             // This converts your Shader Park code into a shader and renders it to the my-canvas element
-            sculptToMinimalRenderer(canvas1, spCode, () => {
-                this.state.currButtonHover = this.state.currButtonHover*.92 + this.state.buttonHover*.08;
-                this.state.currClick = this.state.currClick*.92 + this.state.click*.08;
-                return {
-                    'buttonHover' : this.state.currButtonHover,
-                    'click' : this.state.currClick,
-                };
-            });        
+            // sculptToMinimalRenderer(canvas1, spCode, () => {
+            //     // if(this.state.hovering) {
+            //     //     this.state.buttonHover += .007;
+            //     // }
+            //     this.state.currButtonHover = this.state.currButtonHover*.98 + this.state.buttonHover*.02;
+            //     this.state.currClick = this.state.currClick*.98 + this.state.click*.02;
+            //     return {
+            //         'buttonHover' : this.state.currButtonHover,
+            //         'click' : this.state.currClick,
+            //     };
+            // });        
         });
 	},
 	destroyed() {
@@ -279,4 +306,8 @@ p {
 // 	margin-left: 30px;
 // }
 
+.center {
+    text-align: center;
+
+}
 </style>
