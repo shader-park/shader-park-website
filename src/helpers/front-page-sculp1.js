@@ -1,3 +1,44 @@
+export function spCode2() {
+    let buttonHover = input(0, 0, 1);
+    let click = input(0, 0, 1);
+    lightDirection(getRayDirection());
+    metal(.4);
+    shine(.7);
+    
+    let sCurve = shape((size, innerOffset) => {
+      sphere(size);
+      difference();
+      let s = getSpace();
+      displace(0.1, innerOffset, s.z);
+      sphere(size-.03);
+      expand(.00)
+    })
+    
+    
+    let s = getSpace();
+    let col = vec3(0, .1, length(normal));
+    color(col+normal*.1)
+    rotateX((sin(time))*.04);
+    rotateZ((sin(time))*.04);
+    rotateY((cos(time))*.1);
+    
+    shape(() => {
+      for(let i = 0; i < 3; i++) {
+        blend(.1);
+        // let rot = 4 * sin(time * .2) * .5 * buttonHover;
+        let rot = buttonHover;
+        rotateX(rot);
+        rotateY(rot);
+        rotateZ(rot);
+        sCurve(1*(i/3)+.3, .2);
+      }
+      sphere(.15);
+    })();
+    mixGeo(nsin(time)*.22+.9 * 1-click);
+    sphere(.8)
+  
+}
+
 export function spCode()  {
     //Put your Shader Park Code here
     
