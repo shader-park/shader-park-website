@@ -16,7 +16,7 @@
             <br/>
             John Maeda, Design by Numbers
         </p> -->
-        <sp-three-vue class="canvas1" :shaderParkCode="spCode" :sculptureParams="sculptureParams" />
+        <sp-three-vue class="canvas1" :shaderParkCode="spCode" :sculptureParams="sculptureParams" ref="canvas1" :enableZoom="false" />
         <br/><br/>
         <!-- <canvas class="canvas1" powerPreference=“high-performance” ref="canvas1"/> -->
     </section>
@@ -35,18 +35,32 @@
         <iframe width="100%" height="450px" src="https://shaderpark.netlify.com/sculpture/-LhBKYiVaq9-d-LmnImX?example=true&embed=true" frameborder="0"></iframe>
     </section> -->
 
-    <section class="container">
-        <h1 class="center">
-            Export to other Platforms<br/>
-        </h1>
-        <br/>
-        <a class="active-button w-button center" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore Starter Templates</a>
 
-    </section>
 
     <section class="container"> 
         <router-link to="/featured" class="link"><h1 v-show="!loading">Featured Sculptures ›</h1></router-link>
         <sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
+
+    </section>
+
+    <section class="container second-section">
+        <h1 class="center">
+            Export to other Platforms<br/>
+        </h1>
+        <br/>
+        <div class='action-container'>
+            <a href="#" class="external-platform-link"><img src="img/icons/touchdesigner.png" loading="lazy" width="80" alt=""></a>
+            <a href="#" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt=""></a>
+            <a href="#" class="external-platform-link"><img src="img/icons/glitch.png" loading="lazy" width="80" alt=""></a>
+            <a href="#" class="external-platform-link"><img src="img/icons/hicetnunc.png" loading="lazy" width="130" alt=""></a>
+            <br/>
+            
+        </div>
+        <a class="active-button w-button center" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore All Starter Templates</a>
+
+    </section>
+
+    <section class="container">
         <h1 v-show="!loading && $route.name !== 'featured'">Featured Projects</h1>
         <a class="active-button w-button" target="_blank" href="https://forms.gle/7zsSQYpcD4JtEP3E6">Submit a Project</a>
         <br/>
@@ -73,26 +87,26 @@
 import SculptureFeed from './SculptureFeed.vue';
 import SpThreeVue from './SpThreeVue.vue';
 import {sculptToMinimalRenderer} from 'shader-park-core'
-import {spCode} from '../helpers/front-page-sculp1.js';
+import {spCode2} from '../helpers/front-page-sculp1.js';
 
 export default {
 	data: function() {
 		return {
-            spCode: spCode,
+            spCode: spCode2,
 			featuredSculptures: null,
 			roomName: "Explore",
 			loading: true,
             state: {
                 hovering: false,
-                buttonHover: 0,
-                currButtonHover: 0,
+                hover: 0,
+                currHover: 0,
                 click: 0.0,
                 currClick: 0.0
             },
             sculptureParams :{
                 click: 0.0,
-                buttonHover: 0.0,
-                time: 0.0
+                hover: 0.0,
+                _scale: .9
             }
 		}
 	},
@@ -118,8 +132,10 @@ export default {
             let canvas1 = this.$refs.canvas1;
             if(canvas1) {
                 console.log('found canvas1', canvas1)
+            } else {
+                console.log('coudcaskdjhf no canvas')
             }
-
+            /*
             function resizeCanvasToDisplaySize(canvas) {
                 // look up the size the canvas is being displayed
                 const devicePixelRatio = window.devicePixelRatio || 1;
@@ -134,10 +150,11 @@ export default {
                     canvas.height = height;
                 }
             }
+            */
             // let canvas = document.querySelector('.my-canvas');
 
-            // canvas1.addEventListener('mouseover', () => this.state.buttonHover = 1, false);
-            // canvas1.addEventListener('mouseout', () => this.state.buttonHover = 0, false);
+            // canvas1.addEventListener('mouseover', () => this.state.hover = 1, false);
+            // canvas1.addEventListener('mouseout', () => this.state.hover = 0, false);
             // canvas1.addEventListener('mousedown', () => this.state.click = 1.0, false);
             // canvas1.addEventListener('mouseup', () => this.state.click = 0.0, false);
 
@@ -146,12 +163,12 @@ export default {
             // This converts your Shader Park code into a shader and renders it to the my-canvas element
             // sculptToMinimalRenderer(canvas1, spCode, () => {
             //     // if(this.state.hovering) {
-            //     //     this.state.buttonHover += .007;
+            //     //     this.state.hover += .007;
             //     // }
-            //     this.state.currButtonHover = this.state.currButtonHover*.98 + this.state.buttonHover*.02;
+            //     this.state.currHover = this.state.currHover*.98 + this.state.hover*.02;
             //     this.state.currClick = this.state.currClick*.98 + this.state.click*.02;
             //     return {
-            //         'buttonHover' : this.state.currButtonHover,
+            //         'hover' : this.state.currHover,
             //         'click' : this.state.currClick,
             //     };
             // });        
@@ -308,6 +325,25 @@ p {
 
 .center {
     text-align: center;
+}
 
+.second-section {
+    margin-top: -80px;
+}
+
+.action-container {
+    height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.external-platform-link {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+section {
+    min-height: 90vh;
 }
 </style>
