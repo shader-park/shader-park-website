@@ -19,6 +19,7 @@ export default {
         // canvasWidth: { type: String, default: '100vw' },
         hoverInterpolation: { type: Number, default: .98 },
         clickInterpolation: { type: Number, default: .98 },
+        scrollInterpolation: { type: Number, default: .98 },
         shaderParkCode: {type: [Function, String], default: 'sphere(.5);'},
         sculptureParams: {type: Object, default() {
             return {}
@@ -33,6 +34,7 @@ export default {
             state: {
                 click: 0.0,
                 hover: 0.0,
+                scroll: 0.0
             }
         }
     },
@@ -105,7 +107,7 @@ export default {
             canvasContainer.style.removeProperty('width');
             canvasContainer.style.removeProperty('height');
             this.renderer.setPixelRatio( window.devicePixelRatio );
-            this.renderer.setClearColor( new Color(1, 1, 1), 1 );
+            this.renderer.setClearColor( new Color(1, 1, 1), 0 );
             // canvasContainer.appendChild( this.renderer.domElement );
 
             //Shader Park setup
@@ -152,6 +154,8 @@ export default {
                 }
                 this.sculptureParams.click =  this.sculptureParams.click*this.clickInterpolation + this.state.click*(1.0-this.clickInterpolation);
                 this.sculptureParams.hover =  this.sculptureParams.hover*this.hoverInterpolation + this.state.hover*(1.0-this.hoverInterpolation);
+                this.sculptureParams.scroll =  this.sculptureParams.scroll*this.scrollInterpolation + window.pageYOffset/window.innerHeight*(1.0-this.scrollInterpolation);
+                
                 // this.state.currClick = this.state.currClick*.98 + this.state.click*.02;
                 
                 this.controls.update();

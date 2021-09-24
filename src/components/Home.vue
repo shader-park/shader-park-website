@@ -1,6 +1,8 @@
 <template>
 <div>
-    <section class="container split-container">
+    <!-- <sp-three-vue class="canvas1" :shaderParkCode="spCode" :sculptureParams="backgroundParams" ref="canvas1" :enableZoom="false" /> -->
+    <sp-three-vue class="background-canvas" :shaderParkCode="spCode3" :sculptureParams="backgroundParams" :enableZoom="false" />
+    <section class="container split-container hero">
         <br/>
         <h4>shader-park-core</h4>
         <br/>
@@ -37,30 +39,45 @@
 
 
 
-    <section class="container"> 
+    <section class="container featured"> 
         <router-link to="/featured" class="link"><h1 v-show="!loading">Featured Sculptures ›</h1></router-link>
         <sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
 
     </section>
 
-    <section class="container second-section">
+<section class="container split-container growing-community">
+        <br/>
+        <h4>shader-park</h4>
+        <br/>
+        <h1>
+            We are a growing community of artists and creative coders.<br/>
+        </h1>
+        <p>
+            Reach out and contribute:
+        </p>
+        <br/><br/><br/><br/>
+        <br/><br/>
+            <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
+            <a target="_blank" href="https://github.com/shader-park/" class="external-platform-link"><img src="img/icons/github.png" loading="lazy" width="80" alt="Github Logo"></a>
+    </section>    
+
+    <section class="container other-platforms-section">
         <h1 class="center">
-            Export to other Platforms<br/>
+            Combine with other Platforms<br/>
         </h1>
         <br/>
         <div class='action-container'>
-            <a href="#" class="external-platform-link"><img src="img/icons/touchdesigner.png" loading="lazy" width="80" alt=""></a>
-            <a href="#" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt=""></a>
-            <a href="#" class="external-platform-link"><img src="img/icons/glitch.png" loading="lazy" width="80" alt=""></a>
-            <a href="#" class="external-platform-link"><img src="img/icons/hicetnunc.png" loading="lazy" width="130" alt=""></a>
-            <br/>
-            
+            <a target="_blank" href="https://github.com/shader-park/shader-park-touchdesigner" class="external-platform-link"><img src="img/icons/touchdesigner.png" loading="lazy" width="80" alt="TouchDesigner Logo"></a>
+            <a target="_blank" href="https://github.com/shader-park/shader-park-examples" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt="threejs logo"></a>
+            <a target="_blank" href="https://glitch.com/@torinmb/shader-park-examples" class="external-platform-link"><img src="img/icons/glitch.png" loading="lazy" width="80" alt="glitch logo"></a>
+            <a target="_blank" href="https://github.com/shader-park/shader-park-examples/tree/main/nft-hicetnunc-three-template" class="external-platform-link"><img src="img/icons/hicetnunc.png" loading="lazy" width="130" alt="hicetnunc logo"></a>
         </div>
-        <a class="active-button w-button center" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore All Starter Templates</a>
+        <br/>
+        <a class="active-button w-button center-button" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore All Starter Templates</a>
 
     </section>
 
-    <section class="container">
+    <section class="container featured-projects">
         <h1 v-show="!loading && $route.name !== 'featured'">Featured Projects</h1>
         <a class="active-button w-button" target="_blank" href="https://forms.gle/7zsSQYpcD4JtEP3E6">Submit a Project</a>
         <br/>
@@ -87,12 +104,13 @@
 import SculptureFeed from './SculptureFeed.vue';
 import SpThreeVue from './SpThreeVue.vue';
 import {sculptToMinimalRenderer} from 'shader-park-core'
-import {spCode2} from '../helpers/front-page-sculp1.js';
+import {spCode2, spCode3} from '../helpers/front-page-sculp1.js';
 
 export default {
 	data: function() {
 		return {
             spCode: spCode2,
+            spCode3: spCode3,
 			featuredSculptures: null,
 			roomName: "Explore",
 			loading: true,
@@ -107,6 +125,11 @@ export default {
                 click: 0.0,
                 hover: 0.0,
                 _scale: .9
+            },
+            backgroundParams:  {
+                scroll: 0.0,
+                click: 0.0,
+                hover: 0.0,
             }
 		}
 	},
@@ -135,6 +158,9 @@ export default {
             } else {
                 console.log('coudcaskdjhf no canvas')
             }
+            document.addEventListener('scroll', () => {
+                this.backgroundParams.scroll = this.backgroundParams.scroll*.98 + window.pageYOffset/window.innerHeight*.02;
+            }, false);
             /*
             function resizeCanvasToDisplaySize(canvas) {
                 // look up the size the canvas is being displayed
@@ -246,6 +272,13 @@ export default {
     padding: 30px;
 }
 
+.background-canvas {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: -1;
+}
+
 .canvas1 {
     cursor: pointer;
     margin-top: calc(50vh - 10vh);
@@ -323,13 +356,22 @@ p {
 // 	margin-left: 30px;
 // }
 
+
+.center-button {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
 .center {
     text-align: center;
 }
 
-.second-section {
-    margin-top: -80px;
+.external-platform-link {
+    margin-left: 25px;
+    margin-right: 25px;
 }
+
 
 .action-container {
     height: 40vh;
@@ -338,12 +380,41 @@ p {
     justify-content: center;
 }
 
-.external-platform-link {
-    margin-left: 25px;
-    margin-right: 25px;
-}
+
+
+
 
 section {
-    min-height: 90vh;
+
+    min-height: 100vh;
+
+    &.hero {
+        background-image: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,255,255,1));
+    }
+
+    &.featured {
+        // background-image: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255,255,255,0));
+        // background-image: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(0,0,0,0));
+        background-color: white;
+        // background-color: white;
+        // background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,0,0,0));
+    }
+
+    &.growing-community {
+        padding-top: 100px;
+        padding-bottom: 100px;
+        background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(0,0,255,.2));
+    }
+
+    &.other-platforms-section {
+        // pointer-events: none;
+        // margin-top: -80px;
+        background-image: linear-gradient(to bottom, rgba(0,0,255,.2), rgba(255,255,255,1));
+    }
+
+
+    &.featured-projects {
+        background-color: white;
+    }
 }
 </style>

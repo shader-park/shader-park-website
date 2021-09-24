@@ -1,6 +1,7 @@
 export function spCode2() {
     let hover = input(0, 0, 1);
     let click = input(0, 0, 1);
+    let scroll = input();
     lightDirection(getRayDirection());
     metal(.4);
     shine(.7);
@@ -41,7 +42,7 @@ export function spCode2() {
 
 export function spCode()  {
     //Put your Shader Park Code here
-    
+    let scroll = input();
     let hover = input();
     let click = input();
     //setMaxIterations(1)
@@ -69,3 +70,23 @@ export function spCode()  {
       return  0.5 + 0.5 * cos(time + vec3(p.x, p.y, p.x) + vec3(0., 2., 4.));
     }
   };
+
+export function spCode3() {
+  // for mobile we keep iterations very low for improved performance
+  setMaxIterations(1);
+  backgroundColor(0, 5, 20);
+  let scroll = input();
+  let hover = input();
+  let click = input();
+  let t = time *.1+scroll;
+  // let t = time *.01;
+
+  let n = noise( vec3(0, 0, -1*t) + noise(getRayDirection() * 1 + t));
+  displace(n*.2);
+  let col = vec3(nsin(n*2) + ncos(n*10));
+  color(col * 3);
+  // metal(n);
+  // shine(n);
+
+  sphere(0.5+length(col)*.01);
+}
