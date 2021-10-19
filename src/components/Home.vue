@@ -403,13 +403,13 @@ section {
     &.growing-community {
         padding-top: 100px;
         padding-bottom: 100px;
-        background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(0,0,255,.2));
+        background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(0,0,255,.2) 90%);
     }
 
     &.other-platforms-section {
         // pointer-events: none;
         // margin-top: -80px;
-        background-image: linear-gradient(to bottom, rgba(0,0,255,.2), rgba(255,255,255,1));
+        background-image: linear-gradient(to bottom, rgba(0,0,255,.2) , rgba(255,255,255,1));
     }
 
 
