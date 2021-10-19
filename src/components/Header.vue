@@ -143,9 +143,9 @@ export default {
     margin: 0px;
     font-size: 27px;
     margin-bottom: 3px;
-    .smallDesktop({
-        display:none;
-    });
+    // .smallDesktop({
+    //     // display:none;
+    // });
 }
 
 .nav-spacer {
