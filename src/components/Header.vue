@@ -7,7 +7,7 @@
                 <!-- <input v-if="isMobile" type="text" class="search w-input" maxlength="256" name="search" data-name="search" placeholder="Search..." id="search"> -->
                 <!-- <img v-if="!isMobile" class="logo" src="/images/sp_logo.png" /> -->
             </div>
-            <h1 v-if="!isMobile" class="nav-text">{{title}}</h1>
+            <!-- <h1 v-if="!isMobile" class="nav-text">{{title}}</h1> -->
             <div class="nav-right" v-bind:class="{ mobile: isMobile }" >  
                 
                 <router-link to="/explore" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Explore</router-link>
@@ -143,9 +143,9 @@ export default {
     margin: 0px;
     font-size: 27px;
     margin-bottom: 3px;
-    // .smallDesktop({
-    //     // display:none;
-    // });
+    .smallDesktop({
+        display:none;
+    });
 }
 
 .nav-spacer {
