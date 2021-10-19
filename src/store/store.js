@@ -430,6 +430,16 @@ export const store = new Vuex.Store({
         })
         .catch(error => console.log(error));
     },
+    fetchFeaturedSculptures({commit},) {
+      commit('setLoading', true);
+      return firebase.database().ref('sculptures').orderByChild("featured").equalTo(true).once('value').then(data => {
+          const sculptures = data.val();
+          let output = Object.keys(sculptures).map(key => sculptures[key]);
+          commit('setLoading', false);
+          return output;
+        })
+        .catch(error => console.log(error));      
+    },
     fetchAllSculptures({dispatch}) {
       return dispatch('fetchSculptures', 'sculptures');
     },

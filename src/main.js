@@ -219,6 +219,7 @@ function init() {
 
 	canvas = document.querySelector('canvas');
 	canvas.setAttribute('tabindex', '0');
+	canvas.setAttribute('powerPreference', 'high-performance');
 	canvas.addEventListener('click', (event) => {
 		event.target.focus();
 	});

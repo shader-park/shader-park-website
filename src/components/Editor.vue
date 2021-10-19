@@ -245,7 +245,7 @@ export default {
             let interval = setInterval(() => {
                 this.codemirror.refresh();
                 window.onCanvasResize();
-            }, 1);
+            }, .1);
             setTimeout(() => {
                 this.codemirror.refresh()
                 window.onCanvasResize()
