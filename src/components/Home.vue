@@ -109,8 +109,8 @@ import {spCode2, spCode3} from '../helpers/front-page-sculp1.js';
 export default {
 	data: function() {
 		return {
-            spCode: spCode2,
-            spCode3: spCode3,
+            spCode: spCode2(),
+            spCode3: spCode3(),
 			featuredSculptures: null,
 			roomName: "Explore",
 			loading: true,

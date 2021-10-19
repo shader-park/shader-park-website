@@ -1,4 +1,5 @@
 export function spCode2() {
+    return `
     let hover = input(0, 0, 1);
     let click = input(0, 0, 1);
     let scroll = input();
@@ -37,11 +38,12 @@ export function spCode2() {
     })();
     mixGeo(nsin(time)*.22+.9 * 1-click);
     sphere(.8)
-  
+    `;
 }
 
 export function spCode()  {
     //Put your Shader Park Code here
+    return `
     let scroll = input();
     let hover = input();
     let click = input();
@@ -69,10 +71,12 @@ export function spCode()  {
       }
       return  0.5 + 0.5 * cos(time + vec3(p.x, p.y, p.x) + vec3(0., 2., 4.));
     }
+    `
   };
 
 export function spCode3() {
   // for mobile we keep iterations very low for improved performance
+  return `
   setMaxIterations(1);
   backgroundColor(0, 5, 20);
   let scroll = input();
@@ -89,4 +93,5 @@ export function spCode3() {
   // shine(n);
 
   sphere(0.5+length(col)*.01);
+  `;
 }
