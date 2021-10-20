@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="container">
 		<!-- <room v-if="sculptures.length > 0" v-bind:sculpturesData="sculptures"></room> -->
 		<sculpture-feed :sculptures="sculptures" v-if="sculptures.length > 0"></sculpture-feed>
 		<modal name="profile-modal" class="modal-popup" height="auto" width="500px">
@@ -108,3 +108,9 @@ export default {
 
 
 </script>
+
+<style lang="less" scoped>
+.container {
+    padding: 30px;
+}
+</style>
