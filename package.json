@@ -12,7 +12,7 @@
     "animejs": "^3.1.0",
     "core-js": "^3.6.4",
     "dat.gui": "^0.7.6",
-    "firebase": "^7.8.1",
+    "firebase": "^9.6.8",
     "intersection-observer": "^0.7.0",
     "lodash.throttle": "^4.1.1",
     "register-service-worker": "^1.6.2",

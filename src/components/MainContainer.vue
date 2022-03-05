@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
 import Editor from "./Editor.vue";
 import ActionBar from "./ActionBar.vue";
 

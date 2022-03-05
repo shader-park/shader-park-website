@@ -15,6 +15,7 @@
 
 <script>
 import firebase from "firebase/app";
+import 'firebase/compat/auth';
 import {userSchema} from "../schema/User.js";
 import {required, email, minLength} from 'vuelidate/lib/validators'
 

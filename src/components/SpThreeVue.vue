@@ -89,13 +89,11 @@ export default {
             }
         },
         mouseDown1() {
-            console.log('mouseDown');
             this.state.click = 1.0;
         }
     },
     mounted() {
         this.$nextTick(() => {
-            console.log('SPParams', this.sculptureParams)
             let canvasContainer = this.$refs.canvasContainer;
             this.scene = new Scene();
 
@@ -135,9 +133,9 @@ export default {
             // canvasContainer.addEventListener('mouseover', () => this.mouseOver, false);
             // canvasContainer.addEventListener('mouseout', () => this.mouseOut, false);
             let self = this;
-            console.log('got canvasContainer', canvasContainer)
+            // console.log('got canvasContainer', canvasContainer)
             canvasContainer.addEventListener('mousedown', () => {
-                console.log('mouse down')
+                // console.log('mouse down')
                 self.state.click = 1.0
             }, false);
             canvasContainer.addEventListener('mouseup', () => self.state.click = 0.0, false);

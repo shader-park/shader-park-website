@@ -1,9 +1,9 @@
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 
 // These imports load individual services into the firebase namespace.
-import 'firebase/auth';
-import 'firebase/database';
-import 'firebase/storage';
+import 'firebase/compat/auth';
+import 'firebase/compat/database';
+import 'firebase/compat/storage';
 
 import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGL1Renderer, FrontSide, BackSide } from 'three';
 
@@ -357,9 +357,13 @@ function render(time) {
 			firstIntersect.material.side = FrontSide;
 			const frontSideIntersection = raycaster.intersectObjects(objectsToRaycast);
 			if (frontSideIntersection.length > 0) {
-				firstIntersect.material.uniforms.mouse.value = frontSideIntersection[0].point.sub(firstIntersect.position);
+				if(firstIntersect.material.uniforms) {
+					firstIntersect.material.uniforms['mouse'].value = frontSideIntersection[0].point.sub(firstIntersect.position);
+				}
 			} else { 
-				firstIntersect.material.uniforms.mouse.value = camera.position.clone().sub(firstIntersect.position);
+				if(firstIntersect.material.uniforms) {
+					firstIntersect.material.uniforms['mouse'].value = camera.position.clone().sub(firstIntersect.position);
+				}
 			}
 			firstIntersect.material.side = BackSide;
 			if (store.state.selectedSculpture === null && store.state.clickEnabled) {
