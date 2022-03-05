@@ -35,9 +35,6 @@
 export default {
 	data: function() {
 		return {
-			// shareUrl: "https://shaderpark.netlify.com/embed/",
-            // embedUrl: "https://shaderpark.netlify.com/sculpture/",
-            // codeOpen: false,
             showCopiedEmbedInfo: false,
             showCopiedEditInfo: false,
             showCopiedFullScreenInfo: false,
@@ -57,13 +54,13 @@ export default {
             return this.$store.state.currSculpture;
         },
         embedUrl() {
-            return `<iframe src="https://shaderpark.netlify.com/embed/${this.currSculpture.id}${this.isExample}" frameborder="0"></iframe>`;
+            return `<iframe src="https://shaderpark.com/embed/${this.currSculpture.id}${this.isExample}" frameborder="0"></iframe>`;
         },
         fullScreenUrl() {
-            return `https://shaderpark.netlify.com/embed/${this.currSculpture.id}${this.isExample}`;
+            return `https://shaderpark.com/embed/${this.currSculpture.id}${this.isExample}`;
         },
         editUrl() {
-            return `https://shaderpark.netlify.com/sculpture/${this.currSculpture.id}${this.isExample}`;
+            return `https://shaderpark.com/sculpture/${this.currSculpture.id}${this.isExample}`;
         },
         sculptureTitle() {
             return this.currSculpture.title;
