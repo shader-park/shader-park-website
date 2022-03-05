@@ -12,16 +12,16 @@
             <br/>
             <br/>
             If you enjoy using Shader Park please consider giving us a star.<br/>
-            Website: <github-button href="https://github.com/shader-park/shader-park-website" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-website on GitHub">Star</github-button><br/>
-            Core Framework: <github-button href="https://github.com/shader-park/shader-park-core" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-core on GitHub">Star</github-button>
-            
+            Core Framework <br/>
+	    <github-button href="https://github.com/shader-park/shader-park-core" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-core on GitHub">Star</github-button>
+            Website <br/>
+	    <github-button href="https://github.com/shader-park/shader-park-website" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-website on GitHub">Star</github-button><br/>
+
 
             <br/><br/>
             <b> Acknowledgments: </b><br/>
-            Huge thanks to Inigo Quilez for his guidance and research on raymarching and signed distance fields. This project is heavily inspired by <a  target="_blank" href="https://www.shadertoy.com/">ShaderToy</a> (hence the name) and we encourage anyone on this site to also explore Shadertoy.
-
-            Special thanks to the following for guidance on Shader Park:<br/>
-            Andrew Palmer, Ricardo Cabello, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
+            Special thanks to the following for inspiration and guidance:<br/>
+            Inigo Quilez, Ricardo Cabello, Andrew Palmer, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
             Thanks to Jono Brandel for the inspiration for the design of the editor heavily based on <a  target="_blank" href="http://www.anitype.com/">Anitype</a>
         </p>
 

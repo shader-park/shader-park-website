@@ -262,10 +262,15 @@ export default {
     opacity: .8 !important;
     transition: opacity 300ms ease-in-out, color 300ms ease-in-out ;
 
+    .mobile( {
+        padding: 11px 20px;
+    });
+
     &:hover {
         color: white;
         opacity: 1 !important;
     }
+
 }
 
 .container {
@@ -376,6 +381,7 @@ p {
 .action-container {
     height: 40vh;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 }
@@ -389,7 +395,7 @@ section {
     min-height: 100vh;
 
     &.hero {
-        background-image: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,255,255,1));
+        background-image: linear-gradient(to bottom, rgba(0, 255, 234, 0), rgba(255,255,255,1));
     }
 
     &.featured {

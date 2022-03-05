@@ -209,7 +209,7 @@ loader.load('/img/icons/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new WebGL1Renderer({ forceWebGL1: true, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance', alpha: true});
+	renderer = new WebGL1Renderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance', alpha: true});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
