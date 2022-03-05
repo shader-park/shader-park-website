@@ -42,6 +42,34 @@ export default {
 			hasBeenLoaded: false
 		}
 	},
+	metaInfo: {
+		title: 'Shader Park',
+		meta: [
+			{property: 'og:title', content: 'Shader Park'},
+			{property: 'og:site_name', content: 'Shader Park'},
+			// The list of types is available here: http://ogp.me/#types
+			{property: 'og:type', content: 'website'},
+			// Should the the same as your canonical link, see below.
+			// {property: 'og:url', content: 'https://www.my-site.com/my-special-page'},
+			{property: 'og:image', content: 'https://www.dropbox.com/s/anbwi6k3wm7tn59/sp-hero.png?dl=1'},
+			// Often the same as your meta description, but not always.
+			{property: 'og:description', content: "A JavaScript library for creating interactive procedural 2D and 3D shaders."},
+
+			// Twitter card
+			{name: 'twitter:card', content: 'summary'},
+			// {name: 'twitter:site', content: 'https://www.my-site.com/my-special-page'},
+			{name: 'twitter:title', content: 'Shader Park'},
+			{name: 'twitter:description', content: "A JavaScript library for creating interactive procedural 2D and 3D shaders."},
+			// Your twitter handle, if you have one.
+			// {name: 'twitter:creator', content: '@alligatorio'},
+			{name: 'twitter:image:src', content: 'https://www.dropbox.com/s/anbwi6k3wm7tn59/sp-hero.png?dl=1'},
+
+			// Google / Schema.org markup:
+			{itemprop: 'name', content: 'Shader Park'},
+			{itemprop: 'description', content: "A JavaScript library for creating interactive procedural 2D and 3D shaders."},
+			{itemprop: 'image', content: 'https://www.dropbox.com/s/anbwi6k3wm7tn59/sp-hero.png?dl=1'}
+		]
+	},
 	computed: {
 		displayShareModal() {
 			return this.$store.getters.displayShareModal;
