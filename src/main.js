@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
 import 'firebase/compat/storage';
+import 'firebase/compat/app-check';
 
 import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGL1Renderer, FrontSide, BackSide } from 'three';
 
@@ -38,6 +39,9 @@ Vue.use(Vuelidate);
 Vue.config.devtools = true;
 // Vue.config.productionTip = false;
 let storageRef = firebase.storage().ref();
+
+const appCheck = firebase.appCheck();
+appCheck.activate('6LdOL7keAAAAADahgNg_e2DFCG52EFLuVVN0OTmV',true)
 
 const router = new VueRouter({ routes: routes, mode: 'history', base: process.env.BASE_URL});
 
