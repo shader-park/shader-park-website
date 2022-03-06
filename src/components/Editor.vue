@@ -471,6 +471,7 @@ export default {
             right: 20px;
             line-height: 20px;
             margin: 0px;
+            margin-top: 5px;
             left: auto;
         }
     }
