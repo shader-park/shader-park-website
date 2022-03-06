@@ -1,4 +1,5 @@
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -167,7 +168,6 @@ export const store = new Vuex.Store({
       state.selectedSculpture = Object.assign(state.selectedSculpture, payload);
     },
     updateSculptureIdInScene(state, payload) {
-      console.log('payload', payload)
       const oldId = payload.oldId;
       const newId = payload.newId;
       const obj = window.scene.getObjectByName(oldId);

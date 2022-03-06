@@ -154,7 +154,7 @@ export default {
         this.$nextTick(function () {
             let canvas1 = this.$refs.canvas1;
             if(canvas1) {
-                console.log('found canvas1', canvas1)
+                // console.log('found canvas1', canvas1)
             } else {
                 console.log('coudcaskdjhf no canvas')
             }
