@@ -5909,10 +5909,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shader-park-core@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.7.tgz#3fa754932b657b1ecdb2d97e68d57926a6d5dfb3"
-  integrity sha512-ao+myCVgGmO09ZHHUfkLrQlSbD6uxdEBhEY4VdajYoCd0g++z9GDgRk2aDJRyxqlHCB98jHS0600IPW9MqWnXg==
+shader-park-core@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.9.tgz#16fc1f62fad98817286c1a3ab5897d129a84ae12"
+  integrity sha512-UboQSDvXsfHjOUBjncboXtOqbOPpeEsYptvSlgnPUKbmTMg7GnTF4atuFRGOfd5Zom1FKj9/eKOkrX4FdVJwqA==
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"

@@ -49,9 +49,10 @@
         </codemirror>
         <div class="bottom-controls-container">
             <div class="console-controls">
-                <button  @click.stop="errorMessages = []" class="editor-button centerY clear-console">Clear Console</button>
+                <!-- <button  @click.stop="errorMessages = []" class="editor-button centerY clear-console">Clear Console</button> -->
+                <button  @click.stop="showHideConsole" class="editor-button centerY show-hide-console" ref=showHideConsole>^</button>
             </div>
-            <div class="console-container">
+            <div class="console-container" ref="consoleContainer">
                 
                 <div class="error-messages" v-html="consoleErrorMessages"></div>
                 <!-- <button  @click.stop="download" class="centerY editor-button">Download Source</button> -->
@@ -183,6 +184,7 @@ export default {
     watch : {
         sculptureError(error) {
             if(error) {
+                this.errorMessages = [];
                 let message = error.toString();
                 let lastErrorIndex = this.errorMessages.length - 1;
                 if(!this.errorMessages.length) { // empty, so push new message
@@ -241,6 +243,25 @@ export default {
         }
     },
     methods: {
+        showHideConsole() {
+            let cm = this.$refs.myCm.$el;
+            let consoleContainer = this.$refs.consoleContainer;
+            let showHideConsole = this.$refs.showHideConsole;
+            console.log('showHideConsole',cm, consoleContainer);
+            if(cm && consoleContainer) {
+                if(cm.classList.contains('max')) {
+                    cm.classList.remove('max');
+                    consoleContainer.classList.remove('max')
+                    showHideConsole.classList.remove('max');
+                    
+                } else {
+                    cm.classList.add('max');
+                    consoleContainer.classList.add('max');
+                    showHideConsole.classList.add('max');
+                }
+            }
+            console.log('showHideConsole',cm, consoleContainer);
+        },
         cycleResizeWindows() {
             let interval = setInterval(() => {
                 this.codemirror.refresh();
@@ -258,6 +279,7 @@ export default {
         onCmFocus(cm) {
         },
         onCmCodeChange(newCode) {
+
             if(newCode !== this.selectedSculpture.shaderSource){
                 this.selectedSculpture.saved = false;
                 this.$store.commit('setUnsavedChanges', {[this.selectedSculpture.id] : false})
@@ -265,6 +287,7 @@ export default {
             this.code = newCode;
             if(this.autoUpdate) {
                 if(this.selectedSculpture){
+                    
                     this.selectedSculpture.shaderSource = this.code; 
                 }
             }
@@ -465,24 +488,32 @@ export default {
         pointer-events: none;
         //border-bottom: 2px solid #f5f5f5;
         
-        .clear-console {
+        .show-hide-console {
             position: absolute;
             pointer-events: initial !important;
-            right: 20px;
+            padding-bottom: 1px;
+            right: 10px;
             line-height: 20px;
             margin: 0px;
-            margin-top: 5px;
+            margin-top: -7px;
             left: auto;
+            transform: rotate(0deg);
+            transition: transform 300ms ease-in-out, box-shadow 300ms ease-in-out;
+            &.max {
+                box-shadow: 0 -1px -3px 0 rgba(0, 0, 0, 0.15);
+                transform: rotate(180deg);
+            }
         }
     }
 
     .console-container {
         overflow: scroll;   
-        height: 8vh;
+        height: 12vh;
         padding-left: 10px;
+        transition: height 300ms ease-in-out;
 
-        .error-messages {
-            
+        &.max {
+            height: 45vh;
         }
         // padding-bottom: 10px;
         // padding-top: 10px;
@@ -569,11 +600,14 @@ label {
 .CodeMirror-scroll {
     height: auto;
     overflow: scroll !important;
-    max-height: 81vh;
-    max-width: 100%;
-    &.embed {
-        max-height: 92vh;
-    }
+    // max-height: 81vh;
+    // max-width: 100%;
+    // &.max{ 
+    //     max-height: 48vh;
+    // }
+    // &.embed {
+    //     max-height: 92vh;
+    // }
 }
 
 .CodeMirror {
@@ -596,7 +630,11 @@ label {
 }
 
 .vue-codemirror {
-    max-height: calc(74vh - 2px);
+    max-height: calc(70vh - 2px);
+    &.max{ 
+        max-height: calc(37vh - 2px);
+    }
+    transition: max-height 300ms ease-in-out;
     overflow: scroll;
 }
 

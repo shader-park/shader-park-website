@@ -111,6 +111,7 @@ export default {
                 this.shaderSource = input;
                 try {
                     this.sculpture.refreshMaterial(input);
+                    this.$store.commit('setSculptureError', ' ');
                 } catch (e) {
                     this.$store.commit('setSculptureError', e);
                 }

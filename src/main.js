@@ -6,7 +6,7 @@ import 'firebase/compat/database';
 import 'firebase/compat/storage';
 import 'firebase/compat/app-check';
 
-import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGL1Renderer, FrontSide, BackSide } from 'three';
+import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGLRenderer, FrontSide, BackSide } from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -213,12 +213,14 @@ loader.load('/img/icons/msdf-left-align.png', (texture) => {
 
 function init() {
 	canvasContainer = document.querySelector('.canvas-container');
-	renderer = new WebGL1Renderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance', alpha: true});
+	renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance', alpha: true});
 	renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
 	prevCanvasSize = { width: canvasContainer.clientWidth, height: canvasContainer.clientHeight };
     Object.assign(store.state.canvasSize, prevCanvasSize);
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setClearColor( 0x000000, 0 );
+	window.renderer = renderer;
+	console.log(renderer);
 	canvasContainer.appendChild(renderer.domElement);
 
 	canvas = document.querySelector('canvas');
