@@ -10,7 +10,7 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import { Scene, PerspectiveCamera, WebGL1Renderer, Color} from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color} from 'three'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { createSculpture, createSculptureWithGeometry } from 'shader-park-core';
 
@@ -100,7 +100,7 @@ export default {
             this.camera = new PerspectiveCamera( 75, canvasContainer.offsetWidth/canvasContainer.offsetHeight, 0.1, 1000 );
             this.camera.position.z = 1.5;
 
-            this.renderer = new WebGL1Renderer({ canvas: canvasContainer, antialias: true, powerPreference: 'high-performance', alpha: true});
+            this.renderer = new WebGLRenderer({ canvas: canvasContainer, antialias: true, powerPreference: 'high-performance', alpha: true});
             this.renderer.setSize( canvasContainer.offsetWidth, canvasContainer.offsetHeight );
             canvasContainer.style.removeProperty('width');
             canvasContainer.style.removeProperty('height');
