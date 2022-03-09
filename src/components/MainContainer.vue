@@ -194,7 +194,7 @@ canvas {
 
 .dot-container {
     width: 100%;
-    padding-left: 27px;
+    padding-left: 23px;
     -webkit-transition: opacity 300ms ease-in-out;
     transition: opacity 300ms ease-in-out;
     &:hover {
