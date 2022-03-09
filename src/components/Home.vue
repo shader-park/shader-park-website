@@ -6,7 +6,7 @@
         <br/>
         <h4>shader-park-core</h4>
         <br/>
-        <h1>
+        <h1 class="hero-text">
             A JavaScript library for creating interactive procedural 2D and 3D shaders.<br/>
         </h1>
         <p>
@@ -250,24 +250,25 @@ export default {
 }
 
 .active-button {
-    padding: 11px 35px;
-    border: 1px solid #dedede;
+    padding: 11px 18px;
+    border: 3px solid #dedede;
     border-radius: 10px;
-    background-color: #50e3c2;
+    // background-color: #50e3c2;
     font-family: 'Inter ui', sans-serif;
     font-size: 18px;
     font-weight: 400;
     letter-spacing: 1.1px;
     text-indent: 0px;
     opacity: .8 !important;
-    transition: opacity 300ms ease-in-out, color 300ms ease-in-out ;
-
+    mix-blend-mode: normal;
+    transition: all 300ms ease-in-out;
     .mobile( {
         padding: 11px 20px;
     });
 
     &:hover {
         color: white;
+        border: 3px solid white;
         opacity: 1 !important;
     }
 
@@ -285,6 +286,7 @@ export default {
 }
 
 .canvas1 {
+    mix-blend-mode: multiply;
     cursor: pointer;
     margin-top: calc(50vh - 10vh);
     width: 50vw;
@@ -361,6 +363,12 @@ p {
 // 	margin-left: 30px;
 // }
 
+.hero-text {
+    font-size: 4.6em;
+    mix-blend-mode: color-burn;
+    color: #252525;
+    line-height: 1em;
+}
 
 .center-button {
     position: relative;
