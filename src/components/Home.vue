@@ -403,7 +403,7 @@ section {
     min-height: 100vh;
 
     &.hero {
-        background-image: linear-gradient(to bottom, rgba(0, 255, 234, 0), rgba(255,255,255,1));
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255,255,255,1));
     }
 
     &.featured {
