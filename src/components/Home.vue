@@ -44,27 +44,27 @@
 
     </section>
 
-<section class="container split-container growing-community">
+<section class="container growing-community">
         <br/>
         <h4>shader-park</h4>
         <br/>
-        <h1>
-            We are a growing community of artists and creative coders.<br/>
+        <h1 class="hero-text community">
+            Community
         </h1>
         <p>
-            Reach out and contribute:
+            
+            Join the cult, drink the shader kool-aid, get help and contribute on Discord and GitHub! 
+
         </p>
-        <br/><br/><br/><br/>
         <br/><br/>
             <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
             <a target="_blank" href="https://github.com/shader-park/" class="external-platform-link"><img src="img/icons/github.png" loading="lazy" width="80" alt="Github Logo"></a>
     </section>    
 
     <section class="container other-platforms-section">
-        <h1 class="center">
+        <h1 class="center hero-text other-platforms">
             Combine with other Platforms<br/>
         </h1>
-        <br/>
         <div class='action-container'>
             <a target="_blank" href="https://github.com/shader-park/shader-park-touchdesigner" class="external-platform-link"><img src="img/icons/touchdesigner.png" loading="lazy" width="80" alt="TouchDesigner Logo"></a>
             <a target="_blank" href="https://github.com/shader-park/shader-park-examples" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt="threejs logo"></a>
@@ -137,7 +137,7 @@ export default {
         SpThreeVue
 	},
 	mounted() {
-
+        this.$store.commit('sculpturesLoaded', true);    
 		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
 		this.$store.dispatch('fetchFeaturedSculptures').then(sculptures => {
 			if(sculptures) {
@@ -367,6 +367,13 @@ p {
     mix-blend-mode: color-burn;
     color: #252525;
 
+    &.community {
+        color: #38371c
+    }
+
+    &.other-platforms {
+        color: #5f5c22;;
+    }
     .mobile({
         // margin-top: 0px;
         font-size: 1.6em;
