@@ -22,7 +22,8 @@
             <br/><br/>
             <b> Acknowledgments: </b><br/>
             Special thanks to the following for inspiration and guidance:<br/>
-            Inigo Quilez, Ricardo Cabello, Andrew Palmer, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, Avneeseh Sware, Jono Brandel and Cassie Tarakajian.
+            Inigo Quilez, Ricardo Cabello, Andrew Palmer, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, Avneesh Sarwate, Jono Brandel and Cassie Tarakajian.
+            <br/><br/><br/><br/><br/>
         </p>
 
         <p>
