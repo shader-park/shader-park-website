@@ -6,23 +6,23 @@
             It integrates diverse computer graphics techniques into a unified programming interface designed for fast 
             experimentation and live-coding.<br/><br/>
 
-            Inspired by tools and communities like P5.js, Processing and Shader Toy, <a target="_blank" href="https://torinblankensmith.com">Torin Blankensmith</a> and
+            Inspired by tools and communities like P5.js, Processing, Three.js, and Shader Toy, <a target="_blank" href="https://torinblankensmith.com">Torin Blankensmith</a> and
             <a target="_blank" href="http://www.peterwhidden.com/">Peter Whidden</a> developed Shader Park 
             with the intention of making emerging technology in computer graphics accessible and inclusive for artists, designers, and educators.
             <br/>
             <br/>
-            If you enjoy using Shader Park please consider giving us a star.<br/>
-            Core Framework <br/>
+            If you enjoy using Shader Park please consider giving us a star.<br/><br/>
+            Core Framework
 	    <github-button href="https://github.com/shader-park/shader-park-core" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-core on GitHub">Star</github-button>
-            Website <br/>
+            <br/>
+            Website 
 	    <github-button href="https://github.com/shader-park/shader-park-website" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star shader-park/shader-park-website on GitHub">Star</github-button><br/>
 
 
             <br/><br/>
             <b> Acknowledgments: </b><br/>
             Special thanks to the following for inspiration and guidance:<br/>
-            Inigo Quilez, Ricardo Cabello, Andrew Palmer, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, and Avneeseh Sware.
-            Thanks to Jono Brandel for the inspiration for the design of the editor heavily based on <a  target="_blank" href="http://www.anitype.com/">Anitype</a>
+            Inigo Quilez, Ricardo Cabello, Andrew Palmer, Ben Fry, Casey Reas, Kyle Phillips, Reza Ali, Alex Miller, Avneeseh Sware, Jono Brandel and Cassie Tarakajian.
         </p>
 
         <p>
