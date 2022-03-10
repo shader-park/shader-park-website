@@ -4,8 +4,7 @@
     <sp-three-vue class="background-canvas" :shaderParkCode="spCode3" :sculptureParams="backgroundParams" :enableZoom="false" />
     <section class="container split-container hero">
         <br/>
-        <h4>shader-park-core</h4>
-        <br/>
+        <a href="https://www.npmjs.com/package/shader-park-core"><h4>shader-park-core</h4></a>
         <h1 class="hero-text">
             A JavaScript library for creating interactive procedural 2D and 3D shaders.<br/>
         </h1>
@@ -364,10 +363,22 @@ p {
 // }
 
 .hero-text {
-    font-size: 4.6em;
+    font-size: 4.0em;
     mix-blend-mode: color-burn;
     color: #252525;
+
+    .mobile({
+        // margin-top: 0px;
+        font-size: 1.6em;
+        line-height: 1.3em;
+    });
+
+    .smallDesktop({
+        font-size: 2.3em
+    });
     line-height: 1em;
+
+
 }
 
 .center-button {
@@ -403,7 +414,7 @@ section {
     min-height: 100vh;
 
     &.hero {
-        background-image: linear-gradient(to bottom, rgba(0, 255, 234, 0), rgba(255,255,255,1));
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255,255,255,1));
     }
 
     &.featured {

@@ -219,8 +219,6 @@ function init() {
     Object.assign(store.state.canvasSize, prevCanvasSize);
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setClearColor( 0x000000, 0 );
-	window.renderer = renderer;
-	console.log(renderer);
 	canvasContainer.appendChild(renderer.domElement);
 
 	canvas = document.querySelector('canvas');
