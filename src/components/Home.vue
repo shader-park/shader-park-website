@@ -45,9 +45,9 @@
     </section>
 
 <section class="container growing-community">
-        <br/>
+        <!-- <br/>
         <h4>shader-park</h4>
-        <br/>
+        <br/> -->
         <h1 class="hero-text community">
             Community
         </h1>
@@ -57,7 +57,7 @@
 
         </p>
         <br/><br/>
-            <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
+            <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link no-margin-left"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
             <a target="_blank" href="https://github.com/shader-park/" class="external-platform-link"><img src="img/icons/github.png" loading="lazy" width="80" alt="Github Logo"></a>
     </section>    
 
@@ -401,6 +401,9 @@ p {
 .external-platform-link {
     margin-left: 25px;
     margin-right: 25px;
+    &.no-margin-left {
+        margin-left: 0px;
+    }
 }
 
 
