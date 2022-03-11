@@ -33,6 +33,15 @@ export const routes = [
     }
   },
   {
+    path: '/gallery',
+    name: 'gallery',
+    component: () => import(/* webpackChunkName: "examples" */ '../components/Home3D.vue'),
+    props: (route) => ({embed: route.query.embed}),
+    meta: {
+      title: 'Gallery',
+    }
+  },  
+  {
     path: '/new/:type',
     name: 'new',
     component: New,
