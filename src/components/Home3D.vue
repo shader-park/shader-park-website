@@ -8,6 +8,7 @@ import Room from './Room.vue';
 import {handelUnsavedChanges} from '../helpers/handelUnsavedChanges.js';
 
 export default {
+	props: ['embed'],
 	data: function() {
 		return {
 			sculptures: [],
@@ -19,7 +20,11 @@ export default {
 		room : Room	
 	},
 	mounted() {
-		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
+		this.$store.commit('sculpturesLoaded', true);    
+		this.$store.commit('setInitialCameraPose', [16, 2.5, 4]);
+		if(this.embed && this.embed === 'true') {
+			this.$store.commit('setEmbedded', true);
+		}
 		this.$store.dispatch('fetchAllSculptures').then(sculptures => {
 			if(sculptures) {
 				let temp = [];
@@ -27,7 +32,11 @@ export default {
 					temp.push(sculptures[key]);
 				})
 				temp.reverse();
-				this.sculptures = temp; //array.push isn't tracked by state, resetting is
+				this.sculptures = temp.slice(0, 256); //array.push isn't tracked by state, resetting is
+				setTimeout(() => {
+					this.$store.commit('sculpturesLoaded', true);    
+					window.onCanvasResize();	
+				}, 10);
 			}
 			this.$store.commit('joinRoom', this.roomName);
 		})

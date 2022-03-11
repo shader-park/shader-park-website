@@ -19,7 +19,7 @@ export default {
 		room : Room	
 	},
 	mounted() {
-		this.$store.commit('setInitialCameraPose', [6, 2.5, 4]);
+		this.$store.commit('setInitialCameraPose', [14, 2.5, 4]);
 		if(this.embed && this.embed === 'true') {
 			this.$store.commit('setEmbedded', true);
 		}
@@ -32,7 +32,7 @@ export default {
 				temp.reverse();
 				this.sculptures = temp; //array.push isn't tracked by state, resetting is
 				setTimeout(() => {
-				window.onCanvasResize();	
+					window.onCanvasResize();	
 				}, 10);
 				
 			}

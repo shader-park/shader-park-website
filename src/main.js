@@ -201,7 +201,7 @@ const hemisphereLight = new HemisphereLight(0xFFFFFF, 0xFFFFFF);
 const startTime = Date.now();
 let prevCanvasSize = window.innerWidth/2; 
 let tweeningSculpturesOpacity = false;
-let fogDistance = 8.0;
+let fogDistance = 200.0;
 window.fogDistance = fogDistance;
 
 let loader = new TextureLoader();
@@ -516,7 +516,7 @@ function onMouseUp(event) {
 	if (store.state.intersectedObject && store.state.intersectedObject === tempIntersectedObject) {
 		mouseDownTime = Date.now() - mouseDownTime;
 		if(mouseDownTime < 400) {
-			if(router.currentRoute.name === 'examples') {
+			if(router.currentRoute.name === 'examples' || router.currentRoute.name === 'gallery' ) {
 				store.state.selectedObject = store.state.intersectedObject;
 				selectedSculptureOpacity.opacity = 1.0;
 				canvas.style.cursor = 'auto';
