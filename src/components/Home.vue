@@ -44,20 +44,22 @@
 
     </section>
 
-<section class="container growing-community">
+<section class="container growing-community split-container">
         <!-- <br/>
         <h4>shader-park</h4>
         <br/> -->
-        <h1 class="hero-text community">
+        <h1 class="hero-text community dis">
             Community
         </h1>
         <p>
-            
-            Join the shader cult, get help and contribute on Discord and GitHub! 
+            Shader Park is an open-source platform that is focused on making computer graphics programming accessible for artists, designers, students, educators and all.
+            <br/><br/>
+            Join the Shader Park community on discord and contribute on GitHub!
 
         </p>
+        <br/><br/><br/><br/><br/><br/>
         <br/><br/>
-            <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link no-margin-left"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
+            <a target="_blank" href="https://discord.gg/Z8CDWvVMeR" class="external-platform-link margin-left"><img src="img/icons/discord.png" loading="lazy" width="80" alt="Disscord Logo"></a>
             <a target="_blank" href="https://github.com/shader-park/" class="external-platform-link"><img src="img/icons/github.png" loading="lazy" width="80" alt="Github Logo"></a>
     </section>    
 
@@ -401,8 +403,8 @@ p {
 .external-platform-link {
     margin-left: 25px;
     margin-right: 25px;
-    &.no-margin-left {
-        margin-left: 0px;
+    &.margin-left {
+        margin-left: 20px;
     }
 }
 
