@@ -15,7 +15,7 @@ export default {
     props: ['sculpturesData'],
     data: function() {
     return {
-            grid : {x: 16, z: 0, spacing: 4.0, size: 1.0},
+            grid : {x: 11, z: 0, spacing: 4.0, size: 1.0},
             sculptures : this.sculpturesData || [],
             sculpPositions: []
         }
