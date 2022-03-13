@@ -32,7 +32,7 @@ export default {
 					temp.push(sculptures[key]);
 				})
 				temp.reverse();
-				this.sculptures = temp.slice(0, 256); //array.push isn't tracked by state, resetting is
+				this.sculptures = temp.slice(0, 121); //array.push isn't tracked by state, resetting is
 				setTimeout(() => {
 					this.$store.commit('sculpturesLoaded', true);    
 					window.onCanvasResize();	
