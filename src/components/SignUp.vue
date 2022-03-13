@@ -14,8 +14,9 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import 'firebase/compat/auth';
+
 import {userSchema} from "../schema/User.js";
 import {required, email, minLength} from 'vuelidate/lib/validators'
 
@@ -65,9 +66,8 @@ export default {
                 // this.$router.replace('profile');
                 this.$store.dispatch('fetchUserFavorites');
                 this.$store.commit('displaySignUp', false);
-            },
-            error => {
-                alert(error.message);
+            }).catch(e => {
+                console.error(e)
             });
         },
         close: function() {
