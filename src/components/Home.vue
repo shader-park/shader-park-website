@@ -53,7 +53,7 @@
         </h1>
         <p>
             
-            Join the cult, drink the shader kool-aid, get help and contribute on Discord and GitHub! 
+            Join the shader cult, get help and contribute on Discord and GitHub! 
 
         </p>
         <br/><br/>
