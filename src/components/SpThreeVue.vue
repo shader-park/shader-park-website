@@ -18,6 +18,7 @@ export default {
     props: {
         // canvasWidth: { type: String, default: '100vw' },
         hoverInterpolation: { type: Number, default: .98 },
+        pause: { type: Boolean, default: false},
         clickInterpolation: { type: Number, default: .98 },
         scrollInterpolation: { type: Number, default: .98 },
         shaderParkCode: {type: [Function, String], default: 'sphere(.5);'},
@@ -90,6 +91,9 @@ export default {
         },
         mouseDown1() {
             this.state.click = 1.0;
+        },
+        playToggle() {
+            this.pause = !this.pause;
         }
     },
     mounted() {
@@ -146,13 +150,18 @@ export default {
                 this.$emit('beginRender');
                 this.animationId = requestAnimationFrame( render );
                 if('time' in this.sculptureParams) {
-                    this.sculptureParams.time += 0.01;
+                    if(!this.pause) {
+                        this.sculptureParams.time += 0.01;
+                    }
                 } else {
                     this.sculptureParams.time = 0;
                 }
-                this.sculptureParams.click =  this.sculptureParams.click*this.clickInterpolation + this.state.click*(1.0-this.clickInterpolation);
-                this.sculptureParams.hover =  this.sculptureParams.hover*this.hoverInterpolation + this.state.hover*(1.0-this.hoverInterpolation);
-                this.sculptureParams.scroll =  this.sculptureParams.scroll*this.scrollInterpolation + window.pageYOffset/window.innerHeight*(1.0-this.scrollInterpolation);
+                
+                    this.sculptureParams.click =  this.sculptureParams.click*this.clickInterpolation + this.state.click*(1.0-this.clickInterpolation);
+                    this.sculptureParams.hover =  this.sculptureParams.hover*this.hoverInterpolation + this.state.hover*(1.0-this.hoverInterpolation);
+                if(!this.pause) {
+                    this.sculptureParams.scroll =  this.sculptureParams.scroll*this.scrollInterpolation + window.pageYOffset/window.innerHeight*(1.0-this.scrollInterpolation);
+                }
                 
                 // this.state.currClick = this.state.currClick*.98 + this.state.click*.02;
                 

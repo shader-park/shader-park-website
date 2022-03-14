@@ -1,7 +1,7 @@
 <template>
 <div>
     <!-- <sp-three-vue class="canvas1" :shaderParkCode="spCode" :sculptureParams="backgroundParams" ref="canvas1" :enableZoom="false" /> -->
-    <sp-three-vue class="background-canvas" :shaderParkCode="spCode3" :sculptureParams="backgroundParams" :enableZoom="false" />
+    <sp-three-vue class="background-canvas" :shaderParkCode="spCode3" :sculptureParams="backgroundParams" :enableZoom="false" :pause="pause" />
     <section class="container split-container hero">
         <br/>
         <a href="https://www.npmjs.com/package/shader-park-core"><h4>shader-park-core</h4></a>
@@ -110,6 +110,7 @@ import {spCode2, spCode3} from '../helpers/front-page-sculp1.js';
 export default {
 	data: function() {
 		return {
+            pause: false,
             spCode: spCode2(),
             spCode3: spCode3(),
 			featuredSculptures: null,
@@ -159,9 +160,14 @@ export default {
             } else {
                 console.log('coudcaskdjhf no canvas')
             }
-            document.addEventListener('scroll', () => {
-                this.backgroundParams.scroll = this.backgroundParams.scroll*.98 + window.pageYOffset/window.innerHeight*.02;
-            }, false);
+
+            const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (mediaQuery && mediaQuery.matches) {
+                this.pause = true;
+            }
+            mediaQuery.addEventListener('change', () => {
+                this.pause = mediaQuery.matches;
+            });
             /*
             function resizeCanvasToDisplaySize(canvas) {
                 // look up the size the canvas is being displayed
