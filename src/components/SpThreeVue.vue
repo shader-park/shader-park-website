@@ -4,6 +4,7 @@
         @mouseout="state.hover = 0.0"
         @pointerdown="state.click = 1.0"
         @pointerup="state.click = 0.0"
+        class="noSelect"
      />
 </template>
 
@@ -30,6 +31,7 @@ export default {
     data () {
         return {
             favorited: false,
+            isMobile: false,
             favoriteCount: 0,
             params: {},
             state: {
@@ -52,7 +54,7 @@ export default {
         displayActionButton() {
             return this.currSculpture && this.currSculpture.id && this.currSculpture.id.length > 3
         },
-        isMobile() {
+        isMobileWidth() {
             return window.innerWidth < 500;
         },
         currUser () {
@@ -94,12 +96,17 @@ export default {
         },
         playToggle() {
             this.pause = !this.pause;
-        }
+        },
+        checkIsMobile() {
+            return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+        },
     },
     mounted() {
         this.$nextTick(() => {
             let canvasContainer = this.$refs.canvasContainer;
             this.scene = new Scene();
+
+            this.isMobile = this.checkIsMobile();
 
             this.camera = new PerspectiveCamera( 75, canvasContainer.offsetWidth/canvasContainer.offsetHeight, 0.1, 1000 );
             this.camera.position.z = 1.5;
@@ -120,13 +127,15 @@ export default {
             let mesh = createSculpture(this.shaderParkCode, () => this.sculptureParams );
             this.scene.add(mesh);
 
-            this.controls = new OrbitControls( this.camera, this.renderer.domElement, {
-                enableDamping : true,
-                dampingFactor : 0.25,
-                zoomSpeed : 0.5,
-                rotateSpeed : 0.5
-            } );
-            this.controls.enableZoom = this.enableZoom
+            if(!this.isMobile) {
+                this.controls = new OrbitControls( this.camera, this.renderer.domElement, {
+                    enableDamping : true,
+                    dampingFactor : 0.25,
+                    zoomSpeed : 0.5,
+                    rotateSpeed : 0.5
+                } );
+                this.controls.enableZoom = this.enableZoom
+            }
 
             // let onWindowResize = () => {
             //     this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -143,6 +152,7 @@ export default {
                 self.state.click = 1.0
             }, false);
             canvasContainer.addEventListener('mouseup', () => self.state.click = 0.0, false);
+            canvasContainer.addEventListener('contextmenu', (e) => {e.preventDefault()}, false);
 
             window.addEventListener( 'resize', this.resize );
 
@@ -158,14 +168,17 @@ export default {
                 }
                 
                     this.sculptureParams.click =  this.sculptureParams.click*this.clickInterpolation + this.state.click*(1.0-this.clickInterpolation);
-                    this.sculptureParams.hover =  this.sculptureParams.hover*this.hoverInterpolation + this.state.hover*(1.0-this.hoverInterpolation);
+                    if(!this.isMobile) {
+                        this.sculptureParams.hover =  this.sculptureParams.hover*this.hoverInterpolation + this.state.hover*(1.0-this.hoverInterpolation);
+                    }
                 if(!this.pause) {
                     this.sculptureParams.scroll =  this.sculptureParams.scroll*this.scrollInterpolation + window.pageYOffset/window.innerHeight*(1.0-this.scrollInterpolation);
                 }
                 
                 // this.state.currClick = this.state.currClick*.98 + this.state.click*.02;
-                
-                this.controls.update();
+                if(!this.isMobile) {
+                    this.controls.update();
+                }
                 
                 this.renderer.render( this.scene, this.camera );
             };
@@ -193,5 +206,17 @@ export default {
 
 
 <style lang="less" scoped>
-
+.noSelect {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+}
+.noSelect:focus {
+    outline: none !important;
+}
 </style>
