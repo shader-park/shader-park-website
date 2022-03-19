@@ -1,11 +1,12 @@
 <template>
 <div class="container">
-		<router-link to="/featured" class="link">
+		<!-- <router-link to="/featured" class="link">
 			<h1 v-show="!loading">Featured Sculptures 
 				<span v-show="!loading && $route.name !== 'featured'">›</span>
 			</h1>
-		</router-link>
-		<sculpture-feed :sculptures="featuredSculptures" v-if="featuredSculptures"></sculpture-feed>
+		</router-link> -->
+		<h1 v-show="!loading && $route.name == 'featured'">Featured Sculptures </h1>
+		<sculpture-feed  :sculptures="featuredSculptures" v-if="featuredSculptures && $route.name == 'featured'"></sculpture-feed>
 		<h1 v-show="!loading && $route.name !== 'featured'">New Sculptures</h1>
 		<sculpture-feed :sculptures="sculptures" v-if="sculptures && $route.name !== 'featured'"></sculpture-feed>
 </div>
@@ -43,7 +44,7 @@ export default {
 					sculptures.reverse();
 					let featured = sculptures.filter(sculpture => sculpture.featured == true);
 					this.sculptures = sculptures;
-					this.featuredSculptures = featured.slice(0, 8);
+					// this.featuredSculptures = featured.slice(0, 8);
 					this.finishedLoading();
 				}
 			})
