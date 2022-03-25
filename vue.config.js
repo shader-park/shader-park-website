@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: "",
+    publicPath: "./",
     pwa: {
         workboxOptions: {
             exclude: ['_redirects'],
