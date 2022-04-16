@@ -4,7 +4,9 @@
 			<h1 v-if="!isEmbeded" class="loading-logo" :class='{fade: hasBeenLoaded}'>Shader Park</h1>
 			<div class="container">
 				<nav-main></nav-main>
-				<router-view :key="$route.fullPath"></router-view>
+				<keep-alive>
+					<router-view :key="$route.fullPath"></router-view>
+				</keep-alive>
 				<signIn v-if="displayLogin"></signIn>
 				<signUp v-if="displaySignUp"></signUp>
 				<share-modal v-if="displayShareModal"></share-modal>

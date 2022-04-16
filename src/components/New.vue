@@ -19,55 +19,64 @@ export default {
 	},
 	props: ['example', 'embed', 'hideEditor', 'hidePedestal', 'clickEnabled'],
 	mounted() {
-		
-		this.$nextTick(function () {
-			this.$store.commit('setDisplayCanvas', true);
-			this.$store.commit('setInitialCameraPose', [0, 0, 4]);
-			this.$store.commit('sculpturesLoaded', false);
-			if(this.clickEnabled != null) {
-				this.$store.commit('setClickEnabled', this.clickEnabled === 'true');
-			}
-			
-			if(this.embed && this.embed === 'true') {
-				this.$store.commit('setEmbedded', true);
-				this.setSelectedSculpture();
-			}
-			const sculpId = this.$route.params.id;
-			if(sculpId) {
-				let payload = {id : sculpId};
-				if(this.example && this.example === 'true') {
-					payload['example'] = true;
-				}
-				this.$store.dispatch('fetchSculpture', payload).then(data => {
-					if(data) {
-						this.emptySculpture = data;
-						this.finishedLoadingSculp = true;
-						if(data.title != 'title') {
-							this.$store.commit('setRouteTitle', data.title);
-						}
-						this.setSelectedSculpture();
-					} else {
-						this.$modal.show('no-sculpture-data-found');
-					}
-				});
-			} else {
-				this.finishedLoadingSculp = true;
-				let sculptureType = this.$route.params.type;
-				this.emptySculpture.type = 'js';
-				if(sculptureType && sculptureType === 'glsl') {
-					this.emptySculpture.type = sculptureType;
-				}
-				this.setSelectedSculpture();
-				
-			}
-		});
-		
-	
+		this.mount = true;
+		this.onMount()
 	},
+	activated() {
+        console.log('activated NEW', this.mount)
+        if(!this.mount) {
+            this.onMount();
+            this.mount = false;
+        }
+    },
 	components: {
 		sculpture: Sculpture,
 	},
 	methods: {
+		onMount() {
+			console.log('onMount NEW called')
+			this.$nextTick(function () {
+				this.$store.commit('setDisplayCanvas', true);
+				this.$store.commit('setInitialCameraPose', [0, 0, 4]);
+				this.$store.commit('sculpturesLoaded', false);
+				if(this.clickEnabled != null) {
+					this.$store.commit('setClickEnabled', this.clickEnabled === 'true');
+				}
+				
+				if(this.embed && this.embed === 'true') {
+					this.$store.commit('setEmbedded', true);
+					this.setSelectedSculpture();
+				}
+				const sculpId = this.$route.params.id;
+				if(sculpId) {
+					let payload = {id : sculpId};
+					if(this.example && this.example === 'true') {
+						payload['example'] = true;
+					}
+					this.$store.dispatch('fetchSculpture', payload).then(data => {
+						if(data) {
+							this.emptySculpture = data;
+							this.finishedLoadingSculp = true;
+							if(data.title != 'title') {
+								this.$store.commit('setRouteTitle', data.title);
+							}
+							this.setSelectedSculpture();
+						} else {
+							this.$modal.show('no-sculpture-data-found');
+						}
+					});
+				} else {
+					this.finishedLoadingSculp = true;
+					let sculptureType = this.$route.params.type;
+					this.emptySculpture.type = 'js';
+					if(sculptureType && sculptureType === 'glsl') {
+						this.emptySculpture.type = sculptureType;
+					}
+					this.setSelectedSculpture();
+					
+				}
+			});
+		},
 		setUser: function() {
 			this.$store.dispatch('setUser');
 		},
@@ -89,7 +98,12 @@ export default {
 			});
 		}
 	},
+	deactivated() {
+
+		this.mount = false;
+	},
 	destroyed: function() {
+		this.mount = false;
 		this.$store.commit('setRouteTitle', null);
 	},
 	beforeRouteLeave (to, from, next) {

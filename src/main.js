@@ -27,7 +27,6 @@ import {dbConfig} from './dbConfig.js';
 import {routes} from './router/routes';
 import {store} from './store/store';
 
-
 window.anime = anime;
 
 firebase.initializeApp(dbConfig);
@@ -79,7 +78,11 @@ let firstTimeAtRoute = true;
 let mediaCap = null;
 let isCapturing = false;
 
+
+// const scrollableElementId = 'sculpture-container' // You should change this
+const scrollPositions = Object.create(null)
 router.beforeEach((to, from, next) => {
+
 	const currentUser = firebase.auth().currentUser;
 
 	const nextRoute = () => {
