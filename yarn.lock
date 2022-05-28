@@ -5900,10 +5900,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shader-park-core@^0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.15.tgz#0c3d9ba1c70091f913fe1e3ad702cd03911f5006"
-  integrity sha512-vDLIwkr2EM/gvJv2IK/fI9T6IcGNqFYEi1OtM1rtXW4hxg6SAOwAcBrV70cAQIvP4le/YOmu6HLaYuDtzBFiUQ==
+shader-park-core@^0.1.18:
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.18.tgz#667ec245d673d00a74b9ea3ec13f60734ad5566d"
+  integrity sha512-7o0NA3KkBqgFhjsZu55DmJazksQF2V7okdmRqJ6BcinX8q6ZE30vZkvfbOuD8LMfCrDRnM2EV9WMgE7fe/9oFQ==
   dependencies:
     "@shaderfrog/glsl-parser" "^0.2.1"
     escodegen "^1.11.1"
