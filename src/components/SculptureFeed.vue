@@ -90,11 +90,15 @@ img[lazy=loaded] {
   filter: blur(10px);
   opacity: 0.5;
   min-width: 0;
+  height: 350px;
+  object-fit: contain;  
   transition: filter 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 .v-lazy-image-loaded {
   opacity: 1;
   filter: blur(0);
+  height: 350px;
+  object-fit: contain;  
 }
 
 .sculpture-container {
