@@ -484,16 +484,19 @@ section {
 // }
 
 .video-wrapper {
-    max-height: 80vh;
     position: relative;
     padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */ 
 }
 .youtube-embed{
+    // transform: translateX(-50%);
+
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    max-height: 80vh;
+    
 
 }
  
