@@ -67,22 +67,11 @@
     
     <section class="container getting-started">
         <h1 class="center hero-text other-platforms">
-            Getting Started<br/>
+            Getting Started<br/><br/>
         </h1>
-
-        <div class='action-container'>
-            <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="90vw" height="auto" class="youtube-embed"
-        type="text/html" src="https://www.youtube.com/embed/QvR4rDSKwvM?autoplay=0&fs=0&iv_load_policy=3&showinfo=0&rel=0&cc_load_policy=0">
-        </iframe>
-        <br/><br/>
-            <!-- <a target="_blank" href="https://github.com/shader-park/shader-park-touchdesigner" class="external-platform-link"><img src="img/icons/touchdesigner.png" loading="lazy" width="80" alt="TouchDesigner Logo"></a>
-            <a target="_blank" href="https://github.com/shader-park/shader-park-examples" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt="threejs logo"></a>
-            <a target="_blank" href="https://glitch.com/@torinmb/shader-park-examples" class="external-platform-link"><img src="img/icons/glitch.png" loading="lazy" width="80" alt="glitch logo"></a>
-            <a target="_blank" href="https://github.com/shader-park/shader-park-examples/tree/main/nft-hicetnunc-three-template" class="external-platform-link"><img src="img/icons/hicetnunc.png" loading="lazy" width="130" alt="hicetnunc logo"></a> -->
+        <div class='video_wrapper'>
+                <iframe width="100%"  height="100%" class="youtube-embed" src="https://www.youtube-nocookie.com/embed/videoseries?list=PLgfxkm9xFocbc6wiO3A8vXalP4K57yUKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <br/>
-        <!-- <a class="active-button w-button center-button" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore All Starter Templates</a> -->
-
     </section>    
 
     <section class="container other-platforms-section">
@@ -489,9 +478,22 @@ section {
     }
 }
 
-.youtube-embed {
-    width: 90vw;
-    height: 90vh;
+// .youtube-embed {
+//     width: 90vw;
+//     height: 90vh;
+// }
+
+.video_wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */ 
+}
+.youtube-embed{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
 }
  
 </style>
