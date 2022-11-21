@@ -69,7 +69,7 @@
         <h1 class="center hero-text other-platforms">
             Getting Started<br/><br/>
         </h1>
-        <div class='video_wrapper'>
+        <div class='video-wrapper'>
                 <iframe width="100%"  height="100%" class="youtube-embed" src="https://www.youtube-nocookie.com/embed/videoseries?list=PLgfxkm9xFocbc6wiO3A8vXalP4K57yUKo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </section>    
@@ -483,7 +483,8 @@ section {
 //     height: 90vh;
 // }
 
-.video_wrapper {
+.video-wrapper {
+    max-height: 80vh;
     position: relative;
     padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */ 
 }
