@@ -13,7 +13,7 @@
                 <router-link to="/explore" class="link" v-bind:class="{ mobile: isMobile }"  active-class="active" exact>Explore</router-link>
                 <!-- <router-link to="/examples" class="link" active-class="active">Examples</router-link> -->
                 <a class="link"  target="_blank" href="https://docs.shaderpark.com/references-js/" v-bind:class="{ mobile: isMobile }"  active-class="active">Docs</a>
-                <a class="link"  target="_blank" href="https://github.com/shader-park/shader-park-core/discussions" v-bind:class="{ mobile: isMobile }"  active-class="active">Forum</a>
+                <a class="link"  target="_blank" href="https://discord.gg/NDQXuyRBsQ" v-bind:class="{ mobile: isMobile }"  active-class="active">Discord</a>
                 <router-link v-if="!isMobile" to="/new" class="link" active-class="active">New</router-link>
                 <router-link to="/about" class="link" active-class="active" v-bind:class="{ mobile: isMobile }">About</router-link>
                 <a class="link" v-on:click="signIn" v-if="!user" v-bind:class="{ active: displayLogin, mobile: isMobile }">Sign In</a>
