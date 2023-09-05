@@ -95,7 +95,9 @@
         <br/>
         <div class="row">
             <div class="column">
-                <a target="_blank" href="https://quantumsummer.world/"><img class="featured-project-img left" alt="Quantum Summer Website" src="/img/featured_projects/Quantum Summer Site.jpg" /></a>
+                <a target="_blank" href="https://quantumsummer.netlify.app"><img class="featured-project-img left" alt="Quantum Summer Website" src="/img/featured_projects/Quantum Summer Site.jpg" /></a>
+            </div>
+            <div class="column">
                 <a target="_blank" href="https://lightartspace.org/"><img class="featured-project-img right" alt="Light Art Space Website" src="/img/featured_projects/LAS Site.jpg" /></a>
             </div>
         </div>
@@ -103,11 +105,14 @@
             <div class="column">
                 <a target="_blank" href="http://wcma-experiments.appspot.com/"><img class="featured-project-img left" alt="Williams College of Art Experimental Museum Exploration Website" src="/img/featured_projects/WCMA Site.jpg" /></a>
             </div>
+            <div class="column">
+                <!-- Add another image here -->
+                <!-- <a target="_blank" href="your-link-here"><img class="featured-project-img right" alt="Your Image Description" src="your-image-source-here" /></a> -->
+            </div>
         </div>
-        
-
         <br/><br/><br/><br/><br/>
     </section>
+
 </div>
   
 </template>
@@ -238,8 +243,10 @@ export default {
 
 .column {
     flex: 50%;
+    /* or width: 50%; */
     .mobile({
         flex: 100%;
+        /* or width: 100%; */
     });
 }
 
