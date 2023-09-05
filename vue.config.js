@@ -4,6 +4,7 @@ module.exports = {
       workboxOptions: {
         skipWaiting: true,
         clientsClaim: true,
+        exclude: ['_redirects'],
         runtimeCaching: [
           {
             // Use the NetworkFirst strategy for HTML files
