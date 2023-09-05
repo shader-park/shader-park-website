@@ -12,7 +12,7 @@
 import { mapGetters } from 'vuex'
 
 import { Scene, PerspectiveCamera, WebGLRenderer, Color} from 'three'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { createSculpture, createSculptureWithGeometry } from 'shader-park-core';
 
 export default {

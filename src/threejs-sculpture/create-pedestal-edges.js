@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, MeshBasicMaterial, Color, Mesh, Group} from 'three';
+import { BoxGeometry, MeshBasicMaterial, Color, Mesh, Group} from 'three';
 
 /**
  * Creates thin edges for a pedestal given its dimensions
@@ -13,11 +13,11 @@ import { BoxBufferGeometry, MeshBasicMaterial, Color, Mesh, Group} from 'three';
 export function createPedestalEdges(pedSize, pedHeight, size = 0.005) {
   const edgeSize = pedSize * size;
   const longEdgeGeom =
-      new BoxBufferGeometry(edgeSize, edgeSize, pedSize + 1.0 * edgeSize);
+      new BoxGeometry(edgeSize, edgeSize, pedSize + 1.0 * edgeSize);
   const shortEdgeGeomVertical =
-      new BoxBufferGeometry(edgeSize, pedHeight, edgeSize);
+      new BoxGeometry(edgeSize, pedHeight, edgeSize);
   const shortEdgeGeomHorizontal =
-      new BoxBufferGeometry(pedSize, edgeSize, edgeSize);
+      new BoxGeometry(pedSize, edgeSize, edgeSize);
   const edgeMat =
       new MeshBasicMaterial({color: new Color(1.0, 1.0, 1.0)});
   const edgeGroup = new Group();

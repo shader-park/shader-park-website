@@ -8,10 +8,10 @@ import 'firebase/compat/app-check';
 
 import { Scene, Color, PerspectiveCamera, Vector2, Vector3, Raycaster, HemisphereLight, TextureLoader, WebGLRenderer, FrontSide, BackSide } from 'three';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { MapControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { MapControls } from 'three/addons/controls/MapControls.js';
 
-import './registerServiceWorker';
+// import './registerServiceWorker';
 
 import TWEEN from '@tweenjs/tween.js';
 import Vue from 'vue';
