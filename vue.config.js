@@ -3,5 +3,10 @@ module.exports = {
         workboxOptions: {
             exclude: ['_redirects'],
         }
+    },
+    configureWebpack: {
+        resolve: {
+          mainFields: ['module', 'browser', 'main']
+        }
     }
 };
