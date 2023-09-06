@@ -83,6 +83,7 @@
             <a target="_blank" href="https://github.com/shader-park/shader-park-examples" class="external-platform-link"><img src="img/icons/threejs.png" loading="lazy" width="80" alt="threejs logo"></a>
             <a target="_blank" href="https://glitch.com/@torinmb/shader-park-examples" class="external-platform-link"><img src="img/icons/glitch.png" loading="lazy" width="80" alt="glitch logo"></a>
             <a target="_blank" href="https://github.com/shader-park/shader-park-examples/tree/main/nft-hicetnunc-three-template" class="external-platform-link"><img src="img/icons/hicetnunc.png" loading="lazy" width="130" alt="hicetnunc logo"></a>
+            <a target="_blank" href="https://openprocessing.org/sketch/1994627" class="external-platform-link"><img src="img/icons/p5.png" loading="lazy" width="80" alt="P5.js Logo"></a>
         </div>
         <br/>
         <a class="active-button w-button center-button" target="_blank" href="https://github.com/shader-park/shader-park-examples">Explore All Starter Templates</a>
